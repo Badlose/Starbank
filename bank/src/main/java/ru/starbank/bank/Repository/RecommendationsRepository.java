@@ -1,7 +1,6 @@
 package ru.starbank.bank.Repository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +15,151 @@ public class RecommendationsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public boolean UsingDebit(UUID userId) {
+
+        String query = """
+                    SELECT COUNT(*) FROM newTable WHERE USER_ID = ? AND PRODUCT_TYPE = 'DEBIT'
+                """;
+
+        int result = jdbcTemplate.queryForObject(
+                query,
+                int.class,
+                userId);
+        return result > 0;
+    }
+
+    public boolean NotUsingInvest(UUID userId) {
+        String query = """
+                SELECT COUNT(*)
+                FROM newTable
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'INVEST'
+                """;
+
+        int result = jdbcTemplate.queryForObject(
+                query,
+                int.class,
+                userId
+        );
+        return result == 0;
+    }
+
+    public boolean NotUsingCredit(UUID userId) {
+        String query = """
+                SELECT COUNT(*)
+                FROM newTable
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'CREDIT'
+                """;
+
+        int result = jdbcTemplate.queryForObject(
+                query,
+                int.class,
+                userId
+        );
+        return result == 0;
+    }
+
+    public boolean TotalDepositSavingMoreThan1_000(UUID userId) {
+
+        int MIN_SAVING_AMOUNT = 1000;
+
+        String query = """
+                SELECT SUM(AMOUNT)
+                FROM newTable
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'SAVING'
+                  AND TYPE = 'DEPOSIT'
+                """;
+
+        Integer totalAmount = jdbcTemplate.queryForObject(
+                query,
+                Integer.class,
+                userId
+        );
+
+        return (totalAmount != null) && (totalAmount > MIN_SAVING_AMOUNT);
+    }
+
+    public boolean TotalDepositSavingMoreOrEqual50_000(UUID userId) {
+
+        int MIN_SAVING_AMOUNT = 50000;
+
+        String query = """
+                SELECT SUM(AMOUNT)
+                FROM newTable
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'SAVING'
+                  AND TYPE = 'DEPOSIT'
+                """;
+
+        Integer totalAmount = jdbcTemplate.queryForObject(
+                query,
+                Integer.class,
+                userId
+        );
+
+        return (totalAmount != null) && (totalAmount >= MIN_SAVING_AMOUNT);
+    }
+
+    public boolean TotalDepositDebitMoreThanTotalWithdrawDebit(UUID userId) {
+
+        String queryDebit = """
+                SELECT SUM(AMOUNT)
+                FROM newTable
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'SAVING'
+                  AND TYPE = 'DEPOSIT'
+                """;
+
+        String queryWithdraw = """
+                SELECT SUM(AMOUNT)
+                FROM newTable
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'SAVING'
+                  AND TYPE = 'WITHDRAW'
+                """;
+
+        Integer totalDeposit = jdbcTemplate.queryForObject(
+                queryDebit,
+                Integer.class,
+                userId
+        );
+
+        Integer totalWithdraw = jdbcTemplate.queryForObject(
+                queryWithdraw,
+                Integer.class,
+                userId
+        );
+
+        return (totalDeposit != null) && (totalDeposit > totalWithdraw);
+    }
+
+    public boolean TotalDepositDebitMoreOrEqual50_000(UUID userId) {
+
+        int MIN_DEBIT_AMOUNT = 50000;
+
+        String query = """
+                SELECT SUM(AMOUNT)
+                FROM newTable
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'DEBIT'
+                  AND TYPE = 'DEPOSIT'
+                """;
+
+        Integer totalAmount = jdbcTemplate.queryForObject(
+                query,
+                Integer.class,
+                userId
+        );
+
+        return (totalAmount != null) && (totalAmount >= MIN_DEBIT_AMOUNT);
+    }
+
+
     public int getRandomTransactionAmount(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT amount FROM transactions t WHERE t.user_id = ? LIMIT 1",
+                "SELECT AMOUNT FROM transactions t WHERE t.USER_ID = ? LIMIT 1",
                 Integer.class,
                 user);
         return result != null ? result : 0;
@@ -26,16 +167,8 @@ public class RecommendationsRepository {
 
     public int getRandomTransactionAmountV1(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT amount FROM transactions ORDER BY user_id DESC LIMIT 1",
+                "SELECT AMOUNT FROM transactions ORDER BY USER_ID DESC LIMIT 1",
                 Integer.class);
         return result != null ? result : 0;
     }
-
-    public boolean checkDebitInfo(UUID userId) {
-
-//        SQL запрос
-
-        return false;
-    }
-
 }
