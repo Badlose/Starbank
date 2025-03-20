@@ -23,4 +23,9 @@ public class RuleSetOne implements RecommendationService {
         return Optional.empty();
     }
 
+    @Override
+    public Integer getAmount(UUID userId) {
+        return repository.getRandomTransactionAmount(userId);
+    }
+
 }

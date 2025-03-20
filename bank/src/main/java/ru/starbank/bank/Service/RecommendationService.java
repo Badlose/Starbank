@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface RecommendationService {
     Optional<Recommendation> getRecommendation(UUID userId);
 
+    Integer getAmount(UUID userId);
 }
