@@ -16,7 +16,7 @@ public class RecommendationsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int getRandomTransactionAmountOriginal(UUID user) {
+    public int getRandomTransactionAmount(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
                 "SELECT amount FROM transactions t WHERE t.user_id = ? LIMIT 1",
                 Integer.class,
@@ -24,10 +24,14 @@ public class RecommendationsRepository {
         return result != null ? result : 0;
     }
 
-    public int getRandomTransactionAmount(UUID user) {
+    public int getRandomTransactionAmountV1(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
                 "SELECT amount FROM transactions ORDER BY user_id DESC LIMIT 1",
                 Integer.class);
         return result != null ? result : 0;
+    }
+
+    public Integer getDebitInfo() {
+
     }
 }
