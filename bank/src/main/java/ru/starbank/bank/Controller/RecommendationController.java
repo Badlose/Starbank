@@ -18,10 +18,15 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
+
+
     @GetMapping("/user_id")
     public Optional<Recommendation> getRecommendation(@PathVariable UUID user_id) {
         return recommendationService.getRecommendation(user_id);
     }
+
+
+
 
     @GetMapping("/amount/{userId}")
     public Integer getAmountTest(

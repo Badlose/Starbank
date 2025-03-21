@@ -31,7 +31,11 @@ public class RecommendationsRepository {
         return result != null ? result : 0;
     }
 
-    public Integer getDebitInfo() {
+    public boolean checkDebitInfo(UUID userId) {
 
+//        SQL запрос
+
+        return false;
     }
+
 }
