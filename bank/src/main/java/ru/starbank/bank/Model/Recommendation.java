@@ -1,14 +1,15 @@
 package ru.starbank.bank.Model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Recommendation {
 
+    private UUID id;
     private String name;
-    private Long id;
     private String text;
 
-    public Recommendation(Long id, String name, String text) {
+    public Recommendation(UUID id, String name, String text) {
         this.id = id;
         this.name = name;
         this.text = text;
@@ -17,11 +18,11 @@ public class Recommendation {
     public Recommendation() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
