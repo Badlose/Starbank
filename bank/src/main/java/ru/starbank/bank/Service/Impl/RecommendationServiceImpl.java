@@ -6,20 +6,32 @@ import ru.starbank.bank.Model.Recommendation;
 import ru.starbank.bank.Service.RecommendationRuleSet;
 import ru.starbank.bank.Service.RecommendationService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class RecommendationServiceImpl implements RecommendationService {
 
+    @Autowired
+    private final List<RecommendationRuleSet> ruleSets;
+
+    public RecommendationServiceImpl(List<RecommendationRuleSet> ruleSets) {
+        this.ruleSets = ruleSets;
+    }
 
     @Override
-    public Optional<List<Recommendation>> getRecommendation(UUID userId) {
+       public Optional<List<Recommendation>> getRecommendation(UUID userId) {
 
-        //List<Recommendation> //бины
+        List<Recommendation> recommendations = ruleSets.stream()
+                .map(r -> r.check(userId))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
 
-        return Optional.empty();
+        return recommendations.isEmpty() ? Optional.empty() : Optional.of(recommendations); //нельзя null
     }
 
     @Override

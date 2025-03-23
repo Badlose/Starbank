@@ -1,10 +1,13 @@
 package ru.starbank.bank.Service.Impl.RecommendationRuleSetImpl;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.Model.Recommendation;
 import ru.starbank.bank.Repository.RecommendationsRepository;
+import ru.starbank.bank.Service.CheckConditionService;
 import ru.starbank.bank.Service.RecommendationRuleSet;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,9 +16,16 @@ public class Invest500RecommendationRuleSetImpl implements RecommendationRuleSet
 
     private final RecommendationsRepository recommendationsRepository;
 
-    public Invest500RecommendationRuleSetImpl(RecommendationsRepository recommendationsRepository) {
+    private final List<CheckConditionService> conditionServices;
+
+    public Invest500RecommendationRuleSetImpl(RecommendationsRepository recommendationsRepository,
+                                              @Qualifier("RuleSetOneRuleOne") CheckConditionService checkRuleOne,
+                                              @Qualifier("RuleSetOneRuleTwo") CheckConditionService checkRuleTwo,
+                                              @Qualifier("RuleSetOneRuleThree") CheckConditionService checkRulThree) {
         this.recommendationsRepository = recommendationsRepository;
+        this.conditionServices = List.of(checkRuleOne, checkRuleTwo, checkRulThree);
     }
+
 
     @Override
     public Optional<Recommendation> check(UUID userId) {
@@ -30,16 +40,15 @@ public class Invest500RecommendationRuleSetImpl implements RecommendationRuleSet
                 TEXT
         );
 
-        if (recommendationsRepository.UsingDebit(userId) &&
-                recommendationsRepository.NotUsingInvest(userId) &&
-                recommendationsRepository.TotalDepositSavingMoreThan1_000(userId)
-        ) {
-            return Optional.of(recommendation);
-        } else {
-            return Optional.empty();
-        }
+        boolean checkCondition = conditionServices.stream()
+                .allMatch(r -> r.checkCondition(userId));
 
+        if (checkCondition) {
+            return Optional.of(recommendation);
+        }
+        return Optional.empty();
     }
+
 }
 
 

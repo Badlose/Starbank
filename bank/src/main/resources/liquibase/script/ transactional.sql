@@ -12,4 +12,4 @@ FROM (
            p.NAME AS PRODUCT_NAME
     FROM TRANSACTIONS t
     JOIN PRODUCTS p ON t.product_id = p.id
-) AS newTable;
+);
