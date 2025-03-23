@@ -10,4 +10,7 @@ public interface RecommendationService {
     Optional<List<Recommendation>> getRecommendation(UUID userId);
 
     Integer getAmount(UUID userId);
+
+    List<Recommendation> getRecommendationsWithLogging(UUID userId);
 }
+
