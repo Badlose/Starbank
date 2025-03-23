@@ -15,202 +15,73 @@ public class RecommendationsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean UsingDebitOriginal(UUID userId) {
+    public String DebitUsing(UUID userId) {
 
-        String query = """
-                    SELECT COUNT(*) FROM newTable WHERE USER_ID = ? AND PRODUCT_TYPE = 'DEBIT'
-                """;
-
-        int result = jdbcTemplate.queryForObject(
-                query,
-                int.class,
-                userId);
-        return result > 0;
-    }
-
-    public boolean UsingDebit(UUID userId) {
-
-        String query = """
-                    SELECT COUNT(*) 
-                    FROM TRANSACTIONS t 
-                    INNER JOIN PRODUCTS p ON t.product_id = p.id 
+        return """
+                    SELECT COUNT(*)
+                    FROM TRANSACTIONS t
+                    INNER JOIN PRODUCTS p ON t.product_id = p.id
                     WHERE t.USER_ID = ? AND p.TYPE = 'DEBIT'
                 """;
-
-        int result = jdbcTemplate.queryForObject(
-                query,
-                int.class,
-                userId);
-        return result > 0;
     }
 
-    public boolean NotUsingInvestOriginal(UUID userId) {
-        String query = """
-                SELECT COUNT(*)
-                FROM TRANSACTIONS
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'INVEST'
-                """;
+    public String InvestNotUsing(UUID userId) {
 
-        int result = jdbcTemplate.queryForObject(
-                query,
-                int.class,
-                userId
-        );
-        return result == 0;
-    }
-
-    public boolean NotUsingInvest(UUID userId) {
-        String query = """
+        return """
                 SELECT COUNT(*)
-                FROM TRANSACTIONS t 
-                INNER JOIN PRODUCTS p ON t.product_id = p.id 
+                FROM TRANSACTIONS t
+                INNER JOIN PRODUCTS p ON t.product_id = p.id
                 WHERE t.USER_ID = ?
                   AND p.TYPE = 'INVEST'
                 """;
-
-        int result = jdbcTemplate.queryForObject(
-                query,
-                int.class,
-                userId
-        );
-        return result == 0;
     }
 
-    public boolean NotUsingCredit(UUID userId) {
-        String query = """
+    public String CreditNotUsing(UUID userId) {
+
+        return """
                 SELECT COUNT(*)
-                FROM newTable
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'CREDIT'
+                FROM TRANSACTIONS t
+                INNER JOIN PRODUCTS p ON t.product_id = p.id
+                WHERE t.USER_ID = ?
+                  AND p.TYPE = 'CREDIT'
                 """;
-
-        int result = jdbcTemplate.queryForObject(
-                query,
-                int.class,
-                userId
-        );
-        return result == 0;
     }
 
-    public boolean TotalDepositSavingMoreThan1_000_Original(UUID userId) {
+    public String SavingDeposit(UUID userId) {
 
-        int MIN_SAVING_AMOUNT = 1000;
-
-        String query = """
-                SELECT SUM(AMOUNT)
-                FROM newTable
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'SAVING'
-                  AND TYPE = 'DEPOSIT'
-                """;
-
-        Integer totalAmount = jdbcTemplate.queryForObject(
-                query,
-                Integer.class,
-                userId
-        );
-
-        return (totalAmount != null) && (totalAmount > MIN_SAVING_AMOUNT);
-    }
-
-    public boolean TotalDepositSavingMoreThan1_000(UUID userId) {
-
-        int MIN_SAVING_AMOUNT = 1000;
-
-        String query = """
+        return """
                 SELECT SUM(AMOUNT)
                 FROM TRANSACTIONS t
-                INNER JOIN PRODUCTS p ON t.product_id = p.id 
+                INNER JOIN PRODUCTS p ON t.product_id = p.id
                 WHERE t.USER_ID = ?
                   AND p.TYPE = 'SAVING'
                   AND t.TYPE = 'DEPOSIT'
                 """;
-
-        Integer totalAmount = jdbcTemplate.queryForObject(
-                query,
-                Integer.class,
-                userId
-        );
-
-        return (totalAmount != null) && (totalAmount > MIN_SAVING_AMOUNT);
     }
 
-    public boolean TotalDepositSavingMoreOrEqual50_000(UUID userId) {
+    public String DebitDeposit(UUID userId) {
 
-        int MIN_SAVING_AMOUNT = 50000;
-
-        String query = """
+        return """
                 SELECT SUM(AMOUNT)
-                FROM newTable
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'SAVING'
-                  AND TYPE = 'DEPOSIT'
+                FROM TRANSACTIONS t
+                INNER JOIN PRODUCTS p ON t.product_id = p.id
+                WHERE t.USER_ID = ?
+                  AND p.TYPE = 'DEBIT'
+                  AND t.TYPE = 'DEPOSIT'
                 """;
-
-        Integer totalAmount = jdbcTemplate.queryForObject(
-                query,
-                Integer.class,
-                userId
-        );
-
-        return (totalAmount != null) && (totalAmount >= MIN_SAVING_AMOUNT);
     }
 
-    public boolean TotalDepositDebitMoreThanTotalWithdrawDebit(UUID userId) {
+    public String DebitWithdraw(UUID userId) {
 
-        String queryDebit = """
+        return """
                 SELECT SUM(AMOUNT)
-                FROM newTable
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'SAVING'
-                  AND TYPE = 'DEPOSIT'
+                FROM TRANSACTIONS t
+                INNER JOIN PRODUCTS p ON t.product_id = p.id
+                WHERE t.USER_ID = ?
+                  AND p.TYPE = 'DEBIT'
+                  AND t.TYPE = 'WITHDRAW'
                 """;
-
-        String queryWithdraw = """
-                SELECT SUM(AMOUNT)
-                FROM newTable
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'SAVING'
-                  AND TYPE = 'WITHDRAW'
-                """;
-
-        Integer totalDeposit = jdbcTemplate.queryForObject(
-                queryDebit,
-                Integer.class,
-                userId
-        );
-
-        Integer totalWithdraw = jdbcTemplate.queryForObject(
-                queryWithdraw,
-                Integer.class,
-                userId
-        );
-
-        return (totalDeposit != null) && (totalDeposit > totalWithdraw);
     }
-
-    public boolean TotalDepositDebitMoreOrEqual50_000(UUID userId) {
-
-        int MIN_DEBIT_AMOUNT = 50000;
-
-        String query = """
-                SELECT SUM(AMOUNT)
-                FROM newTable
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'DEBIT'
-                  AND TYPE = 'DEPOSIT'
-                """;
-
-        Integer totalAmount = jdbcTemplate.queryForObject(
-                query,
-                Integer.class,
-                userId
-        );
-
-        return (totalAmount != null) && (totalAmount >= MIN_DEBIT_AMOUNT);
-    }
-
 
     public int getRandomTransactionAmount(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
