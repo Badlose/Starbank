@@ -15,7 +15,7 @@ public class RecommendationsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean UsingDebit(UUID userId) {
+    public boolean UsingDebitOriginal(UUID userId) {
 
         String query = """
                     SELECT COUNT(*) FROM newTable WHERE USER_ID = ? AND PRODUCT_TYPE = 'DEBIT'
@@ -28,12 +28,45 @@ public class RecommendationsRepository {
         return result > 0;
     }
 
+    public boolean UsingDebit(UUID userId) {
+
+        String query = """
+                    SELECT COUNT(*) 
+                    FROM TRANSACTIONS t 
+                    INNER JOIN PRODUCTS p ON t.product_id = p.id 
+                    WHERE t.USER_ID = ? AND p.TYPE = 'DEBIT'
+                """;
+
+        int result = jdbcTemplate.queryForObject(
+                query,
+                int.class,
+                userId);
+        return result > 0;
+    }
+
+    public boolean NotUsingInvestOriginal(UUID userId) {
+        String query = """
+                SELECT COUNT(*)
+                FROM TRANSACTIONS
+                WHERE USER_ID = ?
+                  AND PRODUCT_TYPE = 'INVEST'
+                """;
+
+        int result = jdbcTemplate.queryForObject(
+                query,
+                int.class,
+                userId
+        );
+        return result == 0;
+    }
+
     public boolean NotUsingInvest(UUID userId) {
         String query = """
                 SELECT COUNT(*)
-                FROM newTable
-                WHERE USER_ID = ?
-                  AND PRODUCT_TYPE = 'INVEST'
+                FROM TRANSACTIONS t 
+                INNER JOIN PRODUCTS p ON t.product_id = p.id 
+                WHERE t.USER_ID = ?
+                  AND p.TYPE = 'INVEST'
                 """;
 
         int result = jdbcTemplate.queryForObject(
@@ -60,7 +93,7 @@ public class RecommendationsRepository {
         return result == 0;
     }
 
-    public boolean TotalDepositSavingMoreThan1_000(UUID userId) {
+    public boolean TotalDepositSavingMoreThan1_000_Original(UUID userId) {
 
         int MIN_SAVING_AMOUNT = 1000;
 
@@ -70,6 +103,28 @@ public class RecommendationsRepository {
                 WHERE USER_ID = ?
                   AND PRODUCT_TYPE = 'SAVING'
                   AND TYPE = 'DEPOSIT'
+                """;
+
+        Integer totalAmount = jdbcTemplate.queryForObject(
+                query,
+                Integer.class,
+                userId
+        );
+
+        return (totalAmount != null) && (totalAmount > MIN_SAVING_AMOUNT);
+    }
+
+    public boolean TotalDepositSavingMoreThan1_000(UUID userId) {
+
+        int MIN_SAVING_AMOUNT = 1000;
+
+        String query = """
+                SELECT SUM(AMOUNT)
+                FROM TRANSACTIONS t
+                INNER JOIN PRODUCTS p ON t.product_id = p.id 
+                WHERE t.USER_ID = ?
+                  AND p.TYPE = 'SAVING'
+                  AND t.TYPE = 'DEPOSIT'
                 """;
 
         Integer totalAmount = jdbcTemplate.queryForObject(
