@@ -11,7 +11,7 @@ public class RuleDebitInfo {
         this.repository = repository;
     }
 
-    public boolean checkDebitInfo(UUID userId) {
-        return repository.checkDebitInfo(userId);
-    }
+   // public boolean checkDebitInfo(UUID userId) {
+   //     return repository.checkDebitInfo(userId);
+   // }
 }

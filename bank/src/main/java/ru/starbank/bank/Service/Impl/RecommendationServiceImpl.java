@@ -22,4 +22,10 @@ public class RecommendationServiceImpl implements RecommendationService {
         return Optional.empty();
     }
 
+    @Override
+    public Integer getAmount(UUID userId) {
+
+        return 0;
+    }
+
 }
