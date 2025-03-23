@@ -8,7 +8,7 @@ import ru.starbank.bank.Service.CheckConditionService;
 
 import java.util.UUID;
 
-@Qualifier("RuleSetOneRuleTwo")
+@Qualifier("InvestNotUsing")
 @Component
 public class InvestNotUsing implements CheckConditionService {
 

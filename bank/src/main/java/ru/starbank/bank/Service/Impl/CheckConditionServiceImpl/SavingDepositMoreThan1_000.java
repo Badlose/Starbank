@@ -8,7 +8,7 @@ import ru.starbank.bank.Service.CheckConditionService;
 
 import java.util.UUID;
 
-@Qualifier("RuleSetOneRuleThree")
+@Qualifier("SavingDepositMoreThan1_000")
 @Component
 public class SavingDepositMoreThan1_000 implements CheckConditionService {
 

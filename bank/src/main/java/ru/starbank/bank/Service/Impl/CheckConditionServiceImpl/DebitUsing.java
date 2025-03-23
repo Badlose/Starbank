@@ -8,7 +8,7 @@ import ru.starbank.bank.Service.CheckConditionService;
 
 import java.util.UUID;
 
-@Qualifier("RuleSetOneRuleOne")
+@Qualifier("DebitUsing")
 @Component
 public class DebitUsing implements CheckConditionService {
 
