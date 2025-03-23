@@ -1,4 +1,4 @@
-package ru.starbank.bank;
+package ru.starbank.bank.TestController;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,20 +56,23 @@ public class RecommendationControllerTest {
 
     @Test
     public void testGetRecommendation_ReturnsOkWithEmptyResponse() throws Exception {
-        UUID userId = UUID.randomUUID();
-        logger.info("Тестирование getRecommendation с помощью userId: {}", userId);
+        UUID userId = UUID.fromString("1f7dac2e-7186-400b-9bf1-64961ab1831a");
 
-        when(recommendationService.getRecommendation(userId)).thenReturn(Optional.empty());
+        when(recommendationService.getRecommendationsWithLogging(userId)).thenReturn(Collections.emptyList());
 
+        logger.info("Настройка теста с помощью userId: {}", userId);
 
         mockMvc.perform(get("/recommendation/user_id/{user_id}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("null"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(jsonPath("$").isEmpty());
 
-        logger.info("Завершенный тестGetRecommendation_ReturnsOk с пустым ответом");
+        logger.info("Запрос выполнен для userId: {}", userId);
+
+        verify(recommendationService, times(1)).getRecommendationsWithLogging(userId);
+        logger.info("Проверка, что метод getRecommendationsWithLogging был вызван для userId: {}", userId);
     }
+
 
 
     @Test
