@@ -36,11 +36,24 @@ public class Invest500RecommendationRuleSetImplTest {
     );
 
     @Test
-    public void checkTest() {
+    public void checkTestGood() {
         boolean bool = true;
 
         Mockito.when(conditionService.checkCondition(UUID.fromString(ID))).thenReturn(bool);
         Optional<Recommendation> extendResult = Optional.of(recommendation);
+
+        Optional<Recommendation> actualResult = invest500RecommendationRuleSet.check(UUID.fromString(ID));
+
+        Assertions.assertNotNull(actualResult);
+        Assertions.assertEquals(actualResult, extendResult);
+    }
+
+    @Test
+    public void checkTestFail() {
+        boolean bool = false;
+
+        Mockito.when(conditionService.checkCondition(UUID.fromString(ID))).thenReturn(bool);
+        Optional<Recommendation> extendResult = Optional.empty();
 
         Optional<Recommendation> actualResult = invest500RecommendationRuleSet.check(UUID.fromString(ID));
 
