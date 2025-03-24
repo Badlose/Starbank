@@ -23,7 +23,7 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void deleteDynamicRecommenadtion(Long recommendationId) {
-        return repository.deleteDynamicRecommenadtion(recommendationId);
+    public void deleteDynamicRecommendation(Long recommendationId) {
+        return repository.deleteDynamicRecommendation(recommendationId);
     }
 }

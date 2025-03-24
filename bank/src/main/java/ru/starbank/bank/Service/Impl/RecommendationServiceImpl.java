@@ -45,8 +45,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public void deleteDynamicRecommenadtion(Long recommendationId) {
-        ruleService.deleteDynamicRecommenadtion(recommendationId);
+    public void deleteDynamicRecommendation(Long recommendationId) {
+        ruleService.deleteDynamicRecommendation(recommendationId);
     }
 
 }

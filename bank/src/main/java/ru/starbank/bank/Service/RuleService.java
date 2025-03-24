@@ -9,5 +9,5 @@ public interface RuleService {
 
     List<DynamicRecommendation> getAllDynamicRecommendations();
 
-    void deleteDynamicRecommenadtion(Long recommendationId);
+    void deleteDynamicRecommendation(Long recommendationId);
 }
