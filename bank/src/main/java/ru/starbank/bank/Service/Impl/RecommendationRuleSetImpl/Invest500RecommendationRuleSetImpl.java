@@ -21,9 +21,9 @@ public class Invest500RecommendationRuleSetImpl implements RecommendationRuleSet
     public Invest500RecommendationRuleSetImpl(RecommendationsRepository recommendationsRepository,
                                               @Qualifier("DebitUsing") CheckConditionService checkRuleOne,
                                               @Qualifier("InvestNotUsing") CheckConditionService checkRuleTwo,
-                                              @Qualifier("SavingDepositMoreThan1_000") CheckConditionService checkRulThree) {
+                                              @Qualifier("SavingDepositMoreThan1_000") CheckConditionService checkRuleThree) {
         this.recommendationsRepository = recommendationsRepository;
-        this.conditionServices = List.of(checkRuleOne, checkRuleTwo, checkRulThree);
+        this.conditionServices = List.of(checkRuleOne, checkRuleTwo, checkRuleThree);
     }
 
     private static final String ID = "147f6a0f-3b91-413b-ab99-87f081d60d5a";
