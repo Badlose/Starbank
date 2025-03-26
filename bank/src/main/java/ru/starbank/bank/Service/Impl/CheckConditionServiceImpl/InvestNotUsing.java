@@ -28,6 +28,7 @@ public class InvestNotUsing implements CheckConditionService {
                 int.class,
                 userId
         );
+
         return result == 0;
     }
 }

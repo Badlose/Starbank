@@ -7,4 +7,5 @@ import ru.starbank.bank.Model.DynamicRecommendation;
 @Repository
 public interface RulesRepository extends JpaRepository<DynamicRecommendation, Long> {
 
+
 }

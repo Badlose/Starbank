@@ -1,5 +1,6 @@
 package ru.starbank.bank.Model;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ public class Recommendation {
     private UUID id;
     private String name;
     private String text;
+
 
     public Recommendation(UUID id, String name, String text) {
         this.id = id;

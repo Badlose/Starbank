@@ -5,4 +5,5 @@ import java.util.UUID;
 public interface CheckConditionService {
 
     boolean checkCondition(UUID userId);
+
 }

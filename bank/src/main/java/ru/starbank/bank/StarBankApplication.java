@@ -10,4 +10,5 @@ public class StarBankApplication {
 		SpringApplication.run(StarBankApplication.class, args);
 	}
 
+
 }

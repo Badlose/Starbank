@@ -21,6 +21,7 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
+
     @GetMapping("/userId/{userId}")
     public List<Recommendation> getRecommendation(
             @Parameter(description = "Идентификатор поля (UUID)",

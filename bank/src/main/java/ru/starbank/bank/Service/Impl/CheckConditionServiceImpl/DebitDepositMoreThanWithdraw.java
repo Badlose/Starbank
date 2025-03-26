@@ -28,6 +28,7 @@ public class DebitDepositMoreThanWithdraw implements CheckConditionService {
                 recommendationsRepository.DebitDeposit(userId),
                 Integer.class,
                 userId
+
         );
 
         Integer totalWithdraw = jdbcTemplate.queryForObject(

@@ -30,6 +30,7 @@ public class DebitDepositMoreOrEqual50_000
         Integer totalAmount = jdbcTemplate.queryForObject(
                 recommendationsRepository.DebitDeposit(userId),
                 Integer.class,
+
                 userId
         );
 

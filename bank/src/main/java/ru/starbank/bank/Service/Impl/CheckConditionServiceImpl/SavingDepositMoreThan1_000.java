@@ -31,6 +31,7 @@ public class SavingDepositMoreThan1_000 implements CheckConditionService {
                 userId
         );
 
+
         return (totalAmount != null) && (totalAmount > MIN_SAVING_AMOUNT);
     }
 }

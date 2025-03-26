@@ -26,4 +26,5 @@ public class RuleServiceImpl implements RuleService {
     public void deleteDynamicRecommendation(Long recommendationId) {
         return repository.deleteDynamicRecommendation(recommendationId);
     }
+
 }

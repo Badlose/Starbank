@@ -33,6 +33,7 @@ public class DebitWithdrawMore100_000
                 userId
         );
 
+
         return (totalAmount != null) && (totalAmount >= MIN_DEBIT_WITHDRAW);
     }
 }

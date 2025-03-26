@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface RecommendationRuleSet {
     Optional<Recommendation> check(UUID userId);
+
 }

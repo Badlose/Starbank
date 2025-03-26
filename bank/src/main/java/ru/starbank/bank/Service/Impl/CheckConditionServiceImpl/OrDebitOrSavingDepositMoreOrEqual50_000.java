@@ -24,5 +24,6 @@ public class OrDebitOrSavingDepositMoreOrEqual50_000 implements CheckConditionSe
     public boolean checkCondition(UUID userId) {
         return debitDepositMoreOrEqual50000.checkCondition(userId)
                 || savingDepositMoreOrEqual50000.checkCondition(userId);
+
     }
 }

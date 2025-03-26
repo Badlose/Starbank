@@ -47,6 +47,7 @@ public class SimpleLoanRecommendationRuleSetImpl implements RecommendationRuleSe
             UUID.fromString(ID),
             NAME,
             TEXT
+
     );
 
     @Override

@@ -38,6 +38,7 @@ public class Invest500RecommendationRuleSetImpl implements RecommendationRuleSet
     private static final Recommendation RECOMMENDATION = new Recommendation(
             UUID.fromString(ID),
             NAME,
+
             TEXT
     );
 

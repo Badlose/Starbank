@@ -26,6 +26,10 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public List<Recommendation> getRecommendation(UUID userId) {
+//получить все Динамические
+//        проверить на все Динамические
+//        проверить на все Статические
+//        вернуть результат
 
         return ruleSets.stream()
                 .map(r -> r.check(userId))
