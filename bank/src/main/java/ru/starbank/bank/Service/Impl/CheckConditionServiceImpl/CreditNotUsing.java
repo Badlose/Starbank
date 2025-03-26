@@ -29,5 +29,6 @@ public class CreditNotUsing implements CheckConditionService {
                 userId
         );
         return result == 0;
+
     }
 }

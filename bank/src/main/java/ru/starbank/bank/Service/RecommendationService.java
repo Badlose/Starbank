@@ -14,6 +14,7 @@ public interface RecommendationService {
 
     List<DynamicRecommendation> getAllDynamicRecommendations();
 
-    void deleteDynamicRecommenadtion(Long recommendationId);
+    void deleteDynamicRecommendation(Long recommendationId);
+
 }
 

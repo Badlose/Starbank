@@ -30,6 +30,7 @@ public class SavingDepositMoreOrEqual50_000 implements CheckConditionService {
                 recommendationsRepository.SavingDeposit(userId),
                 Integer.class,
                 userId
+
         );
 
         return (totalAmount != null) && (totalAmount >= MIN_SAVING_AMOUNT);

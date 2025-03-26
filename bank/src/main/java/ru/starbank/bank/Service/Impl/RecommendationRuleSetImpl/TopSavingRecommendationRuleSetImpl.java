@@ -46,6 +46,7 @@ public class TopSavingRecommendationRuleSetImpl implements RecommendationRuleSet
             UUID.fromString(ID),
             NAME,
             TEXT
+
     );
 
 

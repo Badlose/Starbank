@@ -21,6 +21,7 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
+
     @GetMapping("/userId/{userId}")
     public List<Recommendation> getRecommendation(
             @Parameter(description = "Идентификатор поля (UUID)",
@@ -43,7 +44,7 @@ public class RecommendationController {
 
     @DeleteMapping("/delete/{recommendationId}")
     public ResponseEntity<ResponseStatus> deleteDynamicRecommendation(@PathVariable Long recommendationId) { //возможно не тот тип возвращаемого значения
-        recommendationService.deleteDynamicRecommenadtion(recommendationId);
+        recommendationService.deleteDynamicRecommendation(recommendationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

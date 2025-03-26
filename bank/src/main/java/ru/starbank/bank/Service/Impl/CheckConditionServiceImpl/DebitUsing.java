@@ -27,6 +27,7 @@ public class DebitUsing implements CheckConditionService {
                 recommendationsRepository.DebitUsing(userId),
                 int.class,
                 userId);
+
         return result > 0;
     }
 
