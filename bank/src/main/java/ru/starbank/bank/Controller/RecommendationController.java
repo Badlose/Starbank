@@ -2,10 +2,10 @@ package ru.starbank.bank.Controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.starbank.bank.Model.DynamicRecommendation;
 import ru.starbank.bank.Model.Recommendation;
 import ru.starbank.bank.Service.RecommendationService;
 
@@ -30,4 +30,20 @@ public class RecommendationController {
         return recommendationService.getRecommendation(userId);
     }
 
+
+    @PostMapping("/post/{recommendation}")
+    public DynamicRecommendation postNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {
+        return recommendationService.createNewDynamicRecommendation(recommendation);
+    }
+
+    @GetMapping("/get")
+    public List<DynamicRecommendation> getAllDynamicRecommendations() {
+        return recommendationService.getAllDynamicRecommendations();
+    }
+
+    @DeleteMapping("/delete/{recommendationId}")
+    public ResponseEntity<ResponseStatus> deleteDynamicRecommendation(@PathVariable Long recommendationId) { //возможно не тот тип возвращаемого значения
+        recommendationService.deleteDynamicRecommenadtion(recommendationId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
