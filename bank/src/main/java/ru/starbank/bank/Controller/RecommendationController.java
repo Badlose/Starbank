@@ -2,12 +2,14 @@ package ru.starbank.bank.Controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.starbank.bank.Model.DynamicRecommendation;
 import ru.starbank.bank.Model.Recommendation;
 import ru.starbank.bank.Service.RecommendationService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -19,26 +21,29 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
-
-
-    @GetMapping("/user_id/{userId}")
-    public Optional<List<Recommendation>> getRecommendation(
-            @Parameter(description = "Идентификатор пользователя (UUID)",
-                    schema = @Schema(type = "string", format = "uuid",
+    @GetMapping("/userId/{userId}")
+    public List<Recommendation> getRecommendation(
+            @Parameter(description = "Идентификатор поля (UUID)",
+                    schema = @Schema(type = "string", format = "UUID",
                             example = "cd515076-5d8a-44be-930e-8d4fcb79f42d"))
             @PathVariable UUID userId) {
         return recommendationService.getRecommendation(userId);
     }
 
 
+    @PostMapping("/post/{recommendation}")
+    public DynamicRecommendation postNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {
+        return recommendationService.createNewDynamicRecommendation(recommendation);
+    }
 
+    @GetMapping("/get")
+    public List<DynamicRecommendation> getAllDynamicRecommendations() {
+        return recommendationService.getAllDynamicRecommendations();
+    }
 
-//    @GetMapping("/amount/{userId}")
-//    public Integer getAmountTest(
-//            @Parameter(description = "Идентификатор пользователя (UUID)",
-//                    schema = @Schema(type = "string", format = "uuid",
-//                            example = "a1b2c3d4-e5f6-4789-9abc-def012345678"))
-//            @PathVariable UUID userId) {
-//        return recommendationService.getAmount(userId);
-//    }
+    @DeleteMapping("/delete/{recommendationId}")
+    public ResponseEntity<ResponseStatus> deleteDynamicRecommendation(@PathVariable Long recommendationId) { //возможно не тот тип возвращаемого значения
+        recommendationService.deleteDynamicRecommenadtion(recommendationId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

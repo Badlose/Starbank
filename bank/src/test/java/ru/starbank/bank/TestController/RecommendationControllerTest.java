@@ -1,4 +1,4 @@
-package ru.starbank.bank;
+package ru.starbank.bank.TestController;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,14 +15,14 @@ import ru.starbank.bank.Controller.RecommendationController;
 import ru.starbank.bank.Model.Recommendation;
 import ru.starbank.bank.Service.RecommendationService;
 
-import java.util.*;
-
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,37 +50,36 @@ public class RecommendationControllerTest {
         recommendation.setId(UUID.randomUUID());
         recommendation.setName("Пример рекомендации");
         recommendation.setText("Это текст примера рекомендации.");
+    }
+
+    @Test
+    public void shouldReturnsOkWithEmptyResponse() throws Exception {
+        UUID userId = UUID.fromString("1f7dac2e-7186-400b-9bf1-64961ab1831a");
+
+        when(recommendationService.getRecommendation(userId)).thenReturn(Collections.emptyList());
 
         logger.info("Настройка теста с помощью userId: {}", userId);
-    }
 
-    @Test
-    public void testGetRecommendation_ReturnsOkWithEmptyResponse() throws Exception {
-        UUID userId = UUID.randomUUID();
-        logger.info("Тестирование getRecommendation с помощью userId: {}", userId);
-
-        when(recommendationService.getRecommendation(userId)).thenReturn(Optional.empty());
-
-
-        mockMvc.perform(get("/recommendation/user_id/{user_id}", userId)
+        mockMvc.perform(get("/recommendation/userId/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("null"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(jsonPath("$").isEmpty());
 
-        logger.info("Завершенный тестGetRecommendation_ReturnsOk с пустым ответом");
+        logger.info("Запрос выполнен для userId: {}", userId);
+
+        verify(recommendationService, times(1)).getRecommendation(userId);
+        logger.info("Проверка, что метод getRecommendationsWithLogging был вызван для userId: {}", userId);
     }
 
-
     @Test
-    public void testGetRecommendation_ReturnsEmptyList() throws Exception {
+    public void shouldReturnsEmptyList() throws Exception {
         UUID userId = UUID.fromString("a1b2c3d4-e5f6-4789-9abc-def012345678");
 
         logger.info("Тестирование getRecommendation с помощью userId : {}", userId);
 
-        when(recommendationService.getRecommendation(userId)).thenReturn(Optional.of(Collections.emptyList()));
+        when(recommendationService.getRecommendation(userId)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/recommendation/user_id/{user_id}", userId)
+        mockMvc.perform(get("/recommendation/userId/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
@@ -88,17 +87,17 @@ public class RecommendationControllerTest {
     }
 
     @Test
-    public void testGetRecommendation_ReturnsRecommendations() throws Exception {
+    public void shouldReturnsRecommendations() throws Exception {
         UUID userId = UUID.randomUUID();
         logger.info("Создание фиксированного UUID  userId: {}", userId);
 
         List<Recommendation> recommendationsList = Arrays.asList(recommendation);
         logger.info("Создан список рекомендаций для теста: {}", recommendationsList);
 
-        when(recommendationService.getRecommendation(userId)).thenReturn(Optional.of(recommendationsList));
+        when(recommendationService.getRecommendation(userId)).thenReturn(recommendationsList);
         logger.info("Настроено поведение мок-сервиса для userId: {}", userId);
 
-        mockMvc.perform(get("/recommendation/user_id/{user_id}", userId)
+        mockMvc.perform(get("/recommendation/userId/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -106,23 +105,6 @@ public class RecommendationControllerTest {
                 .andExpect(jsonPath("$[0].text").value("Это текст примера рекомендации."));
 
         logger.info("Тест успешно завершен для userId: {}", userId);
-    }
-
-
-    @Test
-    public void testGetAmount() throws Exception {
-        UUID userId = UUID.fromString("a1b2c3d4-e5f6-4789-9abc-def012345678");
-        Integer expectedAmount = 100;
-        logger.info("Тестирование getAmount с помощью userId: {}", userId);
-
-        when(recommendationService.getAmount(userId)).thenReturn(expectedAmount);
-
-        mockMvc.perform(get("/recommendation/amount/{userId}", userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(expectedAmount));
-
-        logger.info("Завершенный testGetAmount");
     }
 
 }
