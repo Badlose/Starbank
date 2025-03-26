@@ -12,6 +12,7 @@ public interface RecommendationService {
 
     DynamicRecommendation createNewDynamicRecommendation(DynamicRecommendation recommendation);
 
+
     List<DynamicRecommendation> getAllDynamicRecommendations();
 
     void deleteDynamicRecommendation(Long recommendationId);

@@ -11,6 +11,7 @@ public class Recommendation {
     private String text;
 
 
+
     public Recommendation(UUID id, String name, String text) {
         this.id = id;
         this.name = name;

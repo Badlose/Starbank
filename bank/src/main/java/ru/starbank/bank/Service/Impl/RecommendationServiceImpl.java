@@ -24,6 +24,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         this.ruleSets = ruleSets;
     }
 
+
     @Override
     public List<Recommendation> getRecommendation(UUID userId) {
 //получить все Динамические

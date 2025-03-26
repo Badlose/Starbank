@@ -47,4 +47,5 @@ public class RecommendationController {
         recommendationService.deleteDynamicRecommendation(recommendationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 }
