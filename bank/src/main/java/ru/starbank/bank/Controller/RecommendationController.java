@@ -43,7 +43,7 @@ public class RecommendationController {
 
     @DeleteMapping("/delete/{recommendationId}")
     public ResponseEntity<ResponseStatus> deleteDynamicRecommendation(@PathVariable Long recommendationId) { //возможно не тот тип возвращаемого значения
-        recommendationService.deleteDynamicRecommenadtion(recommendationId);
+        recommendationService.deleteDynamicRecommendation(recommendationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
