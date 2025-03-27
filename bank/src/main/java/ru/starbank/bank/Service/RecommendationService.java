@@ -16,5 +16,6 @@ public interface RecommendationService {
 
     void deleteDynamicRecommendation(Long recommendationId);
 
+
 }
 
