@@ -1,5 +1,4 @@
 package ru.starbank.bank.Configuration;
-
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,6 @@ import javax.sql.DataSource;
 @Configuration
 public class RecommendationsDataSourceConfiguration {
 
-
     @Bean(name = "recommendationsDataSource")
     public DataSource recommendationsDataSource(
             @Value("${application.recommendations-db.url}") String recommendationsUrl) {
@@ -24,6 +22,7 @@ public class RecommendationsDataSourceConfiguration {
         dataSource.setReadOnly(true);
         return dataSource;
     }
+
     @Bean(name = "recommendationsJdbcTemplate")
     public JdbcTemplate recommendationsJdbcTemplate(
             @Qualifier("recommendationsDataSource") DataSource dataSource
