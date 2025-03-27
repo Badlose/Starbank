@@ -1,8 +1,7 @@
 package ru.starbank.bank.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +12,7 @@ public class DynamicRecommendation {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     private String name;
@@ -21,10 +21,10 @@ public class DynamicRecommendation {
 
     private String text;
 
+    @OneToMany(mappedBy = "dynamicRecommendation")
     private List<Rule> ruleList;
 
-    public DynamicRecommendation(Long id, String name, UUID product_id, String text, List<Rule> ruleList) {
-        this.id = id;
+    public DynamicRecommendation(String name, UUID product_id, String text, List<Rule> ruleList) {
         this.name = name;
         this.product_id = product_id;
         this.text = text;

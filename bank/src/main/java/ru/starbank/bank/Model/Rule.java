@@ -1,8 +1,7 @@
 package ru.starbank.bank.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -11,6 +10,7 @@ public class Rule {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     private String query;
@@ -19,8 +19,20 @@ public class Rule {
 
     private boolean negate;
 
-    public Rule(Long id, String query, String arguments, boolean negate) {
-        this.id = id;
+    public DynamicRecommendation getDynamicRecommendation() {
+        return dynamicRecommendation;
+    }
+
+    public void setDynamicRecommendation(DynamicRecommendation dynamicRecommendation) {
+        this.dynamicRecommendation = dynamicRecommendation;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "Recommendation_id")
+    @JsonIgnore
+    private DynamicRecommendation dynamicRecommendation;
+
+    public Rule(String query, String arguments, boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;

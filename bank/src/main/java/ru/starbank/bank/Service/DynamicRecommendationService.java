@@ -1,5 +1,6 @@
 package ru.starbank.bank.Service;
 
+import org.springframework.http.HttpStatus;
 import ru.starbank.bank.Model.DynamicRecommendation;
 
 import java.util.List;
@@ -10,5 +11,5 @@ public interface DynamicRecommendationService {
 
     List<DynamicRecommendation> getAllDynamicRecommendations();
 
-    void deleteDynamicRecommendation(Long recommendationId);
+    HttpStatus deleteDynamicRecommendation(Long recommendationId);
 }
