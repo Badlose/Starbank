@@ -1,16 +1,14 @@
 package ru.starbank.bank.DTO;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import org.springframework.stereotype.Component;
 import ru.starbank.bank.Model.Rule;
 
 import java.util.List;
 import java.util.UUID;
 
+@Component
 public class DynamicRecommendationDTO {
 
-    @Id
-    @GeneratedValue
     private Long id;
 
     private String product_name;

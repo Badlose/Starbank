@@ -19,6 +19,11 @@ public class Rule {
 
     private boolean negate;
 
+    @ManyToOne
+    @JoinColumn(name = "Recommendation_id")
+    @JsonIgnore
+    private DynamicRecommendation dynamicRecommendation;
+
     public DynamicRecommendation getDynamicRecommendation() {
         return dynamicRecommendation;
     }
@@ -27,15 +32,18 @@ public class Rule {
         this.dynamicRecommendation = dynamicRecommendation;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "Recommendation_id")
-    @JsonIgnore
-    private DynamicRecommendation dynamicRecommendation;
-
     public Rule(String query, String arguments, boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
+    }
+
+    public Rule(Long id, String query, String arguments, boolean negate, DynamicRecommendation dynamicRecommendation) {
+        this.id = id;
+        this.query = query;
+        this.arguments = arguments;
+        this.negate = negate;
+        this.dynamicRecommendation = dynamicRecommendation;
     }
 
     public Rule() {
