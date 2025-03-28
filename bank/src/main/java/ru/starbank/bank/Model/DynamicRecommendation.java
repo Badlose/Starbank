@@ -1,7 +1,9 @@
 package ru.starbank.bank.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +14,6 @@ public class DynamicRecommendation {
 
     @Id
     @GeneratedValue
-    @JsonIgnore
     private Long id;
 
     private String name;
