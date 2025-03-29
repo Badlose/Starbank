@@ -66,8 +66,8 @@ public class StaticRecommendationDBInitializer {
     ));
     private static final List<Rule> TOPSAVINGRULES = new ArrayList<>(List.of(
             new Rule("USER_OF", "[DEBIT]", true), // +
-            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, >=, 50000]", false), // +/-
-            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, >=, 50000]", false), // +/-
+            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, >=, 50000]", true), // +/-
+            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, >=, 50000]", true), // +/-
             new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", "[DEBIT, >]", true) // +
     ));
     private static final List<Rule> SIMPLELOANRULES = new ArrayList<>(List.of(

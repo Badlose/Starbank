@@ -3,6 +3,7 @@ package ru.starbank.bank.repository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.starbank.bank.model.Rule;
 
 import java.util.UUID;
 
@@ -13,6 +14,14 @@ public class TransactionsRepository {
 
     public TransactionsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public int checkUserOfRule(UUID userId, Rule rule) {
+        Integer result = jdbcTemplate.queryForObject(
+                "SELECT AMOUNT FROM transactions t WHERE t.USER_ID = ? LIMIT 1",
+                Integer.class,
+                userId);
+        return result != null ? result : 0;
     }
 
     public String DebitUsing(UUID userId) {
@@ -83,18 +92,4 @@ public class TransactionsRepository {
                 """;
     }
 
-    public int getRandomTransactionAmount(UUID user) {
-        Integer result = jdbcTemplate.queryForObject(
-                "SELECT AMOUNT FROM transactions t WHERE t.USER_ID = ? LIMIT 1",
-                Integer.class,
-                user);
-        return result != null ? result : 0;
-    }
-
-    public int getRandomTransactionAmountV1(UUID user) {
-        Integer result = jdbcTemplate.queryForObject(
-                "SELECT AMOUNT FROM transactions ORDER BY USER_ID DESC LIMIT 1",
-                Integer.class);
-        return result != null ? result : 0;
-    }
 }
