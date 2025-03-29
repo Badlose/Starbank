@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ru.starbank.bank.dto.DynamicRecommendationDTO;
+import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
@@ -49,28 +51,43 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         // тут вызов метода проверки и далее сборка ДТО
 
-        List<DynamicRecommendation> recommendations = ruleSets.stream()
-                .map(r -> r.check(userId))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+//        List<DynamicRecommendation> recommendations = ruleSets.stream()
+//                .map(r -> r.check(userId))
+//                .filter(Optional::isPresent)
+//                .map(Optional::get)
+//                .toList();
 
         return new UserRecommendationsDTO(); //дописать сборку ДТО
     }
 
     @Override
-    public DynamicRecommendation createNewDynamicRecommendation(DynamicRecommendation recommendation) {
+    public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
         for (Rule rule : recommendation.getRuleList()) {
             rule.setDynamicRecommendation(recommendation);
             rulesRepository.save(rule);
         }
-        return recommendation;
+        return new DynamicRecommendationDTO(
+                recommendation.getId(),
+                recommendation.getName(),
+                recommendation.getProduct_id(),
+                recommendation.getText(),
+                recommendation.getRuleList()
+        );
     }
 
     @Override
-    public List<DynamicRecommendation> getAllDynamicRecommendations() {
-        return recommendationsRepository.findAll();
+    public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
+        List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
+        List<DynamicRecommendationDTO> data = recommendations.stream()
+                .map(recommendation -> new DynamicRecommendationDTO(
+                        recommendation.getId(),
+                        recommendation.getName(),
+                        recommendation.getProduct_id(),
+                        recommendation.getText(),
+                        recommendation.getRuleList()))
+                        .toList();
+        return new ListDynamicRecommendationDTO(data);
     }
 
     @Override
