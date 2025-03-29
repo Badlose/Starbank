@@ -1,12 +1,10 @@
-package ru.starbank.bank.DTO;
+package ru.starbank.bank.dto;
 
-import org.springframework.stereotype.Component;
-import ru.starbank.bank.Model.Rule;
+import ru.starbank.bank.model.Rule;
 
 import java.util.List;
 import java.util.UUID;
 
-@Component
 public class DynamicRecommendationDTO {
 
     private Long id;

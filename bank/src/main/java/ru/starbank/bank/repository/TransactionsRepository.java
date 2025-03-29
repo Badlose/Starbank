@@ -1,4 +1,4 @@
-package ru.starbank.bank.Repository;
+package ru.starbank.bank.repository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,4 +1,4 @@
-package ru.starbank.bank.Model;
+package ru.starbank.bank.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

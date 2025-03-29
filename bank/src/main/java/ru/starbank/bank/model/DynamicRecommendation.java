@@ -1,4 +1,4 @@
-package ru.starbank.bank.Model;
+package ru.starbank.bank.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

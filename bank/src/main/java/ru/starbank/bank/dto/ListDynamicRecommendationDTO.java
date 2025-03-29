@@ -1,11 +1,8 @@
-package ru.starbank.bank.DTO;
+package ru.starbank.bank.dto;
 
-
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class ListDynamicRecommendationDTO {
 
     private List<DynamicRecommendationDTO> data;

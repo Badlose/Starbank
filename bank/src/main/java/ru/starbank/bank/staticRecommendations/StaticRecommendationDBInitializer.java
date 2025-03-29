@@ -1,12 +1,12 @@
-package ru.starbank.bank.StaticRecommendations;
+package ru.starbank.bank.staticRecommendations;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.starbank.bank.Model.DynamicRecommendation;
-import ru.starbank.bank.Model.Rule;
-import ru.starbank.bank.Repository.RecommendationsRepository;
-import ru.starbank.bank.Repository.RulesRepository;
+import ru.starbank.bank.model.DynamicRecommendation;
+import ru.starbank.bank.model.Rule;
+import ru.starbank.bank.repository.RecommendationsRepository;
+import ru.starbank.bank.repository.RulesRepository;
 
 import java.util.ArrayList;
 import java.util.List;

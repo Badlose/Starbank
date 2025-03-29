@@ -1,14 +1,15 @@
-package ru.starbank.bank.Service;
+package ru.starbank.bank.service;
 
 import org.springframework.http.HttpStatusCode;
-import ru.starbank.bank.Model.DynamicRecommendation;
+import ru.starbank.bank.dto.UserRecommendationsDTO;
+import ru.starbank.bank.model.DynamicRecommendation;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface RecommendationService {
 
-    List<DynamicRecommendation> getRecommendation(UUID userId);
+    UserRecommendationsDTO getRecommendation(UUID userId);
 
     DynamicRecommendation createNewDynamicRecommendation(DynamicRecommendation recommendation);
 

@@ -1,11 +1,12 @@
-package ru.starbank.bank.Controller;
+package ru.starbank.bank.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.starbank.bank.Model.DynamicRecommendation;
-import ru.starbank.bank.Service.RecommendationService;
+import ru.starbank.bank.dto.UserRecommendationsDTO;
+import ru.starbank.bank.model.DynamicRecommendation;
+import ru.starbank.bank.service.RecommendationService;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class RecommendationController {
 
 
     @GetMapping("/userId/{userId}")
-    public List<DynamicRecommendation> getRecommendation(
+    public UserRecommendationsDTO getRecommendation(
             @Parameter(description = "Идентификатор поля (UUID)",
                     schema = @Schema(type = "string", format = "UUID",
                             example = "cd515076-5d8a-44be-930e-8d4fcb79f42d"))
