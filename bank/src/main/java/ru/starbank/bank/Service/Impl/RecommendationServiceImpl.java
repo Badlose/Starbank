@@ -1,5 +1,7 @@
 package ru.starbank.bank.Service.Impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.Model.DynamicRecommendation;
@@ -8,6 +10,7 @@ import ru.starbank.bank.Repository.RecommendationsRepository;
 import ru.starbank.bank.Repository.RulesRepository;
 import ru.starbank.bank.Service.RecommendationService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,12 +29,15 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
+    @Cacheable(value = "recommendationCache", key = "#userId")
     public List<DynamicRecommendation> getRecommendation(UUID userId) {
 
-        return List.of(null);
+        return Collections.emptyList();
     }
 
+
     @Override
+    @CacheEvict(value = "createNewDynamicRecommendation", allEntries = true) // Очистка кэша при создании новой рекомендации
     public DynamicRecommendation createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
         for (Rule rule : recommendation.getRuleList()) {
@@ -47,6 +53,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
+    @CacheEvict(value = "deleteDynamicRecommendation", allEntries = true) // Очистка кэша при удалении рекомендации
     public HttpStatus deleteDynamicRecommendation(Long id) {
         DynamicRecommendation recommendation = recommendationsRepository.findById(id).orElse(null);
 
