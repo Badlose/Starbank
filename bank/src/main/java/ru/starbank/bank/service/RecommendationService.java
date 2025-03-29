@@ -1,19 +1,20 @@
 package ru.starbank.bank.service;
 
 import org.springframework.http.HttpStatusCode;
+import ru.starbank.bank.dto.DynamicRecommendationDTO;
+import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface RecommendationService {
 
     UserRecommendationsDTO getRecommendation(UUID userId);
 
-    DynamicRecommendation createNewDynamicRecommendation(DynamicRecommendation recommendation);
+    DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation);
 
-    List<DynamicRecommendation> getAllDynamicRecommendations();
+    ListDynamicRecommendationDTO getAllDynamicRecommendations();
 
     HttpStatusCode deleteDynamicRecommendation(Long recommendationId);
 

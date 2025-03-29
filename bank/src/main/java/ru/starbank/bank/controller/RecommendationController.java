@@ -4,11 +4,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.starbank.bank.dto.DynamicRecommendationDTO;
+import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.service.RecommendationService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,12 +33,12 @@ public class RecommendationController {
 
 
     @PostMapping("/post/{recommendation}")
-    public DynamicRecommendation postNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {
+    public DynamicRecommendationDTO postNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {
         return recommendationService.createNewDynamicRecommendation(recommendation);
     }
 
     @GetMapping("/getRecommendations")
-    public List<DynamicRecommendation> getAllDynamicRecommendations() {
+    public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
         return recommendationService.getAllDynamicRecommendations();
     }
 
