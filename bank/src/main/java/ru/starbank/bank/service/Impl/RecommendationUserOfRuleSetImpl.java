@@ -1,9 +1,9 @@
 package ru.starbank.bank.service.Impl;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import ru.starbank.bank.model.DynamicRecommendation;
+import ru.starbank.bank.model.Rule;
+import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.RecommendationRuleSet;
 
 import java.util.UUID;
@@ -12,10 +12,24 @@ import java.util.UUID;
 @Component
 public class RecommendationUserOfRuleSetImpl implements RecommendationRuleSet {
 
-    @Override
-    @Cacheable(value = "RecommendationUserOfRuleSetCache", key = "#userId")
-    public DynamicRecommendation check(UUID userId) {
+    private final TransactionsRepository repository;
 
-        return null;
+    public RecommendationUserOfRuleSetImpl(TransactionsRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public boolean check(UUID userId, Rule rule) {
+
+        if (rule.getQuery().equals("USER_OF")) {
+            int result = repository.checkUserOfRule(userId, rule);
+
+            if (rule.isNegate()) {
+                return result > 0;
+            }
+            return result == 0;
+        }
+
+        return true;
     }
 }

@@ -1,9 +1,6 @@
 package ru.starbank.bank.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +17,7 @@ public class DynamicRecommendation {
 
     private UUID product_id;
 
+    @Column(columnDefinition = "TEXT")
     private String text;
 
     @OneToMany(mappedBy = "dynamicRecommendation")

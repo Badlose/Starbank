@@ -61,29 +61,46 @@ public class StaticRecommendationDBInitializer {
 //    Широкий выбор кредитных продуктов. Мы предлагаем кредиты на различные цели: покупку недвижимости, автомобиля, образование, лечение и многое другое.
 //    Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!
 
+//    private static final List<Rule> INVEST500RULES = new ArrayList<>(List.of(
+//            new Rule("USER_OF", List.of("[DEBIT]"), true),
+//            new Rule("USER_OF", "[INVEST]", false),
+//            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, DEPOSIT, >, 1000]", true)
+//    ));
+//    private static final List<Rule> TOPSAVINGRULES = new ArrayList<>(List.of(
+//            new Rule("USER_OF", "[DEBIT]", true), // +
+//            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, >=, 50000]", true), // +/-
+//            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, >=, 50000]", true), // +/-
+//            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", "[DEBIT, >]", true) // +
+//    ));
+//    private static final List<Rule> SIMPLELOANRULES = new ArrayList<>(List.of(
+//            new Rule("USER_OF", "[CREDIT]", false), // +
+//            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", "[DEBIT, >]", true), // +
+//            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, WITHDRAW, >, 100000]", true) // +
+//    ));
+//
+//    private static final DynamicRecommendation INVEST500DYNAMICRECOMMENDATION = new DynamicRecommendation(
+//            INVEST500NAME,
+//            UUID.fromString(INVEST500ID),
+//            INVEST500TEXT,
+//            INVEST500RULES
+//    );
+
     private static final List<Rule> INVEST500RULES = new ArrayList<>(List.of(
-            new Rule("USER_OF", "[DEBIT]", true),
-            new Rule("USER_OF", "[INVEST]", false),
-            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, DEPOSIT, >, 1000]", true)
+            new Rule("USER_OF", List.of("DEBIT"), true),
+            new Rule("USER_OF", List.of("INVEST"), false),
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">", "1000"), true)
     ));
     private static final List<Rule> TOPSAVINGRULES = new ArrayList<>(List.of(
-            new Rule("USER_OF", "[DEBIT]", true), // +
-            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, >=, 50000]", false), // +/-
-            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, >=, 50000]", false), // +/-
-            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", "[DEBIT, >]", true) // +
+            new Rule("USER_OF", List.of("DEBIT"), true), // +
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", ">=", "50000"), false), // +/-
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", ">=", "50000"), false), // +/-
+            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", List.of("DEBIT", ">"), true) // +
     ));
     private static final List<Rule> SIMPLELOANRULES = new ArrayList<>(List.of(
-            new Rule("USER_OF", "[CREDIT]", false), // +
-            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", "[DEBIT, >]", true), // +
-            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, WITHDRAW, >, 100000]", true) // +
+            new Rule("USER_OF", List.of("CREDIT"), false), // +
+            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", List.of("DEBIT", ">"), true), // +
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", "WITHDRAW", ">", "100000"), true) // +
     ));
-
-    private static final DynamicRecommendation INVEST500DYNAMICRECOMMENDATION = new DynamicRecommendation(
-            INVEST500NAME,
-            UUID.fromString(INVEST500ID),
-            INVEST500TEXT,
-            INVEST500RULES
-    );
 
     public StaticRecommendationDBInitializer(RecommendationsRepository recommendationsRepository, RulesRepository rulesRepository) {
         this.recommendationsRepository = recommendationsRepository;
