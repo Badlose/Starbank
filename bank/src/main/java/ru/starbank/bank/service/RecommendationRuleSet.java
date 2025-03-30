@@ -1,9 +1,10 @@
 package ru.starbank.bank.service;
 
 import ru.starbank.bank.model.DynamicRecommendation;
+import ru.starbank.bank.model.Rule;
 
 import java.util.UUID;
 
 public interface RecommendationRuleSet {
-    DynamicRecommendation check(UUID userId);
+    boolean check(UUID userId, Rule rule);
 }

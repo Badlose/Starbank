@@ -11,9 +11,11 @@ import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
+import ru.starbank.bank.service.RecommendationCheckerService;
 import ru.starbank.bank.service.RecommendationRuleSet;
 import ru.starbank.bank.service.RecommendationService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,40 +26,38 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     private final RulesRepository rulesRepository;
 
-    @Autowired
-    private final List<RecommendationRuleSet> ruleSets;
+    private final RecommendationCheckerService checkerService;
 
-
-    public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository,
-                                     RulesRepository rulesRepository,
-                                     @Qualifier("USER_OF") RecommendationRuleSet ruleSetUserOf,
-                                     @Qualifier("ACTIVE_USER_OF") RecommendationRuleSet ruleSetActiveUserOf,
-                                     @Qualifier("TRANSACTION_SUM_COMPARE")
-                                     RecommendationRuleSet ruleSetTransactionSumCompare,
-                                     @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
-                                     RecommendationRuleSet ruleSetTransactionSumCompareDepositWithdraw) {
+    public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository, RulesRepository rulesRepository, RecommendationCheckerService checkerService) {
         this.recommendationsRepository = recommendationsRepository;
         this.rulesRepository = rulesRepository;
-        this.ruleSets = List.of(
-                ruleSetUserOf,
-                ruleSetActiveUserOf,
-                ruleSetTransactionSumCompare,
-                ruleSetTransactionSumCompareDepositWithdraw
-        );
+        this.checkerService = checkerService;
     }
 
     @Override
     public UserRecommendationsDTO getRecommendation(UUID userId) {
 
-        // тут вызов метода проверки и далее сборка ДТО
+        List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
 
-//        List<DynamicRecommendation> recommendations = ruleSets.stream()
-//                .map(r -> r.check(userId))
-//                .filter(Optional::isPresent)
-//                .map(Optional::get)
-//                .toList();
+        List<DynamicRecommendationDTO> recommendationListForDto = new ArrayList<>();
 
-        return new UserRecommendationsDTO(); //дописать сборку ДТО
+        for (DynamicRecommendation recommendation : recommendations) {
+
+            boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
+
+            if (resultCheck) {
+                DynamicRecommendationDTO dto = new DynamicRecommendationDTO(
+                        recommendation.getId(),
+                        recommendation.getName(),
+                        recommendation.getProduct_id(),
+                        recommendation.getText(),
+                        recommendation.getRuleList());
+
+                recommendationListForDto.add(dto);
+            }
+        }
+
+        return new UserRecommendationsDTO(userId, recommendationListForDto);
     }
 
     @Override

@@ -9,6 +9,11 @@ public class UserRecommendationsDTO {
 
     private List<DynamicRecommendationDTO> recommendations;
 
+    public UserRecommendationsDTO(UUID userId, List<DynamicRecommendationDTO> recommendations) {
+        this.userId = userId;
+        this.recommendations = recommendations;
+    }
+
     public UUID getUserId() {
         return userId;
     }
