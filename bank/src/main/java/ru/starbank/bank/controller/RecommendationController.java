@@ -2,6 +2,7 @@ package ru.starbank.bank.controller;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.starbank.bank.dto.DynamicRecommendationDTO;

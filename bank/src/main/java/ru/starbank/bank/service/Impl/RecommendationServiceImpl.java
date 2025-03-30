@@ -78,6 +78,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     @CachePut(value = "recommendationCache", key = "#recommendation.id")
+    @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
         for (Rule rule : recommendation.getRuleList()) {
@@ -106,6 +107,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     @Cacheable(value = "recommendationCache", key = "'allDynamicRecommendations'")
+    @Transactional
     public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
         List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
 
@@ -135,6 +137,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     @CacheEvict(value = "recommendationCache", key = "#id")
+    @Transactional
     public HttpStatus deleteDynamicRecommendation(Long id) {
         DynamicRecommendation recommendation = recommendationsRepository.findById(id).orElse(null);
 

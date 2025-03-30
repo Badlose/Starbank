@@ -23,7 +23,6 @@ public class DynamicRecommendation {
     private String text;
 
     @OneToMany(mappedBy = "dynamicRecommendation")
-    @Fetch(FetchMode.JOIN)
     private List<Rule> ruleList;
 
     public DynamicRecommendation(String name, UUID product_id, String text, List<Rule> ruleList) {

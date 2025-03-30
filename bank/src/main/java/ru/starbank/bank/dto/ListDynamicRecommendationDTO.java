@@ -11,6 +11,14 @@ public class ListDynamicRecommendationDTO {
         this.data = data;
     }
 
+    public List<DynamicRecommendationDTO> getData() {
+        return data;
+    }
+
+    public void setData(List<DynamicRecommendationDTO> data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return "{" +
