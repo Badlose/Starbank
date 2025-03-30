@@ -7,8 +7,10 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.starbank.bank.dto.DynamicRecommendationDTO;
 import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
+import ru.starbank.bank.dto.RuleDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
@@ -21,6 +23,7 @@ import ru.starbank.bank.service.RecommendationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -50,14 +53,23 @@ public class RecommendationServiceImpl implements RecommendationService {
             boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
 
             if (resultCheck) {
-                DynamicRecommendationDTO dto = new DynamicRecommendationDTO(
+                List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
+                        .map(rule -> new RuleDTO(
+                                rule.getQuery(),
+                                rule.getArguments(),
+                                rule.isNegate()
+                        ))
+                        .toList();
+
+                DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
                         recommendation.getId(),
                         recommendation.getName(),
                         recommendation.getProduct_id(),
                         recommendation.getText(),
-                        recommendation.getRuleList());
+                        ruleDtoList
+                );
 
-                recommendationListForDto.add(dto);
+                recommendationListForDto.add(recommendationDTO);
             }
         }
 
@@ -72,28 +84,53 @@ public class RecommendationServiceImpl implements RecommendationService {
             rule.setDynamicRecommendation(recommendation);
             rulesRepository.save(rule);
         }
-        return new DynamicRecommendationDTO(
-                recommendation.getId(),
-                recommendation.getName(),
-                recommendation.getProduct_id(),
-                recommendation.getText(),
-                recommendation.getRuleList()
-        );
+
+            List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
+                    .map(rule -> new RuleDTO(
+                            rule.getQuery(),
+                            rule.getArguments(),
+                            rule.isNegate()
+                    ))
+                    .toList();
+
+            DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
+                    recommendation.getId(),
+                    recommendation.getName(),
+                    recommendation.getProduct_id(),
+                    recommendation.getText(),
+                    ruleDtoList
+            );
+
+        return recommendationDTO;
     }
 
     @Override
     @Cacheable(value = "recommendationCache", key = "'allDynamicRecommendations'")
     public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
         List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
-        List<DynamicRecommendationDTO> data = recommendations.stream()
-                .map(recommendation -> new DynamicRecommendationDTO(
-                        recommendation.getId(),
-                        recommendation.getName(),
-                        recommendation.getProduct_id(),
-                        recommendation.getText(),
-                        recommendation.getRuleList()))
-                        .toList();
-        return new ListDynamicRecommendationDTO(data);
+
+        List<DynamicRecommendationDTO> data = new ArrayList<>();
+
+        for (DynamicRecommendation recommendation : recommendations) {
+            List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
+                    .map(rule -> new RuleDTO(
+                            rule.getQuery(),
+                            rule.getArguments(),
+                            rule.isNegate()
+                    ))
+                    .toList();
+            DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
+                    recommendation.getId(),
+                    recommendation.getName(),
+                    recommendation.getProduct_id(),
+                    recommendation.getText(),
+                    ruleDtoList
+            );
+            data.add(recommendationDTO);
+        }
+
+        ListDynamicRecommendationDTO dynamicRecommendationDTOList = new ListDynamicRecommendationDTO(data);
+        return dynamicRecommendationDTOList;
     }
 
     @Override

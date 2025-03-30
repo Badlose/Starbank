@@ -15,9 +15,9 @@ public class DynamicRecommendationDTO {
 
     private String product_text;
 
-    private List<Rule> rule;
+    private List<RuleDTO> rule;
 
-    public DynamicRecommendationDTO(Long id, String product_name, UUID product_id, String product_text, List<Rule> rule) {
+    public DynamicRecommendationDTO(Long id, String product_name, UUID product_id, String product_text, List<RuleDTO> rule) {
         this.id = id;
         this.product_name = product_name;
         this.product_id = product_id;
