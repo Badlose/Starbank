@@ -2,14 +2,13 @@ package ru.starbank.bank.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.util.Objects;
 
 @Entity
 public class Rule {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Уточните стратегию генерации
     @JsonIgnore
     private Long id;
 
@@ -20,33 +19,18 @@ public class Rule {
     private boolean negate;
 
     @ManyToOne
-    @JoinColumn(name = "Recommendation_id")
+    @JoinColumn(name = "recommendation_id")
     @JsonIgnore
     private DynamicRecommendation dynamicRecommendation;
 
-    public DynamicRecommendation getDynamicRecommendation() {
-        return dynamicRecommendation;
-    }
+    // Конструктор без параметров
+    public Rule() {}
 
-    public void setDynamicRecommendation(DynamicRecommendation dynamicRecommendation) {
-        this.dynamicRecommendation = dynamicRecommendation;
-    }
-
+    // Конструктор с параметрами
     public Rule(String query, String arguments, boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
-    }
-
-    public Rule(Long id, String query, String arguments, boolean negate, DynamicRecommendation dynamicRecommendation) {
-        this.id = id;
-        this.query = query;
-        this.arguments = arguments;
-        this.negate = negate;
-        this.dynamicRecommendation = dynamicRecommendation;
-    }
-
-    public Rule() {
     }
 
     public Long getId() {
@@ -81,16 +65,27 @@ public class Rule {
         this.negate = negate;
     }
 
+    public DynamicRecommendation getDynamicRecommendation() {
+        return dynamicRecommendation;
+    }
+
+    public void setDynamicRecommendation(DynamicRecommendation dynamicRecommendation) {
+        this.dynamicRecommendation = dynamicRecommendation;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (!(o instanceof Rule)) return false;
         Rule rule = (Rule) o;
-        return negate == rule.negate && Objects.equals(id, rule.id) && Objects.equals(query, rule.query) && Objects.equals(arguments, rule.arguments);
+        return negate == rule.negate &&
+                Objects.equals(query, rule.query) &&
+                Objects.equals(arguments, rule.arguments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, query, arguments, negate);
+        return Objects.hash(query, arguments, negate); // Не учитываем id
     }
 
     @Override
