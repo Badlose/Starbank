@@ -34,7 +34,7 @@ public class RecommendationUserOfRuleSetImpl implements RecommendationRuleSet {
             if (rule.isNegate()) {
                 return result > 5;
             }
-            return false;
+            return result < 5;
         }
 
         return true;

@@ -23,7 +23,7 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleSetImpl imple
     public boolean check(UUID userId, Rule rule) {
         if (rule.getQuery().equals("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")) {
 
-            int result = repository.checkTransactionSumCompareRule(userId, rule);
+            int result = repository.checkTransactionSumCompareDepositWithdrawRule(userId, rule);
 
             if (rule.isNegate()) {
                 return result == 1;

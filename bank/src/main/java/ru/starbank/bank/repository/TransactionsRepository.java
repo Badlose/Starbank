@@ -18,9 +18,16 @@ public class TransactionsRepository {
 
     public int checkUserOfRule(UUID userId, Rule rule) {
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT AMOUNT FROM transactions t WHERE t.USER_ID = ? LIMIT 1",
+                """
+                        SELECT COUNT(*)
+                                FROM TRANSACTIONS t
+                                INNER JOIN PRODUCTS p ON t.product_id = p.id
+                                WHERE t.USER_ID = ?
+                                AND p.TYPE = ?
+                        """,
                 Integer.class,
-                userId);
+                userId,
+                rule.getArguments().get(0));
         return result != null ? result : -1;
     }
 

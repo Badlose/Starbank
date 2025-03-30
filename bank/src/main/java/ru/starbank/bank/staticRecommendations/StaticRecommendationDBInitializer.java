@@ -2,7 +2,6 @@ package ru.starbank.bank.staticRecommendations;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.starbank.bank.model.DynamicRecommendation;
@@ -61,30 +60,6 @@ public class StaticRecommendationDBInitializer {
 //    Широкий выбор кредитных продуктов. Мы предлагаем кредиты на различные цели: покупку недвижимости, автомобиля, образование, лечение и многое другое.
 //    Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!
 
-//    private static final List<Rule> INVEST500RULES = new ArrayList<>(List.of(
-//            new Rule("USER_OF", List.of("[DEBIT]"), true),
-//            new Rule("USER_OF", "[INVEST]", false),
-//            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, DEPOSIT, >, 1000]", true)
-//    ));
-//    private static final List<Rule> TOPSAVINGRULES = new ArrayList<>(List.of(
-//            new Rule("USER_OF", "[DEBIT]", true), // +
-//            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, >=, 50000]", true), // +/-
-//            new Rule("TRANSACTION_SUM_COMPARE", "[SAVING, >=, 50000]", true), // +/-
-//            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", "[DEBIT, >]", true) // +
-//    ));
-//    private static final List<Rule> SIMPLELOANRULES = new ArrayList<>(List.of(
-//            new Rule("USER_OF", "[CREDIT]", false), // +
-//            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", "[DEBIT, >]", true), // +
-//            new Rule("TRANSACTION_SUM_COMPARE", "[DEBIT, WITHDRAW, >, 100000]", true) // +
-//    ));
-//
-//    private static final DynamicRecommendation INVEST500DYNAMICRECOMMENDATION = new DynamicRecommendation(
-//            INVEST500NAME,
-//            UUID.fromString(INVEST500ID),
-//            INVEST500TEXT,
-//            INVEST500RULES
-//    );
-
     private static final List<Rule> INVEST500RULES = new ArrayList<>(List.of(
             new Rule("USER_OF", List.of("DEBIT"), true),
             new Rule("USER_OF", List.of("INVEST"), false),
@@ -107,15 +82,11 @@ public class StaticRecommendationDBInitializer {
         this.rulesRepository = rulesRepository;
     }
 
-
     List<DynamicRecommendation> recommendationList = new ArrayList<>(List.of(
             new DynamicRecommendation(INVEST500NAME, UUID.fromString(INVEST500ID), INVEST500TEXT, INVEST500RULES),
             new DynamicRecommendation(TOPSAVINGNAME, UUID.fromString(TOPSAVINGID), TOPSAVINGTEXT, TOPSAVINGRULES),
             new DynamicRecommendation(SIMPLELOANNAME, UUID.fromString(SIMPLELOANID), SIMPLELOANTEXT, SIMPLELOANRULES)
     ));
-
-
-
 
     @PostConstruct
     @Transactional

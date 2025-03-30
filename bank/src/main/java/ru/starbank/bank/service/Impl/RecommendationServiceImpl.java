@@ -118,6 +118,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                             rule.isNegate()
                     ))
                     .toList();
+
             DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
                     recommendation.getId(),
                     recommendation.getName(),
