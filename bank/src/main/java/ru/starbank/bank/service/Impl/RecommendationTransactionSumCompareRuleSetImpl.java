@@ -24,9 +24,21 @@ public class RecommendationTransactionSumCompareRuleSetImpl implements Recommend
     public boolean check(UUID userId, Rule rule) {
         if (rule.getQuery().equals("TRANSACTION_SUM_COMPARE")) {
 
-            int result = repository.checkTransactionSumCompareRule(userId, rule);
+            int threshold = Integer.parseInt(rule.getArguments().get(3));
 
-            //дописать сравнение с negate
+            String operator = rule.getArguments().get(2);
+
+            int value = repository.checkTransactionSumCompareRule(userId, rule);
+
+            return switch (operator) {
+                case ">=" -> value >= threshold;
+                case ">" -> value > threshold;
+                case "<" -> value < threshold;
+                case "<=" -> value <= threshold;
+                case "=" -> value == threshold;
+                case "!=" -> value != threshold;
+                default -> throw new IllegalArgumentException("Недопустимый оператор: " + operator);
+            };
         }
 
         return true;
