@@ -1,6 +1,8 @@
 package ru.starbank.bank.staticRecommendations;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.starbank.bank.model.DynamicRecommendation;
@@ -88,14 +90,19 @@ public class StaticRecommendationDBInitializer {
         this.rulesRepository = rulesRepository;
     }
 
+
     List<DynamicRecommendation> recommendationList = new ArrayList<>(List.of(
             new DynamicRecommendation(INVEST500NAME, UUID.fromString(INVEST500ID), INVEST500TEXT, INVEST500RULES),
             new DynamicRecommendation(TOPSAVINGNAME, UUID.fromString(TOPSAVINGID), TOPSAVINGTEXT, TOPSAVINGRULES),
             new DynamicRecommendation(SIMPLELOANNAME, UUID.fromString(SIMPLELOANID), SIMPLELOANTEXT, SIMPLELOANRULES)
     ));
 
+
+
+
     @PostConstruct
     @Transactional
+    @CacheEvict(value = "recommendationsCache", allEntries = true)
     public void initializeStaticRecommendations() {
         for (DynamicRecommendation recommendation : recommendationList) {
             DynamicRecommendation existingRecommendations = recommendationsRepository.findByName(recommendation.getName());

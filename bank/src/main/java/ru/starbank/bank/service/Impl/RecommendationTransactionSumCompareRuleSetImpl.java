@@ -1,6 +1,7 @@
 package ru.starbank.bank.service.Impl;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.service.RecommendationRuleSet;
@@ -12,6 +13,7 @@ import java.util.UUID;
 public class RecommendationTransactionSumCompareRuleSetImpl implements RecommendationRuleSet {
 
     @Override
+    @Cacheable(value = "RecommendationTransactionSumCompareRuleSetCache", key = "#userId")
     public DynamicRecommendation check(UUID userId) {
         return null;
     }

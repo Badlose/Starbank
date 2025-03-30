@@ -2,6 +2,9 @@ package ru.starbank.bank.service.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.dto.DynamicRecommendationDTO;
@@ -47,6 +50,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
+    @Cacheable(value = "recommendationCache", key = "#userId")
     public UserRecommendationsDTO getRecommendation(UUID userId) {
 
         // тут вызов метода проверки и далее сборка ДТО
@@ -61,6 +65,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
+    @CachePut(value = "recommendationCache", key = "#recommendation.id")
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
         for (Rule rule : recommendation.getRuleList()) {
@@ -77,6 +82,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
+    @Cacheable(value = "recommendationCache", key = "'allDynamicRecommendations'")
     public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
         List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
         List<DynamicRecommendationDTO> data = recommendations.stream()
@@ -91,6 +97,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
+    @CacheEvict(value = "recommendationCache", key = "#id")
     public HttpStatus deleteDynamicRecommendation(Long id) {
         DynamicRecommendation recommendation = recommendationsRepository.findById(id).orElse(null);
 
