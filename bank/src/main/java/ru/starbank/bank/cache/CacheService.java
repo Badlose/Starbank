@@ -45,6 +45,7 @@ public class CacheService {
 
     /**
      * Получает элемент по ключу из кэша.
+     *
      * @param key Ключ элемента.
      * @return Значение элемента или null, если элемент не найден.
      */
@@ -66,7 +67,8 @@ public class CacheService {
 
     /**
      * Добавляет или обновляет элемент в кэше.
-     * @param key Ключ элемента.
+     *
+     * @param key   Ключ элемента.
      * @param value Значение элемента.
      */
     public void putElement(Object key, Object value) {

@@ -18,109 +18,67 @@ public class TransactionsRepository {
 
     public int checkUserOfRule(UUID userId, Rule rule) {
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT AMOUNT FROM transactions t WHERE t.USER_ID = ? LIMIT 1",
+                """
+                        SELECT COUNT(*)
+                                FROM TRANSACTIONS t
+                                INNER JOIN PRODUCTS p ON t.product_id = p.id
+                                WHERE t.USER_ID = ?
+                                AND p.TYPE = ?
+                        """,
                 Integer.class,
-                userId);
-        return result != null ? result : 0;
+                userId,
+                rule.getArguments().get(0));
+        return result != null ? result : -1;
     }
 
     public int checkTransactionSumCompareRule(UUID userId, Rule rule) {
-//        todo
+
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT AMOUNT FROM transactions t WHERE t.USER_ID = ? LIMIT 1",
+                """
+                        SELECT SUM(t.AMOUNT)
+                        FROM TRANSACTIONS t
+                        INNER JOIN PRODUCTS p ON t.product_id = p.id
+                        WHERE t.user_ID = ?
+                        AND p.TYPE = ?
+                        AND t.TYPE = ?
+                        """,
                 Integer.class,
-                userId);
-        return result != null ? result : 0;
+                userId,
+                rule.getArguments().get(0),
+                rule.getArguments().get(1));
+        return result != null ? result : -1;
     }
 
     public int checkTransactionSumCompareDepositWithdrawRule(UUID userId, Rule rule) {
-        //todo
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT AMOUNT FROM transactions t WHERE t.USER_ID = ? LIMIT 1",
+                """
+                        SELECT
+                        CASE
+                            WHEN (
+                                SELECT COALESCE(SUM(t.AMOUNT), 0)
+                                FROM TRANSACTIONS t
+                                INNER JOIN PRODUCTS p ON t.product_id = p.id
+                                WHERE t.USER_ID = ?
+                                  AND p.TYPE = ?
+                                  AND t.TYPE = 'DEPOSIT'
+                            ) ? (
+                                SELECT COALESCE(SUM(t.AMOUNT), 0)
+                                FROM TRANSACTIONS t
+                                INNER JOIN PRODUCTS p ON t.product_id = p.id
+                                WHERE t.USER_ID = ?
+                                  AND p.TYPE = ?
+                                  AND t.TYPE = 'WITHDRAW'
+                            ) THEN 1
+                            ELSE 0
+                        END AS is_debit_deposits_greater_than_debit_withdrawals;
+                        """,
                 Integer.class,
-                userId);
-        return result != null ? result : 0;
+                userId,
+                rule.getArguments().get(0),
+                rule.getArguments().get(1),
+                userId,
+                rule.getArguments().get(0));
+        return result != null ? result : -1;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public String DebitUsing(UUID userId) {
-//
-//        return """
-//                    SELECT COUNT(*)
-//                    FROM TRANSACTIONS t
-//                    INNER JOIN PRODUCTS p ON t.product_id = p.id
-//                    WHERE t.USER_ID = ? AND p.TYPE = 'DEBIT'
-//                """;
-//    }
-//
-//    public String InvestNotUsing(UUID userId) {
-//
-//        return """
-//                SELECT COUNT(*)
-//                FROM TRANSACTIONS t
-//                INNER JOIN PRODUCTS p ON t.product_id = p.id
-//                WHERE t.USER_ID = ?
-//                  AND p.TYPE = 'INVEST'
-//                """;
-//    }
-//
-//    public String CreditNotUsing(UUID userId) {
-//
-//        return """
-//                SELECT COUNT(*)
-//                FROM TRANSACTIONS t
-//                INNER JOIN PRODUCTS p ON t.product_id = p.id
-//                WHERE t.USER_ID = ?
-//                  AND p.TYPE = 'CREDIT'
-//                """;
-//    }
-//
-//    public String SavingDeposit(UUID userId) {
-//
-//        return """
-//                SELECT SUM(AMOUNT)
-//                FROM TRANSACTIONS t
-//                INNER JOIN PRODUCTS p ON t.product_id = p.id
-//                WHERE t.USER_ID = ?
-//                  AND p.TYPE = 'SAVING'
-//                  AND t.TYPE = 'DEPOSIT'
-//                """;
-//    }
-//
-//    public String DebitDeposit(UUID userId) {
-//
-//        return """
-//                SELECT SUM(AMOUNT)
-//                FROM TRANSACTIONS t
-//                INNER JOIN PRODUCTS p ON t.product_id = p.id
-//                WHERE t.USER_ID = ?
-//                  AND p.TYPE = 'DEBIT'
-//                  AND t.TYPE = 'DEPOSIT'
-//                """;
-//    }
-//
-//    public String DebitWithdraw(UUID userId) {
-//
-//        return """
-//                SELECT SUM(AMOUNT)
-//                FROM TRANSACTIONS t
-//                INNER JOIN PRODUCTS p ON t.product_id = p.id
-//                WHERE t.USER_ID = ?
-//                  AND p.TYPE = 'DEBIT'
-//                  AND t.TYPE = 'WITHDRAW'
-//                """;
-//    }
 
 }

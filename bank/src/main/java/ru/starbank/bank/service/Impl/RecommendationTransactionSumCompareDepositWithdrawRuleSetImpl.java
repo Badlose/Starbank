@@ -2,7 +2,6 @@ package ru.starbank.bank.service.Impl;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.RecommendationRuleSet;
@@ -25,9 +24,15 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleSetImpl imple
 
             int result = repository.checkTransactionSumCompareDepositWithdrawRule(userId, rule);
 
-            //дописать сравнение с negate
+            if (rule.isNegate()) {
+                return result == 1;
+            }
+
+            return result == 0;
+
         }
 
         return true;
+
     }
 }
