@@ -32,7 +32,7 @@ public class RecommendationUserOfRuleSetImpl implements RecommendationRuleSet {
         } else if (rule.getQuery().equals("ACTIVE_USER_OF")) {
 
             if (rule.isNegate()) {
-                return result > 5;
+                return result >= 5;
             }
             return result < 5;
         }

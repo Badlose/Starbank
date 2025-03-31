@@ -36,4 +36,12 @@ public class RuleDTO {
     public void setNegate(boolean negate) {
         this.negate = negate;
     }
+
+    @Override
+    public String toString() {
+        return "query" + ": " + query + '\'' +
+                ", arguments" + ": " + arguments +
+                ", negate" + ": " + negate +
+                '}';
+    }
 }

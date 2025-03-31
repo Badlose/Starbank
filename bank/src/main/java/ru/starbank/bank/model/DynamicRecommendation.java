@@ -1,8 +1,6 @@
 package ru.starbank.bank.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 import java.util.Objects;

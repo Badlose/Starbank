@@ -22,7 +22,7 @@ public class ListDynamicRecommendationDTO {
     @Override
     public String toString() {
         return "{" +
-                "data=" + data +
+                "data" + ": " + data +
                 '}';
     }
 }

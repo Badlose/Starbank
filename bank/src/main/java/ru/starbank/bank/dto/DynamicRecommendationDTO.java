@@ -1,7 +1,5 @@
 package ru.starbank.bank.dto;
 
-import ru.starbank.bank.model.Rule;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -68,11 +66,11 @@ public class DynamicRecommendationDTO {
     @Override
     public String toString() {
         return "{" +
-                "id=" + id +
-                ", product_name='" + product_name + '\'' +
-                ", product_id=" + product_id +
-                ", product_text='" + product_text + '\'' +
-                ", rule=" + rule +
+                "id" + ": " + id +
+                ", product_name" + ": " + product_name + '\'' +
+                ", product_id" + ": " + product_id +
+                ", product_text" + ": " + product_text + '\'' +
+                ", rule" + ": " + rule +
                 '}';
     }
 }
