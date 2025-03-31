@@ -61,7 +61,8 @@ public class TransactionsRepository {
                                 WHERE t.USER_ID = ?
                                   AND p.TYPE = ?
                                   AND t.TYPE = 'DEPOSIT'
-                            ) ? (
+                            )""" + rule.getArguments().get(1) + """
+                                (
                                 SELECT COALESCE(SUM(t.AMOUNT), 0)
                                 FROM TRANSACTIONS t
                                 INNER JOIN PRODUCTS p ON t.product_id = p.id
@@ -75,7 +76,6 @@ public class TransactionsRepository {
                 Integer.class,
                 userId,
                 rule.getArguments().get(0),
-                rule.getArguments().get(1),
                 userId,
                 rule.getArguments().get(0));
         return result != null ? result : -1;

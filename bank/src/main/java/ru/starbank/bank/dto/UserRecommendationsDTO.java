@@ -7,9 +7,9 @@ public class UserRecommendationsDTO {
 
     private UUID userId;
 
-    private List<DynamicRecommendationDTO> recommendations;
+    private List<UserDTO> recommendations;
 
-    public UserRecommendationsDTO(UUID userId, List<DynamicRecommendationDTO> recommendations) {
+    public UserRecommendationsDTO(UUID userId, List<UserDTO> recommendations) {
         this.userId = userId;
         this.recommendations = recommendations;
     }
@@ -22,18 +22,12 @@ public class UserRecommendationsDTO {
         this.userId = userId;
     }
 
-    public List<DynamicRecommendationDTO> getRecommendations() {
+    public List<UserDTO> getRecommendations() {
         return recommendations;
     }
 
-    public void setRecommendations(List<DynamicRecommendationDTO> recommendations) {
+    public void setRecommendations(List<UserDTO> recommendations) {
         this.recommendations = recommendations;
     }
 
-    @Override
-    public String toString() {
-        return "user_id" + ": " + userId + '\'' +
-                ", recommendations" + ": " + recommendations +
-                '}';
-    }
 }
