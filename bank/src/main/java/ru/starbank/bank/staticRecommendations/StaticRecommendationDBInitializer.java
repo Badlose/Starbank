@@ -28,6 +28,7 @@ public class StaticRecommendationDBInitializer {
     private static final String TOPSAVINGID = "59efc529-2fff-41af-baff-90ccd7402925";
     private static final String TOPSAVINGNAME = "TopSaving";
     private static final String TOPSAVINGTEXT = """
+
             Откройте свою собственную «Копилку» с нашим банком! \
             «Копилка» — это уникальный банковский инструмент, который поможет вам легко и удобно накапливать деньги на важные цели. \
             Больше никаких забытых чеков и потерянных квитанций — всё под контролем!
@@ -66,8 +67,8 @@ public class StaticRecommendationDBInitializer {
     ));
     private static final List<Rule> TOPSAVINGRULES = new ArrayList<>(List.of(
             new Rule("USER_OF", List.of("DEBIT"), true), // +
-            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", "DEPOSIT", ">=", "50000"), true), // +/-
-            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">=", "50000"), true), // +/-
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", "DEPOSIT", ">=", "50000", "OR"), true), // +/-
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">=", "50000", "OR"), true), // +/-
             new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", List.of("DEBIT", ">"), true) // +
     ));
     private static final List<Rule> SIMPLELOANRULES = new ArrayList<>(List.of(
