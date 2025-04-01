@@ -10,7 +10,7 @@ import java.util.UUID;
 public class DynamicRecommendation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

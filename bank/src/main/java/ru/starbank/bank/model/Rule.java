@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Rule {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
 
