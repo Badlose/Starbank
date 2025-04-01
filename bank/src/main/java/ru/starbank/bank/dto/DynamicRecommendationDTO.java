@@ -68,4 +68,5 @@ public class DynamicRecommendationDTO {
     public void setRule(List<RuleDTO> rule) {
         this.rule = rule;
     }
+  
 }
