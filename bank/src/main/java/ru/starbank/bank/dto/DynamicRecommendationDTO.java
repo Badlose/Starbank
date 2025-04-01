@@ -1,5 +1,7 @@
 package ru.starbank.bank.dto;
 
+import ru.starbank.bank.model.DynamicRecommendation;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -21,12 +23,6 @@ public class DynamicRecommendationDTO {
         this.product_id = product_id;
         this.product_text = product_text;
         this.rule = rule;
-    }
-
-    public DynamicRecommendationDTO(String product_name, UUID product_id, String product_text) {
-        this.product_name = product_name;
-        this.product_id = product_id;
-        this.product_text = product_text;
     }
 
     public Long getId() {
@@ -68,5 +64,14 @@ public class DynamicRecommendationDTO {
     public void setRule(List<RuleDTO> rule) {
         this.rule = rule;
     }
-  
+
+    public static DynamicRecommendationDTO from(DynamicRecommendation recommendation, List<RuleDTO> ruleDTOList) {
+        return new DynamicRecommendationDTO(
+                recommendation.getId(),
+                recommendation.getName(),
+                recommendation.getProduct_id(),
+                recommendation.getText(),
+                ruleDTOList);
+    }
+
 }
