@@ -33,14 +33,22 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
     @Override
     public boolean checkDynamicRecommendation(UUID userId, DynamicRecommendation recommendation) {
 
-        boolean resultCheck = false;
+        boolean resultCheck = true;
+        boolean check = false;
+        boolean checkIf = true;
 
         for (Rule rule : recommendation.getRuleList()) {
-            resultCheck = ruleSets.stream()
-                    .allMatch(r -> r.check(userId, rule));
+            if(rule.getArguments().contains("OR")){
+                check = check || ruleSets.stream()
+                        .allMatch(r -> r.check(userId, rule));
+                checkIf = false;
+            }else {
+                resultCheck = resultCheck && ruleSets.stream()
+                        .allMatch(r -> r.check(userId, rule));
+            }
         }
 
-        return resultCheck;
+        return resultCheck && (check || checkIf);
 
     }
 }

@@ -6,10 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.starbank.bank.dto.DynamicRecommendationDTO;
-import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
-import ru.starbank.bank.dto.RuleDTO;
-import ru.starbank.bank.dto.UserRecommendationsDTO;
+import ru.starbank.bank.dto.*;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.RecommendationsRepository;
@@ -43,27 +40,17 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
 
-        List<DynamicRecommendationDTO> recommendationListForDto = new ArrayList<>();
+        List<UserDTO> recommendationListForDto = new ArrayList<>();
 
         for (DynamicRecommendation recommendation : recommendations) {
 
             boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
 
             if (resultCheck) {
-                List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
-                        .map(rule -> new RuleDTO(
-                                rule.getQuery(),
-                                rule.getArguments(),
-                                rule.isNegate()
-                        ))
-                        .toList();
-
-                DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
-                        recommendation.getId(),
+                UserDTO recommendationDTO = new UserDTO(
                         recommendation.getName(),
                         recommendation.getProduct_id(),
-                        recommendation.getText(),
-                        ruleDtoList
+                        recommendation.getText()
                 );
 
                 recommendationListForDto.add(recommendationDTO);
