@@ -61,21 +61,22 @@ public class TransactionsRepository {
                                 WHERE t.USER_ID = ?
                                   AND p.TYPE = ?
                                   AND t.TYPE = 'DEPOSIT'
-                            ) ? (
-                                SELECT COALESCE(SUM(t.AMOUNT), 0)
-                                FROM TRANSACTIONS t
-                                INNER JOIN PRODUCTS p ON t.product_id = p.id
-                                WHERE t.USER_ID = ?
-                                  AND p.TYPE = ?
-                                  AND t.TYPE = 'WITHDRAW'
-                            ) THEN 1
-                            ELSE 0
-                        END AS is_debit_deposits_greater_than_debit_withdrawals;
-                        """,
+                            )""" + rule.getArguments().get(1) +
+                        """
+                                        (
+                                        SELECT COALESCE(SUM(t.AMOUNT), 0)
+                                        FROM TRANSACTIONS t
+                                        INNER JOIN PRODUCTS p ON t.product_id = p.id
+                                        WHERE t.USER_ID = ?
+                                          AND p.TYPE = ?
+                                          AND t.TYPE = 'WITHDRAW'
+                                    ) THEN 1
+                                    ELSE 0
+                                END AS is_debit_deposits_greater_than_debit_withdrawals;
+                                """,
                 Integer.class,
                 userId,
                 rule.getArguments().get(0),
-                rule.getArguments().get(1),
                 userId,
                 rule.getArguments().get(0));
         return result != null ? result : -1;

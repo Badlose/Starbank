@@ -19,10 +19,4 @@ public class ListDynamicRecommendationDTO {
         this.data = data;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "data" + ": " + data +
-                '}';
-    }
 }

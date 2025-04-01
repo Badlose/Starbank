@@ -63,14 +63,4 @@ public class DynamicRecommendationDTO {
         this.rule = rule;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id" + ": " + id +
-                ", product_name" + ": " + product_name + '\'' +
-                ", product_id" + ": " + product_id +
-                ", product_text" + ": " + product_text + '\'' +
-                ", rule" + ": " + rule +
-                '}';
-    }
 }

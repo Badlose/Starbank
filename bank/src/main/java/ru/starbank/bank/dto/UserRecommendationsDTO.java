@@ -30,10 +30,4 @@ public class UserRecommendationsDTO {
         this.recommendations = recommendations;
     }
 
-    @Override
-    public String toString() {
-        return "user_id" + ": " + userId + '\'' +
-                ", recommendations" + ": " + recommendations +
-                '}';
-    }
 }
