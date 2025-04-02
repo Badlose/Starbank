@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.starbank.bank.dto.DynamicRecommendationDTO;
 import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
+import ru.starbank.bank.dto.StatisticsDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.service.RecommendationService;
@@ -32,18 +33,24 @@ public class RecommendationController {
     }
 
 
-    @PostMapping("/post/{recommendation}")
+    @PostMapping("/rule/{recommendation}")
     public DynamicRecommendationDTO postNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {
         return recommendationService.createNewDynamicRecommendation(recommendation);
     }
 
-    @GetMapping("/getRecommendations")
+    @GetMapping("/rule")
     public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
         return recommendationService.getAllDynamicRecommendations();
     }
 
-    @DeleteMapping("/delete/{recommendationId}")
+    @DeleteMapping("/rule/{recommendationId}")
     public ResponseEntity<ResponseStatus> deleteDynamicRecommendation(@PathVariable Long recommendationId) {
         return ResponseEntity.status(recommendationService.deleteDynamicRecommendation(recommendationId)).build();
     }
+
+    @GetMapping("/rule/stats")
+    public StatisticsDTO getStatistics() {
+        return recommendationService.getStatistics();
+    }
+
 }
