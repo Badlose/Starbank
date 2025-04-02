@@ -3,6 +3,7 @@ package ru.starbank.bank.service;
 import org.springframework.http.HttpStatusCode;
 import ru.starbank.bank.dto.DynamicRecommendationDTO;
 import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
+import ru.starbank.bank.dto.StatisticsDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
 
@@ -19,5 +20,6 @@ public interface RecommendationService {
     HttpStatusCode deleteDynamicRecommendation(Long recommendationId);
 
 
+    StatisticsDTO getStatistics();
 }
 

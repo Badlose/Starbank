@@ -139,4 +139,10 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     }
 
+    @Override
+    public StatisticsDTO getStatistics() {
+
+        return null;
+    }
+
 }
