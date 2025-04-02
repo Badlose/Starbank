@@ -1,8 +1,5 @@
 package ru.starbank.bank.service.Impl;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +31,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    @Cacheable(value = "recommendationCache", key = "#userId")
     @Transactional
     public UserRecommendationsDTO getRecommendation(UUID userId) {
 
@@ -61,7 +57,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    @CachePut(value = "recommendationCache", key = "#recommendation.id")
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
@@ -90,7 +85,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    @Cacheable(value = "recommendationCache", key = "'allDynamicRecommendations'")
     @Transactional
     public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
         List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
@@ -121,7 +115,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    @CacheEvict(value = "recommendationCache", key = "#id")
     @Transactional
     public HttpStatus deleteDynamicRecommendation(Long id) {
         DynamicRecommendation recommendation = recommendationsRepository.findById(id).orElse(null);
