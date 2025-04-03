@@ -1,14 +1,13 @@
 package ru.starbank.bank.repository;
 
-import org.checkerframework.checker.optional.qual.Present;
+import ru.starbank.bank.exceptions.IllegalResultException;
+import ru.starbank.bank.exceptions.SQLRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.starbank.bank.model.Rule;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -22,19 +21,7 @@ public class TransactionsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int checkUserOfRule(UUID userId, Rule rule) {
-        if (rule == null || rule.getArguments() == null || rule.getArguments().isEmpty()) {
-            logger.warn("Rule or rule arguments are null or empty.  Returning -1.");
-            return -1;
-        }
-
-        List<String> arguments = rule.getArguments();
-        String productType = arguments.get(0);
-
-        if (arguments == null || productType.isEmpty()) {
-            logger.warn("Product type is null or empty. Returning -1.");
-            return -1;
-        }
+    public int countTransactionsByUserIdProductType(UUID userId, String productType) {
 
         String sql = """
                 SELECT COUNT(*)
@@ -46,38 +33,26 @@ public class TransactionsRepository {
 
         String userIdString = userId.toString();
 
-        Integer result = null;
+        Integer result;
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
-        } catch (Exception e) {
+        } catch (SQLRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            return -1;
+            throw new SQLRequestException();
         }
 
         if (result == null) {
-            logger.warn("Query returned null for user {} and product type {}.  Returning -1.", userIdString, productType);
-            return -1;
+//            logger.warn("Query returned null for user {} and product type {}.  Returning -1.", userIdString, productType);
+            throw new IllegalResultException();
         }
 
         logger.debug("Query returned: {}", result);
         return result;
     }
 
-    public int checkTransactionSumCompareRule(UUID userId, Rule rule) {
-        if (rule == null || rule.getArguments() == null || rule.getArguments().isEmpty()) {
-            logger.warn("Rule or rule arguments are null or empty.  Returning -1.");
-            return -1;
-        }
+    public int compareTransactionSumByUserIdProductType(UUID userId, String productType, String transactionType) {
 
-        List<String> arguments = rule.getArguments();
-        String productType = arguments.get(0);
-        String transactionType = arguments.get(1);
-
-        if (arguments == null || productType.isEmpty() || transactionType.isEmpty()) {
-            logger.warn("Product type or Transaction type are null or empty. Returning -1.");
-            return -1;
-        }
         String userIdString = userId.toString();
         String sql = """
                 SELECT SUM(t.AMOUNT)
@@ -92,9 +67,9 @@ public class TransactionsRepository {
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, transactionType);
-        } catch (Exception e) {
+        } catch (SQLRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            return -1;
+            throw new SQLRequestException();
         }
 
         if (result == null) {
@@ -102,30 +77,17 @@ public class TransactionsRepository {
                     userIdString,
                     productType,
                     transactionType);
-            return -1;
+            throw new IllegalResultException();
         }
 
         logger.debug("Query returned: {}", result);
         return result;
     }
 
-    public int checkTransactionSumCompareDepositWithdrawRule(UUID userId, Rule rule) {
-
-        if (rule == null || rule.getArguments() == null || rule.getArguments().isEmpty()) {
-            logger.warn("Rule or rule arguments are null or empty.  Returning -1.");
-            return -1;
-        }
-
-        List<String> arguments = rule.getArguments();
-        String productType = arguments.get(0);
-        String comparison = rule.getArguments().get(1);
-
-        if (arguments == null || productType.isEmpty() || comparison.isEmpty()) {
-            logger.warn("Product type or Comparison type are null or empty. Returning -1.");
-            return -1;
-        }
+    public int compareTransactionSumByUserIdProductTypeDepositWithdraw(UUID userId, String productType, String comparison) {
 
         String userIdString = userId.toString();
+
         String sql = """
                 SELECT
                 CASE
@@ -153,17 +115,20 @@ public class TransactionsRepository {
         Integer result = null;
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, userIdString, productType);
-        } catch (Exception e) {
+        } catch (SQLRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            return -1;
+            throw new SQLRequestException();
         }
 
         if (result == null) {
             logger.warn("Query returned null for user {} and product type {}.  Returning -1.", userIdString, productType);
-            return -1;
+            throw new IllegalResultException();
         }
 
         return result;
     }
+
+
+
 
 }

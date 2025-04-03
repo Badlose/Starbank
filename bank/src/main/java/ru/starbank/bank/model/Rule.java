@@ -67,7 +67,7 @@ public class Rule {
     }
 
     public List<String> getArguments() {
-        return arguments;
+        return arguments == null ? List.of() : arguments;
     }
 
     public void setArguments(List<String> arguments) {
