@@ -1,11 +1,10 @@
 package ru.starbank.bank.service.Impl;
 
-import ru.starbank.bank.exceptions.IncorrectRuleException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
-import ru.starbank.bank.service.RecommendationRuleSet;
+import ru.starbank.bank.service.RecommendationRuleSetService;
 import ru.starbank.bank.service.RuleService;
 
 import java.util.List;
@@ -13,13 +12,13 @@ import java.util.UUID;
 
 @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
 @Component
-public class RecommendationTransactionSumCompareDepositWithdrawRuleSetImpl implements RecommendationRuleSet {
+public class RecommendationTransactionSumCompareDepositWithdrawRuleSetServiceImpl implements RecommendationRuleSetService {
 
     private final TransactionsRepository repository;
 
     private final RuleService ruleService;
 
-    public RecommendationTransactionSumCompareDepositWithdrawRuleSetImpl(TransactionsRepository repository, RuleService ruleService) {
+    public RecommendationTransactionSumCompareDepositWithdrawRuleSetServiceImpl(TransactionsRepository repository, RuleService ruleService) {
         this.repository = repository;
         this.ruleService = ruleService;
     }

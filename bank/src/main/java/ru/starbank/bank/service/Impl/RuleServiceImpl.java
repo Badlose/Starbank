@@ -1,5 +1,6 @@
 package ru.starbank.bank.service.Impl;
 
+import org.springframework.stereotype.Service;
 import ru.starbank.bank.exceptions.IncorrectRuleArgumentsException;
 import ru.starbank.bank.exceptions.IncorrectRuleException;
 import ru.starbank.bank.model.Rule;
@@ -7,6 +8,7 @@ import ru.starbank.bank.service.RuleService;
 
 import java.util.List;
 
+@Service
 public class RuleServiceImpl implements RuleService {
 
     @Override

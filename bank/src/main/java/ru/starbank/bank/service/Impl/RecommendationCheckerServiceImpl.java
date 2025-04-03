@@ -1,24 +1,20 @@
 package ru.starbank.bank.service.Impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.service.RecommendationCheckerService;
-import ru.starbank.bank.service.RecommendationRuleSet;
+import ru.starbank.bank.service.RecommendationRuleSetService;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @Component
 public class RecommendationCheckerServiceImpl implements RecommendationCheckerService {
 
-    @Autowired
-    private final Map<String, RecommendationRuleSet> ruleSets;
+    private final Map<String, RecommendationRuleSetService> ruleSets;
 
-    public RecommendationCheckerServiceImpl(Map<String, RecommendationRuleSet> ruleSets) {
+    public RecommendationCheckerServiceImpl(Map<String, RecommendationRuleSetService> ruleSets) {
         this.ruleSets = ruleSets;
     }
 
@@ -29,12 +25,11 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
 
         for (Rule rule : recommendation.getRuleList()) {
 
-            RecommendationRuleSet ruleSet = ruleSets.get(rule.getQuery());
+            RecommendationRuleSetService ruleSet = ruleSets.get(rule.getQuery());
 
-            checkResult = checkResult && ruleSet.check(userId, rule);
+            checkResult = checkResult || ruleSet.check(userId, rule);
 
         }
-
 
         return checkResult;
     }
@@ -59,4 +54,10 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
 //    }
 //
 //        return resultCheck &&(check ||checkIf);
+
+//                if (ruleSet != null) {
+//        checkResult = checkResult || ruleSet.check(userId, rule);
+//    } else {
+//        throw new NullPointerException("Ruleset is null exception");
+//    }
 }

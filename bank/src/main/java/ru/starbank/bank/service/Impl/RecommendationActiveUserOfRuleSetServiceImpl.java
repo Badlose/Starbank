@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
-import ru.starbank.bank.service.RecommendationRuleSet;
+import ru.starbank.bank.service.RecommendationRuleSetService;
 
 import java.util.List;
 import java.util.UUID;
 
 @Qualifier("ACTIVE_USER_OF")
 @Component
-public class RecommendationActiveUserOfRuleSetImpl implements RecommendationRuleSet {
+public class RecommendationActiveUserOfRuleSetServiceImpl implements RecommendationRuleSetService {
 
     private final TransactionsRepository repository;
 
-    public RecommendationActiveUserOfRuleSetImpl(TransactionsRepository repository) {
+    public RecommendationActiveUserOfRuleSetServiceImpl(TransactionsRepository repository) {
         this.repository = repository;
     }
 
