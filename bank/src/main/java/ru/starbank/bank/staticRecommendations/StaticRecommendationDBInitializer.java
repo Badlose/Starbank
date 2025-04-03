@@ -97,6 +97,7 @@ public class StaticRecommendationDBInitializer {
             if (existingRecommendations == null) {
                 recommendationsRepository.save(recommendation);
                 for (Rule rule : recommendation.getRuleList()) {
+                    rule.setDynamicRecommendation(recommendation);
                     rulesRepository.save(rule);
                 }
             }

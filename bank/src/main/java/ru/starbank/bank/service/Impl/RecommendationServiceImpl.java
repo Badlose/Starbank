@@ -1,5 +1,8 @@
 package ru.starbank.bank.service.Impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +63,10 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
-
+        for (Rule rule : recommendation.getRuleList()) {
+            rule.setDynamicRecommendation(recommendation);
+            rulesRepository.save(rule);
+        }
 
         List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
                 .map(rule -> new RuleDTO(

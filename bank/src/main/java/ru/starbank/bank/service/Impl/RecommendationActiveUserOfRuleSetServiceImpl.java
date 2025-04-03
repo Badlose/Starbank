@@ -27,7 +27,7 @@ public class RecommendationActiveUserOfRuleSetServiceImpl implements Recommendat
 
         int result = repository.countTransactionsByUserIdProductType(userId, productType);
 
-        return rule.isNegate() == (result >= 5);
+        return rule.isNegate() == (result >= 5);//вот тут могут быть проблемы
 
     }
 }

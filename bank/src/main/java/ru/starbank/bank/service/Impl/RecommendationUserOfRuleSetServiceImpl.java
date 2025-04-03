@@ -33,7 +33,7 @@ public class RecommendationUserOfRuleSetServiceImpl implements RecommendationRul
 
         int result = repository.countTransactionsByUserIdProductType(userId, productType);
 
-        return rule.isNegate() ? result > 0 : result == 0;
+        return rule.isNegate() == (result > 0); //вот тут могут быть проблемы
     }
 
 }

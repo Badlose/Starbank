@@ -8,6 +8,7 @@ import ru.starbank.bank.service.RecommendationRuleSetService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -22,9 +23,9 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
     @Override
     public boolean checkDynamicRecommendation(UUID userId, DynamicRecommendation recommendation) {
 
-        boolean checkResult = true;
 
         for (Rule rule : recommendation.getRuleList()) {
+            boolean checkResult = true;
 
             for (RecommendationRuleSetService ruleSetService : ruleSets.values()) {
 
@@ -32,12 +33,17 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
 
                     checkResult = checkResult && ruleSetService.check(userId, rule);
                 }
+                if (!checkResult) {
+                    break;
+                }
             }
+            return checkResult;
         }
-        return checkResult;
+        return false;
     }
 
-//
+// @Override
+//    public boolean checkDynamicRecommendation(UUID userId, DynamicRecommendation recommendation) {
 //    boolean resultCheck = true;
 //    boolean check = false;
 //    boolean checkIf = true;
@@ -63,4 +69,5 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
 //    } else {
 //        throw new NullPointerException("Ruleset is null exception");
 //    }
+//}
 }

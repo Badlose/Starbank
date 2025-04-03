@@ -1,5 +1,6 @@
 package ru.starbank.bank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -11,16 +12,17 @@ public class DynamicRecommendation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     private String name;
 
     private UUID product_id;
 
-    @Column(columnDefinition = "TEXT")
     private String text;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dynamicRecommendation")
+    @JsonIgnore
     private List<Rule> ruleList;
 
     public DynamicRecommendation(String name, UUID product_id, String text, List<Rule> ruleList) {

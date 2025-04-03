@@ -33,7 +33,7 @@ public class TransactionsRepository {
 
         String userIdString = userId.toString();
 
-        Integer result;
+        Integer result = 0;
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
