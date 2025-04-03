@@ -6,6 +6,7 @@ import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.service.RecommendationCheckerService;
 import ru.starbank.bank.service.RecommendationRuleSetService;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,16 +22,18 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
     @Override
     public boolean checkDynamicRecommendation(UUID userId, DynamicRecommendation recommendation) {
 
-        boolean checkResult = false;
+        boolean checkResult = true;
 
         for (Rule rule : recommendation.getRuleList()) {
 
-            RecommendationRuleSetService ruleSet = ruleSets.get(rule.getQuery());
+            for (RecommendationRuleSetService ruleSetService : ruleSets.values()) {
 
-            checkResult = checkResult || ruleSet.check(userId, rule);
+                if (rule.getQuery().equals(ruleSetService)) {
 
+                    checkResult = checkResult && ruleSetService.check(userId, rule);
+                }
+            }
         }
-
         return checkResult;
     }
 

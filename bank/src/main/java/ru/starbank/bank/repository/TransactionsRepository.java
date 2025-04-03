@@ -39,7 +39,7 @@ public class TransactionsRepository {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
         } catch (SQLRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SQLRequestException();
+            throw new SQLRequestException("Error executing query.");
         }
 
         if (result == null) {
@@ -69,7 +69,7 @@ public class TransactionsRepository {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, transactionType);
         } catch (SQLRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SQLRequestException();
+            throw new SQLRequestException("Error executing query.");
         }
 
         if (result == null) {
@@ -117,7 +117,7 @@ public class TransactionsRepository {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, userIdString, productType);
         } catch (SQLRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SQLRequestException();
+            throw new SQLRequestException("Error executing query.");
         }
 
         if (result == null) {

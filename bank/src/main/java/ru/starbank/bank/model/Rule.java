@@ -20,31 +20,17 @@ public class Rule {
 
     private boolean negate;
 
-    @ManyToOne
-    @JoinColumn(name = "Recommendation_id")
-    @JsonIgnore
-    private DynamicRecommendation dynamicRecommendation;
-
-    public DynamicRecommendation getDynamicRecommendation() {
-        return dynamicRecommendation;
-    }
-
-    public void setDynamicRecommendation(DynamicRecommendation dynamicRecommendation) {
-        this.dynamicRecommendation = dynamicRecommendation;
-    }
-
     public Rule(String query, List<String> arguments, boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
     }
 
-    public Rule(Long id, String query, List<String> arguments, boolean negate, DynamicRecommendation dynamicRecommendation) {
+    public Rule(Long id, String query, List<String> arguments, boolean negate) {
         this.id = id;
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
-        this.dynamicRecommendation = dynamicRecommendation;
     }
 
     public Rule() {
@@ -87,12 +73,12 @@ public class Rule {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return negate == rule.negate && Objects.equals(id, rule.id) && Objects.equals(query, rule.query) && Objects.equals(arguments, rule.arguments) && Objects.equals(dynamicRecommendation, rule.dynamicRecommendation);
+        return negate == rule.negate && Objects.equals(id, rule.id) && Objects.equals(query, rule.query) && Objects.equals(arguments, rule.arguments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, query, arguments, negate, dynamicRecommendation);
+        return Objects.hash(id, query, arguments, negate);
     }
 
     @Override
@@ -102,7 +88,6 @@ public class Rule {
                 ", query='" + query + '\'' +
                 ", arguments=" + arguments +
                 ", negate=" + negate +
-                ", dynamicRecommendation=" + dynamicRecommendation +
                 '}';
     }
 }

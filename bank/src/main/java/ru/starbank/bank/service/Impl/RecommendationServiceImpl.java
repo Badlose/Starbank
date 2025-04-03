@@ -60,10 +60,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
-        for (Rule rule : recommendation.getRuleList()) {
-            rule.setDynamicRecommendation(recommendation);
-            rulesRepository.save(rule);
-        }
+
 
         List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
                 .map(rule -> new RuleDTO(

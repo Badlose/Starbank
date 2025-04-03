@@ -33,7 +33,6 @@ public class RecommendationTransactionSumCompareRuleSetServiceImpl implements Re
         ruleService.checkRule(rule);
         boolean result = false;
 
-
         int threshold = Integer.parseInt(arguments.get(3));
         String operator = arguments.get(2);
 
