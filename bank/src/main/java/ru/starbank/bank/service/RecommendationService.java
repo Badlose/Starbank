@@ -17,7 +17,7 @@ public interface RecommendationService {
 
     ListDynamicRecommendationDTO getAllDynamicRecommendations();
 
-    HttpStatusCode deleteDynamicRecommendation(Long recommendationId);
+    void deleteDynamicRecommendation(Long recommendationId);
 
 
     StatisticsDTO getStatistics();

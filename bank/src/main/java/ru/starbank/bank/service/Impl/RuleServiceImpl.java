@@ -12,25 +12,26 @@ import java.util.List;
 public class RuleServiceImpl implements RuleService {
 
     @Override
-    public boolean checkRule(Rule rule) {
+    public void checkRule(Rule rule) {
 
         if (rule == null) {
             throw new IncorrectRuleException();
         }
 
         List<String> arguments = rule.getArguments();
+        if (arguments.isEmpty()) {
+            throw new IncorrectRuleArgumentsException("List<Arguments> is empty");
+        }
         String productType = arguments.get(0);
-        String comparison = arguments.get(1);
 
-        if (productType.isEmpty() || comparison.isEmpty()) {
-            throw new IncorrectRuleArgumentsException("Product type or Comparison  symbol are empty");
+        if (productType.isEmpty()) {
+            throw new IncorrectRuleArgumentsException("Product type is empty");
         }
 
         if (rule.getQuery().equals("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")) {
             checkComparisonSymbol(rule.getArguments().get(1));
         }
 
-        return true;
     }
 
     private void checkComparisonSymbol(String comparison) {

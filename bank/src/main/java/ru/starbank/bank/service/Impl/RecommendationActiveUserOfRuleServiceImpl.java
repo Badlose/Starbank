@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
-import ru.starbank.bank.service.RecommendationRuleSetService;
+import ru.starbank.bank.service.RecommendationRuleService;
 
 import java.util.List;
 import java.util.UUID;
 
 @Qualifier("ACTIVE_USER_OF")
 @Component
-public class RecommendationActiveUserOfRuleSetServiceImpl implements RecommendationRuleSetService {
+public class RecommendationActiveUserOfRuleServiceImpl implements RecommendationRuleService {
 
     private final TransactionsRepository repository;
 
-    public RecommendationActiveUserOfRuleSetServiceImpl(TransactionsRepository repository) {
+    public RecommendationActiveUserOfRuleServiceImpl(TransactionsRepository repository) {
         this.repository = repository;
     }
 
@@ -27,7 +27,7 @@ public class RecommendationActiveUserOfRuleSetServiceImpl implements Recommendat
 
         int result = repository.countTransactionsByUserIdProductType(userId, productType);
 
-        return rule.isNegate() == (result >= 5);
+        return rule.isNegate() == (result >= 5);//вот тут могут быть проблемы
 
     }
 }

@@ -1,8 +1,11 @@
 package ru.starbank.bank.service.Impl;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 import ru.starbank.bank.dto.*;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
@@ -13,6 +16,7 @@ import ru.starbank.bank.service.RecommendationService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -43,7 +47,13 @@ public class RecommendationServiceImpl implements RecommendationService {
             boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
 
             if (resultCheck) {
-                recommendationListForDto.add(UserDTO.from(recommendation));
+                UserDTO recommendationDTO = new UserDTO(
+                        recommendation.getName(),
+                        recommendation.getProductId(),
+                        recommendation.getText()
+                );
+
+                recommendationListForDto.add(recommendationDTO);
             }
         }
 
@@ -58,10 +68,24 @@ public class RecommendationServiceImpl implements RecommendationService {
             rule.setDynamicRecommendation(recommendation);
             rulesRepository.save(rule);
         }
+
         List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
-                .map(RuleDTO::from)
+                .map(rule -> new RuleDTO(
+                        rule.getQuery(),
+                        rule.getArguments(),
+                        rule.isNegate()
+                ))
                 .toList();
-        return DynamicRecommendationDTO.from(recommendation,ruleDtoList);
+
+        DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
+                recommendation.getId(),
+                recommendation.getName(),
+                recommendation.getProductId(),
+                recommendation.getText(),
+                ruleDtoList
+        );
+
+        return recommendationDTO;
     }
 
     @Override
@@ -73,31 +97,37 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         for (DynamicRecommendation recommendation : recommendations) {
             List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
-                    .map(RuleDTO::from)
+                    .map(rule -> new RuleDTO(
+                            rule.getQuery(),
+                            rule.getArguments(),
+                            rule.isNegate()
+                    ))
                     .toList();
 
-            data.add(DynamicRecommendationDTO.from(recommendation,ruleDtoList));
+            DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
+                    recommendation.getId(),
+                    recommendation.getName(),
+                    recommendation.getProductId(),
+                    recommendation.getText(),
+                    ruleDtoList
+            );
+            data.add(recommendationDTO);
         }
 
-        return new ListDynamicRecommendationDTO(data);
+        ListDynamicRecommendationDTO dynamicRecommendationDTOList = new ListDynamicRecommendationDTO(data);
+        return dynamicRecommendationDTOList;
     }
 
     @Override
     @Transactional
-    public HttpStatus deleteDynamicRecommendation(Long id) {
-        DynamicRecommendation recommendation = recommendationsRepository.findById(id).orElse(null);
-
-        if (recommendation == null) {
-            return HttpStatus.BAD_REQUEST;
-        }
+    public void deleteDynamicRecommendation(Long id) {
+        DynamicRecommendation recommendation = recommendationsRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         for (Rule e : recommendation.getRuleList()) {
             rulesRepository.deleteById(e.getId());
         }
         recommendationsRepository.deleteById(id);
-
-        return HttpStatus.NO_CONTENT;
-
     }
 
     @Override

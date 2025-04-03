@@ -4,6 +4,6 @@ import ru.starbank.bank.model.Rule;
 
 import java.util.UUID;
 
-public interface RecommendationRuleSetService {
+public interface RecommendationRuleService {
     boolean check(UUID userId, Rule rule);
 }

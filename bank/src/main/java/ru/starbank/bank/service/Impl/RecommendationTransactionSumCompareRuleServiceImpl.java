@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
-import ru.starbank.bank.service.RecommendationRuleSetService;
+import ru.starbank.bank.service.RecommendationRuleService;
 import ru.starbank.bank.service.RuleService;
 
 import java.util.List;
@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Qualifier("TRANSACTION_SUM_COMPARE")
 @Component
-public class RecommendationTransactionSumCompareRuleSetServiceImpl implements RecommendationRuleSetService {
+public class RecommendationTransactionSumCompareRuleServiceImpl implements RecommendationRuleService {
 
     private final TransactionsRepository repository;
 
     private final RuleService ruleService;
 
-    public RecommendationTransactionSumCompareRuleSetServiceImpl(TransactionsRepository repository, RuleService ruleService) {
+    public RecommendationTransactionSumCompareRuleServiceImpl(TransactionsRepository repository, RuleService ruleService) {
         this.repository = repository;
         this.ruleService = ruleService;
     }
@@ -30,8 +30,9 @@ public class RecommendationTransactionSumCompareRuleSetServiceImpl implements Re
         String productType = arguments.get(0);
         String transactionType = arguments.get(1);
 
-        ruleService.checkRule(rule);
-        boolean result = false;
+
+
+        boolean result;
 
         int threshold = Integer.parseInt(arguments.get(3));
         String operator = arguments.get(2);

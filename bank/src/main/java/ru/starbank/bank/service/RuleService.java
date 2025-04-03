@@ -4,5 +4,5 @@ import ru.starbank.bank.model.Rule;
 
 public interface RuleService {
 
-    boolean checkRule(Rule rule);
+    void checkRule(Rule rule);
 }
