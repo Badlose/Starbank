@@ -43,13 +43,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
 
             if (resultCheck) {
-                UserDTO recommendationDTO = new UserDTO(
-                        recommendation.getName(),
-                        recommendation.getProduct_id(),
-                        recommendation.getText()
-                );
-
-                recommendationListForDto.add(recommendationDTO);
+                recommendationListForDto.add(UserDTO.from(recommendation));
             }
         }
 
@@ -60,25 +54,14 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
-
-
+        for (Rule rule : recommendation.getRuleList()) {
+            rule.setDynamicRecommendation(recommendation);
+            rulesRepository.save(rule);
+        }
         List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
-                .map(rule -> new RuleDTO(
-                        rule.getQuery(),
-                        rule.getArguments(),
-                        rule.isNegate()
-                ))
+                .map(RuleDTO::from)
                 .toList();
-
-        DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
-                recommendation.getId(),
-                recommendation.getName(),
-                recommendation.getProduct_id(),
-                recommendation.getText(),
-                ruleDtoList
-        );
-
-        return recommendationDTO;
+        return DynamicRecommendationDTO.from(recommendation,ruleDtoList);
     }
 
     @Override
@@ -90,25 +73,13 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         for (DynamicRecommendation recommendation : recommendations) {
             List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
-                    .map(rule -> new RuleDTO(
-                            rule.getQuery(),
-                            rule.getArguments(),
-                            rule.isNegate()
-                    ))
+                    .map(RuleDTO::from)
                     .toList();
 
-            DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
-                    recommendation.getId(),
-                    recommendation.getName(),
-                    recommendation.getProduct_id(),
-                    recommendation.getText(),
-                    ruleDtoList
-            );
-            data.add(recommendationDTO);
+            data.add(DynamicRecommendationDTO.from(recommendation,ruleDtoList));
         }
 
-        ListDynamicRecommendationDTO dynamicRecommendationDTOList = new ListDynamicRecommendationDTO(data);
-        return dynamicRecommendationDTOList;
+        return new ListDynamicRecommendationDTO(data);
     }
 
     @Override
