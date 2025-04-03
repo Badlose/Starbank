@@ -13,6 +13,8 @@ import ru.starbank.bank.service.RecommendationService;
 
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+
 @RestController
 @RequestMapping("/recommendation")
 public class RecommendationController {
@@ -45,7 +47,8 @@ public class RecommendationController {
 
     @DeleteMapping("/rule/{recommendationId}")
     public ResponseEntity<Void> deleteDynamicRecommendation(@PathVariable Long recommendationId) {
-        return ResponseEntity.status(recommendationService.deleteDynamicRecommendation(recommendationId)).build();
+        recommendationService.deleteDynamicRecommendation(recommendationId);
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @GetMapping("/rule/stats")

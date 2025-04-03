@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
-import ru.starbank.bank.service.RecommendationRuleSetService;
+import ru.starbank.bank.service.RecommendationRuleService;
 import ru.starbank.bank.service.RuleService;
 
 import java.util.List;
@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Qualifier("USER_OF")
 @Component
-public class RecommendationUserOfRuleSetServiceImpl implements RecommendationRuleSetService {
+public class RecommendationUserOfRuleServiceImpl implements RecommendationRuleService {
 
     private final TransactionsRepository repository;
 
     private final RuleService ruleService;
 
-    public RecommendationUserOfRuleSetServiceImpl(TransactionsRepository repository, RuleService ruleService) {
+    public RecommendationUserOfRuleServiceImpl(TransactionsRepository repository, RuleService ruleService) {
         this.repository = repository;
         this.ruleService = ruleService;
     }

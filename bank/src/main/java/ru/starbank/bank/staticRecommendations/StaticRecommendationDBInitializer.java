@@ -63,7 +63,7 @@ public class StaticRecommendationDBInitializer {
     private static final List<Rule> INVEST500RULES = new ArrayList<>(List.of(
             new Rule("USER_OF", List.of("DEBIT"), true),
             new Rule("USER_OF", List.of("INVEST"), false),
-            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">", "1000"), true)
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">=", "50000"), true)
     ));
     private static final List<Rule> TOPSAVINGRULES = new ArrayList<>(List.of(
             new Rule("USER_OF", List.of("DEBIT"), true), // +

@@ -1,73 +1,91 @@
 package ru.starbank.bank.service.Impl;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import ru.starbank.bank.exceptions.IncorrectRuleQueryException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.service.RecommendationCheckerService;
-import ru.starbank.bank.service.RecommendationRuleSetService;
+import ru.starbank.bank.service.RecommendationRuleService;
+import ru.starbank.bank.service.RuleService;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.List;
 import java.util.UUID;
 
 @Component
 public class RecommendationCheckerServiceImpl implements RecommendationCheckerService {
 
-    private final Map<String, RecommendationRuleSetService> ruleSets;
+    private final List<RecommendationRuleService> ruleSets;
+    private final RuleService ruleService;
 
-    public RecommendationCheckerServiceImpl(Map<String, RecommendationRuleSetService> ruleSets) {
-        this.ruleSets = ruleSets;
+
+    public RecommendationCheckerServiceImpl(@Qualifier("USER_OF") RecommendationRuleService ruleUserOf,
+                                            @Qualifier("ACTIVE_USER_OF") RecommendationRuleService ruleActiveUserOf,
+                                            @Qualifier("TRANSACTION_SUM_COMPARE")
+                                            RecommendationRuleService ruleTransactionSumCompare,
+                                            @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
+                                            RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, RuleService ruleService) {
+        this.ruleService = ruleService;
+        this.ruleSets = List.of(
+                ruleUserOf,
+                ruleActiveUserOf,
+                ruleTransactionSumCompare,
+                ruleTransactionSumCompareDepositWithdraw
+        );
     }
 
     @Override
     public boolean checkDynamicRecommendation(UUID userId, DynamicRecommendation recommendation) {
 
+        boolean check = true;
+        boolean checkOr = false;
+        boolean checkIf = true;
 
         for (Rule rule : recommendation.getRuleList()) {
-            boolean checkResult = true;
-
-            for (RecommendationRuleSetService ruleSetService : ruleSets.values()) {
-
-                if (rule.getQuery().equals(ruleSetService)) {
-
-                    checkResult = checkResult && ruleSetService.check(userId, rule);
+            ruleService.checkRule(rule);
+            switch (rule.getQuery()) {
+                case "USER_OF" -> check = check && ruleSets.get(0).check(userId, rule);
+                case "ACTIVE_USER_OF" -> check = check && ruleSets.get(1).check(userId, rule);
+                case "TRANSACTION_SUM_COMPARE" -> {
+                    if (rule.getArguments().contains("OR")) {
+                        checkOr = checkOr || ruleSets.get(2).check(userId, rule);
+                        checkIf = false;
+                    } else {
+                        check = check && ruleSets.get(2).check(userId, rule);
+                    }
                 }
-                if (!checkResult) {
-                    break;
-                }
+                case "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW" -> check = check && ruleSets.get(3).check(userId, rule);
+                default -> throw new IncorrectRuleQueryException("Incorrect query.");
             }
-            return checkResult;
+
         }
-        return false;
+        return check && (checkOr || checkIf);
     }
-
-// @Override
-//    public boolean checkDynamicRecommendation(UUID userId, DynamicRecommendation recommendation) {
-//    boolean resultCheck = true;
-//    boolean check = false;
-//    boolean checkIf = true;
-//
-//        for(
-//    Rule rule :recommendation.getRuleList())
-//
-//    {
-//        if (rule.getArguments().contains("OR")) {
-//            check = check || ruleSets.stream()
-//                    .allMatch(r -> r.check(userId, rule));
-//            checkIf = false;
-//        } else {
-//            resultCheck = resultCheck && ruleSets.stream()
-//                    .allMatch(r -> r.check(userId, rule));
-//        }
-//    }
-//
-//        return resultCheck &&(check ||checkIf);
-
-//                if (ruleSet != null) {
-//        checkResult = checkResult || ruleSet.check(userId, rule);
-//    } else {
-//        throw new NullPointerException("Ruleset is null exception");
-//    }
-//}
 }
+
+//        if (ruleSets != null) {
+//            checkResult = checkResult || ruleSet.check(userId, rule);
+//        } else {
+//            throw new NullPointerException("Ruleset is null exception");
+//        }
+//
+//        boolean resultCheck = true;
+//        boolean check = false;
+//        boolean checkIf = true;
+//
+//        for (Rule rule : recommendation.getRuleList()) {
+//
+//            if (rule.getArguments().contains("OR")) {
+//
+//                check = check || ruleSets.stream()
+//                        .allMatch(r -> r.check(userId, rule));
+//                checkIf = false;
+//
+//            } else {
+//
+//                resultCheck = resultCheck && ruleSets.stream()
+//                        .allMatch(r -> r.check(userId, rule));
+//            }
+//        }
+//
+//        return resultCheck && (check || checkIf);

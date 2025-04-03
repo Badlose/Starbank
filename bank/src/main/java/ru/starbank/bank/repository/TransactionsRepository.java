@@ -1,7 +1,7 @@
 package ru.starbank.bank.repository;
 
 import ru.starbank.bank.exceptions.IllegalResultException;
-import ru.starbank.bank.exceptions.SQLRequestException;
+import ru.starbank.bank.exceptions.SqlRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,13 +37,13 @@ public class TransactionsRepository {
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
-        } catch (SQLRequestException e) {
+        } catch (SqlRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SQLRequestException("Error executing query.");
+            throw new SqlRequestException("Error executing query.");
         }
 
         if (result == null) {
-//            logger.warn("Query returned null for user {} and product type {}.  Returning -1.", userIdString, productType);
+            logger.warn("Query returned null for user {} and product type {}.", userIdString, productType);
             throw new IllegalResultException();
         }
 
@@ -55,7 +55,7 @@ public class TransactionsRepository {
 
         String userIdString = userId.toString();
         String sql = """
-                SELECT SUM(t.AMOUNT)
+                SELECT COALESCE(SUM(t.AMOUNT), 0)
                 FROM TRANSACTIONS t
                 INNER JOIN PRODUCTS p ON t.product_id = p.id
                 WHERE t.user_ID = ?
@@ -63,20 +63,22 @@ public class TransactionsRepository {
                 AND t.TYPE = ?
                 """;
 
-        Integer result = null;
+        Integer result;
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, transactionType);
-        } catch (SQLRequestException e) {
+            logger.info("RESULT {}", result);
+        } catch (RuntimeException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SQLRequestException("Error executing query.");
+            throw new SqlRequestException("Error executing query.");
         }
 
         if (result == null) {
-            logger.warn("Query returned null for user {} and product type {} and transaction type {}.  Returning -1.",
+            logger.warn("Query returned null for user {} and product type {} and transaction type {}, {}.",
                     userIdString,
                     productType,
-                    transactionType);
+                    transactionType,
+                    result);
             throw new IllegalResultException();
         }
 
@@ -115,13 +117,13 @@ public class TransactionsRepository {
         Integer result = null;
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, userIdString, productType);
-        } catch (SQLRequestException e) {
+        } catch (SqlRequestException e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SQLRequestException("Error executing query.");
+            throw new SqlRequestException("Error executing query.");
         }
 
         if (result == null) {
-            logger.warn("Query returned null for user {} and product type {}.  Returning -1.", userIdString, productType);
+            logger.warn("Query returned null for user {} and product type {}.", userIdString, productType);
             throw new IllegalResultException();
         }
 

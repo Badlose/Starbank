@@ -1,11 +1,11 @@
 package ru.starbank.bank.service.Impl;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 import ru.starbank.bank.dto.*;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
@@ -16,6 +16,7 @@ import ru.starbank.bank.service.RecommendationService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -48,7 +49,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             if (resultCheck) {
                 UserDTO recommendationDTO = new UserDTO(
                         recommendation.getName(),
-                        recommendation.getProduct_id(),
+                        recommendation.getProductId(),
                         recommendation.getText()
                 );
 
@@ -79,7 +80,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
                 recommendation.getId(),
                 recommendation.getName(),
-                recommendation.getProduct_id(),
+                recommendation.getProductId(),
                 recommendation.getText(),
                 ruleDtoList
         );
@@ -106,7 +107,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
                     recommendation.getId(),
                     recommendation.getName(),
-                    recommendation.getProduct_id(),
+                    recommendation.getProductId(),
                     recommendation.getText(),
                     ruleDtoList
             );
@@ -119,20 +120,14 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     @Transactional
-    public HttpStatus deleteDynamicRecommendation(Long id) {
-        DynamicRecommendation recommendation = recommendationsRepository.findById(id).orElse(null);
-
-        if (recommendation == null) {
-            return HttpStatus.BAD_REQUEST;
-        }
+    public void deleteDynamicRecommendation(Long id) {
+        DynamicRecommendation recommendation = recommendationsRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         for (Rule e : recommendation.getRuleList()) {
             rulesRepository.deleteById(e.getId());
         }
         recommendationsRepository.deleteById(id);
-
-        return HttpStatus.NO_CONTENT;
-
     }
 
     @Override
