@@ -20,7 +20,7 @@ public class DynamicRecommendation {
     @Column(columnDefinition = "TEXT")
     private String text;
 
-    @OneToMany(mappedBy = "dynamicRecommendation")
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Rule> ruleList;
 
     public DynamicRecommendation(String name, UUID product_id, String text, List<Rule> ruleList) {

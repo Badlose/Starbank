@@ -44,7 +44,7 @@ public class RecommendationController {
     }
 
     @DeleteMapping("/rule/{recommendationId}")
-    public ResponseEntity<ResponseStatus> deleteDynamicRecommendation(@PathVariable Long recommendationId) {
+    public ResponseEntity<Void> deleteDynamicRecommendation(@PathVariable Long recommendationId) {
         return ResponseEntity.status(recommendationService.deleteDynamicRecommendation(recommendationId)).build();
     }
 
