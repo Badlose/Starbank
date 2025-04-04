@@ -6,7 +6,9 @@ import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
 import ru.starbank.bank.dto.StatisticsDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
+import ru.starbank.bank.model.Statistic;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface RecommendationService {
@@ -20,6 +22,6 @@ public interface RecommendationService {
     void deleteDynamicRecommendation(Long recommendationId);
 
 
-    StatisticsDTO getStatistics();
+    List<Statistic> getStatistics();
 }
 

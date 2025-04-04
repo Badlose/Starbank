@@ -69,7 +69,7 @@ public class DynamicRecommendationDTO {
         return new DynamicRecommendationDTO(
                 recommendation.getId(),
                 recommendation.getName(),
-                recommendation.getProduct_id(),
+                recommendation.getProductId(),
                 recommendation.getText(),
                 ruleDTOList);
     }

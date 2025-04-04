@@ -1,30 +1,49 @@
 package ru.starbank.bank.model;
 
-import java.util.UUID;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
 public class Statistic {
-    private UUID rule_id;
-    private int count = 0;
 
-    public Statistic(UUID rule_id, int count) {
-        this.rule_id = rule_id;
-        this.count = count;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long recommendationId;
+    private int counter;
+
+    public Statistic(Long recommendationId, int counter) {
+        this.recommendationId = recommendationId;
+        this.counter = counter;
     }
 
-    public UUID getRule_id() {
-        return rule_id;
+    public Statistic() {
     }
 
-    public void setRule_id(UUID rule_id) {
-        this.rule_id = rule_id;
+    public Long getId() {
+        return id;
     }
 
-    public int getCount() {
-        return count;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public Long getRecommendationId() {
+        return recommendationId;
+    }
+
+    public void setRecommendationId(Long recommendationId) {
+        this.recommendationId = recommendationId;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 
 
