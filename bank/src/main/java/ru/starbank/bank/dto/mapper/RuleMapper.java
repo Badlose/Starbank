@@ -13,6 +13,7 @@ public interface RuleMapper {
     @Mapping(source = "arguments", target = "arguments")
     RuleDTO ruleToDTO(Rule rule);
 
+    @Mapping(source = "arguments", target = "arguments")
     Rule toRule(RuleDTO ruleDTO);
 
     default String argumentsListToString(List<String> arguments) {

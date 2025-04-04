@@ -1,6 +1,5 @@
 package ru.starbank.bank.service.Impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,7 +96,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 //                ))
 //                .toList();
 
-        DynamicRecommendationDTO recommendationDTO = recommendationMapper.convert(recommendation);
+        DynamicRecommendationDTO recommendationDTO = recommendationMapper.toDynamicRecommendationDTO(recommendation);
 //        DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
 //                recommendation.getId(),
 //                recommendation.getName(),
@@ -125,7 +124,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                     ))
                     .toList();
 
-            DynamicRecommendationDTO recommendationDTO = recommendationMapper.convert(recommendation);
+            DynamicRecommendationDTO recommendationDTO = recommendationMapper.toDynamicRecommendationDTO(recommendation);
 //            DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
 //                    recommendation.getId(),
 //                    recommendation.getName(),
