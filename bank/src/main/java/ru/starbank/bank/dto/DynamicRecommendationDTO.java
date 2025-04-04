@@ -16,18 +16,13 @@ public class DynamicRecommendationDTO {
 
     private String product_text;
 
-    private List<Rule> rule;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private List<RuleDTO> rule;
 
     public String getProduct_name() {
         return product_name;
+    }
+
+    public DynamicRecommendationDTO() {
     }
 
     public void setProduct_name(String product_name) {
@@ -50,15 +45,23 @@ public class DynamicRecommendationDTO {
         this.product_text = product_text;
     }
 
-    public List<Rule> getRule() {
+    public List<RuleDTO> getRule() {
         return rule;
     }
 
-    public void setRule(List<Rule> rule) {
+    public void setRule(List<RuleDTO> rule) {
         this.rule = rule;
     }
 
-//    public static DynamicRecommendationDTO from(DynamicRecommendation recommendation, List<RuleDTO> ruleDTOList) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    //    public static DynamicRecommendationDTO from(DynamicRecommendation recommendation, List<RuleDTO> ruleDTOList) {
 //        return new DynamicRecommendationDTO(
 //                recommendation.getId(),
 //                recommendation.getName(),

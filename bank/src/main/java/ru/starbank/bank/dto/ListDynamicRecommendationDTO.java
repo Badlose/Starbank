@@ -2,13 +2,19 @@ package ru.starbank.bank.dto;
 
 
 import java.util.List;
+import java.util.UUID;
 
 public class ListDynamicRecommendationDTO {
 
+    private UUID userId;
     private List<DynamicRecommendationDTO> data;
 
-    public ListDynamicRecommendationDTO(List<DynamicRecommendationDTO> data) {
-        this.data = data;
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public List<DynamicRecommendationDTO> getData() {
@@ -18,5 +24,4 @@ public class ListDynamicRecommendationDTO {
     public void setData(List<DynamicRecommendationDTO> data) {
         this.data = data;
     }
-
 }
