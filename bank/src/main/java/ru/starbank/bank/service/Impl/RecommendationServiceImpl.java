@@ -1,22 +1,21 @@
 package ru.starbank.bank.service.Impl;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 import ru.starbank.bank.dto.*;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
+import ru.starbank.bank.model.Statistic;
 import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
+import ru.starbank.bank.repository.StatisticRepository;
 import ru.starbank.bank.service.RecommendationCheckerService;
 import ru.starbank.bank.service.RecommendationService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,11 +25,14 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     private final RulesRepository rulesRepository;
 
+    private final StatisticRepository statisticRepository;
+
     private final RecommendationCheckerService checkerService;
 
-    public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository, RulesRepository rulesRepository, RecommendationCheckerService checkerService) {
+    public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository, RulesRepository rulesRepository, StatisticRepository statisticRepository, RecommendationCheckerService checkerService) {
         this.recommendationsRepository = recommendationsRepository;
         this.rulesRepository = rulesRepository;
+        this.statisticRepository = statisticRepository;
         this.checkerService = checkerService;
     }
 
@@ -51,9 +53,15 @@ public class RecommendationServiceImpl implements RecommendationService {
                         recommendation.getName(),
                         recommendation.getProductId(),
                         recommendation.getText()
+
                 );
 
+                Statistic statistic = statisticRepository.findByRecommendationId(recommendation.getId());
+
+                statistic.setCounter(statistic.getCounter() + 1);
+
                 recommendationListForDto.add(recommendationDTO);
+
             }
         }
 
@@ -64,6 +72,10 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
         recommendationsRepository.save(recommendation);
+
+        Statistic statistic = new Statistic(recommendation.getId(), 0);
+        statisticRepository.save(statistic);
+
         for (Rule rule : recommendation.getRuleList()) {
             rule.setDynamicRecommendation(recommendation);
             rulesRepository.save(rule);
@@ -124,16 +136,21 @@ public class RecommendationServiceImpl implements RecommendationService {
         DynamicRecommendation recommendation = recommendationsRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        for (Rule e : recommendation.getRuleList()) {
+        statisticRepository.deleteById(recommendation.getId());
+
+        for (Rule e : recommendation.getRuleList()) { //апускать удаление рулов если удалили статы
             rulesRepository.deleteById(e.getId());
         }
-        recommendationsRepository.deleteById(id);
+
+        recommendationsRepository.deleteById(id); //запускать если удалили рулы
+
+
     }
 
     @Override
-    public StatisticsDTO getStatistics() {
-
-        return null;
+    public List<Statistic> getStatistics() {
+        List<Statistic> statistics = statisticRepository.findAll();
+        return statistics;
     }
 
 }

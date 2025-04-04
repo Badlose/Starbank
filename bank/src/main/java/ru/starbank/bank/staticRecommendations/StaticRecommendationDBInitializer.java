@@ -4,10 +4,13 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.starbank.bank.exceptions.StaticRecommendationInitializerException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
+import ru.starbank.bank.model.Statistic;
 import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
+import ru.starbank.bank.repository.StatisticRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,7 @@ public class StaticRecommendationDBInitializer {
 
     private final RecommendationsRepository recommendationsRepository;
     private final RulesRepository rulesRepository;
+    private final StatisticRepository statisticRepository;
 
     private static final String INVEST500ID = "147f6a0f-3b91-413b-ab99-87f081d60d5a";
     private static final String INVEST500NAME = "Invest500";
@@ -66,20 +70,21 @@ public class StaticRecommendationDBInitializer {
             new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">=", "50000"), true)
     ));
     private static final List<Rule> TOPSAVINGRULES = new ArrayList<>(List.of(
-            new Rule("USER_OF", List.of("DEBIT"), true), // +
-            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", "DEPOSIT", ">=", "50000", "OR"), true), // +/-
-            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">=", "50000", "OR"), true), // +/-
+            new Rule("USER_OF", List.of("DEBIT"), true),
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", "DEPOSIT", ">=", "50000", "OR"), true),
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("SAVING", "DEPOSIT", ">=", "50000", "OR"), true),
             new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", List.of("DEBIT", ">"), true) // +
     ));
     private static final List<Rule> SIMPLELOANRULES = new ArrayList<>(List.of(
-            new Rule("USER_OF", List.of("CREDIT"), false), // +
-            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", List.of("DEBIT", ">"), true), // +
-            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", "WITHDRAW", ">", "100000"), true) // +
+            new Rule("USER_OF", List.of("CREDIT"), false),
+            new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", List.of("DEBIT", ">"), true),
+            new Rule("TRANSACTION_SUM_COMPARE", List.of("DEBIT", "WITHDRAW", ">", "100000"), true)
     ));
 
-    public StaticRecommendationDBInitializer(RecommendationsRepository recommendationsRepository, RulesRepository rulesRepository) {
+    public StaticRecommendationDBInitializer(RecommendationsRepository recommendationsRepository, RulesRepository rulesRepository, StatisticRepository statisticRepository) {
         this.recommendationsRepository = recommendationsRepository;
         this.rulesRepository = rulesRepository;
+        this.statisticRepository = statisticRepository;
     }
 
     List<DynamicRecommendation> recommendationList = new ArrayList<>(List.of(
@@ -95,13 +100,18 @@ public class StaticRecommendationDBInitializer {
         for (DynamicRecommendation recommendation : recommendationList) {
             DynamicRecommendation existingRecommendations = recommendationsRepository.findByName(recommendation.getName());
             if (existingRecommendations == null) {
+
                 recommendationsRepository.save(recommendation);
+                Statistic statistic = new Statistic(recommendation.getId(), 0);
+
+                statisticRepository.save(statistic);
                 for (Rule rule : recommendation.getRuleList()) {
                     rule.setDynamicRecommendation(recommendation);
                     rulesRepository.save(rule);
                 }
             }
-        }
-    }
+        }//какой тут может быть негатив? напрашивается исключение
+    } //                throw new StaticRecommendationInitializerException("Exception when initializing static recommendations");
+
 
 }

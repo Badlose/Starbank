@@ -22,7 +22,6 @@ public class DynamicRecommendation {
     private String text;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "dynamicRecommendation")
-    @JsonIgnore
     private List<Rule> ruleList;
 
     public DynamicRecommendation(String name, UUID productId, String text, List<Rule> ruleList) {

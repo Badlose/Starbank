@@ -44,7 +44,7 @@ public class UserDTO {
     public static UserDTO from(DynamicRecommendation recommendation) {
         return new UserDTO(
                 recommendation.getName(),
-                recommendation.getProduct_id(),
+                recommendation.getProductId(),
                 recommendation.getText());
     }
 }

@@ -9,8 +9,10 @@ import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
 import ru.starbank.bank.dto.StatisticsDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
+import ru.starbank.bank.model.Statistic;
 import ru.starbank.bank.service.RecommendationService;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -52,7 +54,7 @@ public class RecommendationController {
     }
 
     @GetMapping("/rule/stats")
-    public StatisticsDTO getStatistics() {
+    public List<Statistic> getStatistics() {
         return recommendationService.getStatistics();
     }
 
