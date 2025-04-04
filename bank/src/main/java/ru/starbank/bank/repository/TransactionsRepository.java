@@ -21,6 +21,7 @@ public class TransactionsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
     public int countTransactionsByUserIdProductType(UUID userId, String productType) {
 
         String sql = """
@@ -74,11 +75,10 @@ public class TransactionsRepository {
         }
 
         if (result == null) {
-            logger.warn("Query returned null for user {} and product type {} and transaction type {}, {}.",
+            logger.warn("Query returned null for user {} and product type {} and transaction type {}.",
                     userIdString,
                     productType,
-                    transactionType,
-                    result);
+                    transactionType);
             throw new IllegalResultException();
         }
 

@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.starbank.bank.dto.DynamicRecommendationDTO;
 import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
-import ru.starbank.bank.dto.StatisticsDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Statistic;
