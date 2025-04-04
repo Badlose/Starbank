@@ -45,17 +45,15 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>8.0.1.Final</version> <!-- Используйте самую последнюю версию -->
+            <version>8.0.1.Final</version>
         </dependency>
 
-        <!--  Jakarta Validation API (опционально, но можно оставить) -->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.2</version> <!-- Подходит для Hibernate Validator 8.0.1.Final -->
+            <version>3.0.2</version>
         </dependency>
 
-        <!-- Jakarta Expression Language (если используете выражения в аннотациях) -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
@@ -109,7 +107,13 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>3.0.5</version> <!-- Убедитесь, что используете последнюю версию -->
+            <version>3.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.6.3</version>
         </dependency>
 
     </dependencies>
