@@ -7,10 +7,6 @@ public class ListDynamicRecommendationDTO {
 
     private List<DynamicRecommendationDTO> data;
 
-    public ListDynamicRecommendationDTO(List<DynamicRecommendationDTO> data) {
-        this.data = data;
-    }
-
     public List<DynamicRecommendationDTO> getData() {
         return data;
     }
@@ -18,5 +14,4 @@ public class ListDynamicRecommendationDTO {
     public void setData(List<DynamicRecommendationDTO> data) {
         this.data = data;
     }
-
 }

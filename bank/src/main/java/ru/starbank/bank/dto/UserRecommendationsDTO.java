@@ -14,6 +14,9 @@ public class UserRecommendationsDTO {
         this.recommendations = recommendations;
     }
 
+    public UserRecommendationsDTO() {
+    }
+
     public UUID getUserId() {
         return userId;
     }

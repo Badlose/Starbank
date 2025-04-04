@@ -5,11 +5,15 @@ import ru.starbank.bank.model.DynamicRecommendation;
 import java.util.UUID;
 
 public class UserDTO {
+
     private String product_name;
 
     private UUID product_id;
 
     private String product_text;
+
+    public UserDTO() {
+    }
 
     public UserDTO(String product_name, UUID product_id, String product_text) {
         this.product_name = product_name;
@@ -41,11 +45,11 @@ public class UserDTO {
         this.product_text = product_text;
     }
 
-    public static UserDTO from(DynamicRecommendation recommendation) {
-        return new UserDTO(
-                recommendation.getName(),
-                recommendation.getProductId(),
-                recommendation.getText());
-    }
+//    public static UserDTO from(DynamicRecommendation recommendation) {
+//        return new UserDTO(
+//                recommendation.getName(),
+//                recommendation.getProductId(),
+//                recommendation.getText());
+//    }
 }
 
