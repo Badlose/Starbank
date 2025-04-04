@@ -111,6 +111,18 @@
             <artifactId>caffeine</artifactId>
             <version>3.0.5</version> <!-- Убедитесь, что используете последнюю версию -->
         </dependency>
+        <dependency>
+            <groupId>com.github.pengrad</groupId>
+            <artifactId>java-telegram-bot-api</artifactId>
+            <version>5.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>6.0.1</version>
+        </dependency>
+
 
     </dependencies>
 
