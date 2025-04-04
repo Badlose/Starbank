@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DynamicRecommendationMapper {
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "product_name")
     @Mapping(source = "productId", target = "product_id")
     @Mapping(source = "text", target = "product_text")
@@ -23,19 +24,5 @@ public interface DynamicRecommendationMapper {
     @Mapping(source = "negate", target = "negate")
     RuleDTO toRuleDto(Rule rule);
 
-    default List<RuleDTO> mapRuleListToRuleDtoList(List<Rule> ruleList) {
-        if (ruleList == null) {
-            return null;
-        }
-        return ruleList.stream()
-                .map(this::toRuleDto)
-                .toList();
-    }
-
-    default DynamicRecommendationDTO toDynamicRecommendationDtoWithRules(DynamicRecommendation dynamicRecommendation) {
-        DynamicRecommendationDTO dto = toDynamicRecommendationDto(dynamicRecommendation);
-        List<RuleDTO> ruleDTOS = mapRuleListToRuleDtoList(dynamicRecommendation.getRuleList());
-        dto.setRule(ruleDTOS);
-        return dto;
-    }
+    List<RuleDTO> mapRuleListToRuleDtoList(List<Rule> ruleList);
 }

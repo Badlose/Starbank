@@ -13,14 +13,11 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface UserRecommendationMapper {
 
-    // Метод для преобразования DynamicRecommendation в RecommendationDto
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "productId", target = "id")
-    @Mapping(source = "text", target = "text")
+    @Mapping(source = "name", target = "product_name")
+    @Mapping(source = "productId", target = "product_id")
+    @Mapping(source = "text", target = "product_text")
     UserDTO dynamicRecommendationToRecommendationDto(DynamicRecommendation dynamicRecommendation);
 
-
-    // Метод для создания RecommendationResponseDto из userId и списка DynamicRecommendation
     default UserRecommendationsDTO toRecommendationResponseDto(UUID userId, List<DynamicRecommendation> dynamicRecommendations) {
         List<UserDTO> recommendationDTOS = dynamicRecommendations.stream()
                 .map(this::dynamicRecommendationToRecommendationDto)

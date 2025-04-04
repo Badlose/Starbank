@@ -6,6 +6,9 @@ public class InfoDTO {
 
     private String version;
 
+    public InfoDTO() {
+    }
+
     public InfoDTO(String name, String version) {
         this.name = name;
         this.version = version;
