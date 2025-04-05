@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.service.Impl.RecommendationServiceImpl;
 import ru.starbank.bank.telegram.service.MessageProcessor;
-import ru.starbank.bank.telegram.service.MessageSender; // Импортируйте новый класс
+import ru.starbank.bank.telegram.service.MessageSender;
+import ru.starbank.bank.telegram.service.impl.MessageSenderImpl; // Импортируйте новый класс
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ import java.util.List;
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+
+    private MessageSender messageSender;
+
 
     @Autowired
     private TelegramBot telegramBot;
@@ -31,7 +35,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private MessageProcessor messageProcessor;
 
     @Autowired
-    private MessageSender messageSender; // Внедрите новый класс
+    private MessageSenderImpl messageSenderImpl; // Внедрите новый класс
 
     @PostConstruct
     public void init() {
@@ -51,11 +55,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                 if ("/start".equals(messageText)) {
                     messageSender.sendWelcomeMessage(chatId); // Используйте MessageService
-                } else {
+                }
+                if (messageText.startsWith("/recomend")) {
                     messageProcessor.processMessage(messageText, chatId);
-
                 }
             }
+
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }

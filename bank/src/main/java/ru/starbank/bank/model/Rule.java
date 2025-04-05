@@ -39,8 +39,7 @@ public class Rule {
         this.negate = negate;
     }
 
-    public Rule(Long id, String query, List<String> arguments, boolean negate,
-                DynamicRecommendation dynamicRecommendation) {
+    public Rule(Long id, String query, List<String> arguments, boolean negate, DynamicRecommendation dynamicRecommendation) {
         this.id = id;
         this.query = query;
         this.arguments = arguments;
@@ -68,7 +67,7 @@ public class Rule {
     }
 
     public List<String> getArguments() {
-        return arguments == null ? List.of() : arguments;
+        return arguments;
     }
 
     public void setArguments(List<String> arguments) {
@@ -88,9 +87,7 @@ public class Rule {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return negate == rule.negate && Objects.equals(id, rule.id) && Objects.equals(query, rule.query)
-                && Objects.equals(arguments, rule.arguments)
-                && Objects.equals(dynamicRecommendation, rule.dynamicRecommendation);
+        return negate == rule.negate && Objects.equals(id, rule.id) && Objects.equals(query, rule.query) && Objects.equals(arguments, rule.arguments) && Objects.equals(dynamicRecommendation, rule.dynamicRecommendation);
     }
 
     @Override

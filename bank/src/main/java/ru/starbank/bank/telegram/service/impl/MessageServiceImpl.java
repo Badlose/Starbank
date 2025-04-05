@@ -5,6 +5,7 @@ import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.telegram.service.MessageService;
 
 import java.util.UUID;
+
 @Service
 public class MessageServiceImpl implements MessageService {
     private final TransactionsRepository transactionsRepository;
@@ -30,12 +31,12 @@ public class MessageServiceImpl implements MessageService {
         return null;
     }
 
-    private UUID getUserIdByUsername(String userName) {
-      return   transactionsRepository.getUserIdByUserName(userName);
+    public UUID getUserIdByUsername(String userName) {
+        return transactionsRepository.getUserIdByUserName(userName);
 
     }
 
-    private String getFirstNameLastNameByUserName(String userName) {
+    public String getFirstNameLastNameByUserName(String userName) {
         String fullName = transactionsRepository.getFirstNameLastNameByUserName(userName);
 
         return fullName;
