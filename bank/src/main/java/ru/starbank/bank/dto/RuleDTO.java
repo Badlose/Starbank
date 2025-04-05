@@ -9,10 +9,7 @@ public class RuleDTO {
     private List<String> arguments;
     private boolean negate;
 
-    public RuleDTO(String query, List<String> arguments, boolean negate) {
-        this.query = query;
-        this.arguments = arguments;
-        this.negate = negate;
+    public RuleDTO() {
     }
 
     public String getQuery() {
@@ -39,10 +36,10 @@ public class RuleDTO {
         this.negate = negate;
     }
 
-    public static RuleDTO from(Rule rule) {
-        return new RuleDTO(
-                rule.getQuery(),
-                rule.getArguments(),
-                rule.isNegate());
-    }
+//    public static RuleDTO from(Rule rule) {
+//        return new RuleDTO(
+//                rule.getQuery(),
+//                rule.getArguments(),
+//                rule.isNegate());
+//    }
 }

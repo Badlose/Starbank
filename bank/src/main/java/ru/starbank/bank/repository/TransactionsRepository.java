@@ -4,12 +4,14 @@ import org.checkerframework.checker.optional.qual.Present;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -166,26 +168,51 @@ public class TransactionsRepository {
 
         return result;
     }
-    public UUID getUserIdByUserName(String userName) {
-        String sql = "SELECT id FROM USERS WHERE username = ?";
-        UUID userId;
+
+    public Optional<List<DynamicRecommendation>> getRecommendationsByFirstNameAndLastName(String firstName, String lastName) {
+
+        if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty()) {
+            logger.info("Имя или фамилия должны быть непустыми. Возвращает Optional.empty().");
+            return Optional.empty();
+        }
+
+        String sql = "SELECT ID FROM USERS WHERE FIRST_NAME = ? AND LAST_NAME = ?";
 
         try {
-         userId=jdbcTemplate.queryForObject(sql, UUID.class,userName);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
+            logger.debug("Запрос идентификатора пользователя для {} {}", firstName, lastName);
+
+
+            Optional<UUID> userIdOptional = Optional.of(jdbcTemplate.queryForObject(sql, UUID.class
+                    , firstName.trim()
+                    , lastName.trim()));
+
+            if (userIdOptional.isPresent()) {
+
+                List<DynamicRecommendation> recommendations = getRecommendationsByUserId(userIdOptional.get());
+                logger.debug("Найдены рекомендации для пользователя {} {}: {}", firstName, lastName, recommendations.size());
+                return Optional.of(recommendations);
+            } else {
+                logger.info("Пользователь с именем {} и фамилией {} не найден.", firstName, lastName);
+            }
+        } catch (DataAccessException e) {
+            logger.error("Ошибка доступа к базе данных при получении идентификатора пользователя для {} {}: {}",
+                    firstName, lastName, e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("Непредвиденная ошибка при получении идентификатора пользователя для {} {}: {}",
+                    firstName, lastName, e.getMessage(), e);
         }
-        return userId;
-    }
-    public String getFirstNameLastNameByUserName(String userName) {
-        String sql = "SELECT first_name  ' '  last_name AS full_name FROM USERS u WHERE u.username = ?";
-        String userFirstNameLastName;
-        try {
-            userFirstNameLastName= jdbcTemplate.queryForObject(sql, String.class,userName);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-        return userFirstNameLastName;
+
+        return Optional.empty();
     }
 
+
+
+
+    public List<DynamicRecommendation> getRecommendationsByUserId(UUID userId) {
+
+
+        return List.of();
+    }
 }
+
+
