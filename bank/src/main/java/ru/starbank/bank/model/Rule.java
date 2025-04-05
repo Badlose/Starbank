@@ -88,9 +88,7 @@ public class Rule {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return negate == rule.negate && Objects.equals(id, rule.id) && Objects.equals(query, rule.query)
-                && Objects.equals(arguments, rule.arguments)
-                && Objects.equals(dynamicRecommendation, rule.dynamicRecommendation);
+        return negate == rule.negate && Objects.equals(id, rule.id) && Objects.equals(query, rule.query) && Objects.equals(arguments, rule.arguments) && Objects.equals(dynamicRecommendation, rule.dynamicRecommendation);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package ru.starbank.bank.service.Impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.RecommendationRuleService;
@@ -18,6 +21,10 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl i
 
     private final RuleService ruleService;
 
+    private static final Logger logger = LoggerFactory.getLogger(
+            RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl.class);
+
+
     public RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl(TransactionsRepository repository, RuleService ruleService) {
         this.repository = repository;
         this.ruleService = ruleService;
@@ -29,10 +36,21 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl i
         List<String> arguments = rule.getArguments();
         String productType = arguments.get(0);
         String comparison = rule.getArguments().get(1);
+        int result;
 
         ruleService.checkRule(rule);
 
-        int result = repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId, productType, comparison);
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        try {
+            result = repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId, productType, comparison);
+        } finally {
+            stopWatch.stop();
+            long executionTime = stopWatch.getTotalTimeMillis();
+            logger.info("Query executed in {} ms for user {} and product type {} and comparison symbol {}.",
+                    executionTime, userId, productType, comparison);
+        }
 
         return rule.isNegate() ? result == 1 : result == 0;
 

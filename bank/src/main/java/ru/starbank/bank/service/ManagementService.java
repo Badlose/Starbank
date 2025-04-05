@@ -6,5 +6,5 @@ public interface ManagementService {
 
     InfoDTO getServiceInfo();
 
-    void clearAllCache();
+    void clearAllCaches();
 }

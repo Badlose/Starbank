@@ -1,10 +1,20 @@
 package ru.starbank.bank.repository;
 
-import ru.starbank.bank.exceptions.IllegalResultException;
-import ru.starbank.bank.exceptions.SqlRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import ru.starbank.bank.exceptions.IllegalResultException;
+import ru.starbank.bank.exceptions.SqlRequestException;
+import ru.starbank.bank.model.DynamicRecommendation;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +31,7 @@ public class TransactionsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
+    @Cacheable(value = "transactionCounts")
     public int countTransactionsByUserIdProductType(UUID userId, String productType) {
 
         String sql = """
@@ -38,7 +48,7 @@ public class TransactionsRepository {
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
-        } catch (SqlRequestException e) {
+        } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query.");
         }
@@ -52,6 +62,7 @@ public class TransactionsRepository {
         return result;
     }
 
+    @Cacheable(value = "transactionSumCompare")
     public int compareTransactionSumByUserIdProductType(UUID userId, String productType, String transactionType) {
 
         String userIdString = userId.toString();
@@ -68,8 +79,7 @@ public class TransactionsRepository {
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, transactionType);
-            logger.info("RESULT {}", result);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query.");
         }
@@ -86,6 +96,7 @@ public class TransactionsRepository {
         return result;
     }
 
+    @Cacheable(value = "transactionSumCompareDepositWithdraw")
     public int compareTransactionSumByUserIdProductTypeDepositWithdraw(UUID userId, String productType, String comparison) {
 
         String userIdString = userId.toString();
@@ -115,9 +126,10 @@ public class TransactionsRepository {
                         """;
 
         Integer result = null;
+
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, userIdString, productType);
-        } catch (SqlRequestException e) {
+        } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query.");
         }
@@ -130,7 +142,22 @@ public class TransactionsRepository {
         return result;
     }
 
+    @CacheEvict(value = {"transactionCounts", "transactionSumCompare", "transactionSumCompareDepositWithdraw"}, allEntries = true)
+    public void clearCache() {
+        logger.info("clearCache - Clearing the entire cache");
+    }
 
+    public Optional<List<DynamicRecommendation>> getRecommendationsByFirstNameAndLastName(String firstName, String lastName) {
 
+        if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty()) {
+            logger.info("Имя или фамилия должны быть непустыми. Возвращает Optional.empty().");
+            return Optional.empty();
+        }
 
-}
+        String sql = "SELECT ID FROM USERS WHERE FIRST_NAME = ? AND LAST_NAME = ?";
+
+    public List<DynamicRecommendation> getRecommendationsByUserId(UUID userId) {
+
+        return List.of();
+    }
+

@@ -1,17 +1,27 @@
 package ru.starbank.bank.service.Impl;
 
-import org.checkerframework.checker.units.qual.A;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.dto.InfoDTO;
+import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.ManagementService;
 
 @Service
 public class ManagementServiceImpl implements ManagementService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ManagementServiceImpl.class);
+
     @Autowired
     private BuildProperties buildProperties;
+
+    private final TransactionsRepository repository;
+
+    public ManagementServiceImpl(TransactionsRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public InfoDTO getServiceInfo() {
@@ -22,7 +32,9 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     @Override
-    public void clearAllCache() {
+    public void clearAllCaches() {
+
+        repository.clearCache();
 
     }
 }
