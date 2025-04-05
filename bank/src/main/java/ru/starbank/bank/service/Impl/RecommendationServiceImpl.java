@@ -10,9 +10,11 @@ import ru.starbank.bank.dto.*;
 import ru.starbank.bank.dto.mapper.DynamicRecommendationMapper;
 import ru.starbank.bank.dto.mapper.ListDynamicRecommendationMapper;
 import ru.starbank.bank.dto.mapper.UserRecommendationMapper;
+import ru.starbank.bank.exceptions.SqlRequestException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.model.Statistic;
+import ru.starbank.bank.model.enums.QueryEnum;
 import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
 import ru.starbank.bank.repository.StatisticRepository;
@@ -35,11 +37,12 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final DynamicRecommendationMapper recommendationMapper;
     private final UserRecommendationMapper userRecommendationMapper;
     private final ListDynamicRecommendationMapper listDynamicRecommendationMapper;
+    private final CheckCorrect checkCorrect;
 
     public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository,
                                      RulesRepository rulesRepository,
                                      StatisticRepository statisticRepository,
-                                     RecommendationCheckerService checkerService, DynamicRecommendationMapper recommendationMapper, UserRecommendationMapper userRecommendationMapper, ListDynamicRecommendationMapper listDynamicRecommendationMapper) {
+                                     RecommendationCheckerService checkerService, DynamicRecommendationMapper recommendationMapper, UserRecommendationMapper userRecommendationMapper, ListDynamicRecommendationMapper listDynamicRecommendationMapper, CheckCorrect checkCorrect) {
         this.recommendationsRepository = recommendationsRepository;
         this.rulesRepository = rulesRepository;
         this.statisticRepository = statisticRepository;
@@ -47,6 +50,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         this.recommendationMapper = recommendationMapper;
         this.userRecommendationMapper = userRecommendationMapper;
         this.listDynamicRecommendationMapper = listDynamicRecommendationMapper;
+        this.checkCorrect = checkCorrect;
     }
 
     @Override
@@ -58,13 +62,6 @@ public class RecommendationServiceImpl implements RecommendationService {
         for (DynamicRecommendation recommendation : recommendations) {
             boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
             if (resultCheck) {
-
-//                UserDTO recommendationDTO = new UserDTO(
-//                        recommendation.getName(),
-//                        recommendation.getProductId(),
-//                        recommendation.getText()
-//                );
-
                 Statistic statistic = statisticRepository.findByRecommendationId(recommendation.getId());
                 statistic.setCounter(statistic.getCounter() + 1);
                 recommendationListForDto.add(recommendation);
@@ -77,34 +74,19 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
-        recommendationsRepository.save(recommendation);
+        if(checkCorrect.checkRecommendationCorrect(recommendation)){
+            recommendationsRepository.save(recommendation);
 
-        Statistic statistic = new Statistic(recommendation.getId(), 0);
-        statisticRepository.save(statistic);
+            Statistic statistic = new Statistic(recommendation.getId(), 0);
+            statisticRepository.save(statistic);
 
-        for (Rule rule : recommendation.getRuleList()) {
-            rule.setDynamicRecommendation(recommendation);
-            rulesRepository.save(rule);
+            for (Rule rule : recommendation.getRuleList()) {
+                rule.setDynamicRecommendation(recommendation);
+                rulesRepository.save(rule);
+            }
+            return recommendationMapper.toDynamicRecommendationDto(recommendation);
         }
-
-//        List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
-//                .map(rule -> new RuleDTO(
-//                        rule.getQuery(),
-//                        rule.getArguments(),
-//                        rule.isNegate()
-//                ))
-//                .toList();
-
-//        DynamicRecommendationDTO recommendationDTO = recommendationMapper.toDynamicRecommendationDTO(recommendation);
-//        DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
-//                recommendation.getId(),
-//                recommendation.getName(),
-//                recommendation.getProductId(),
-//                recommendation.getText(),
-//                ruleDtoList
-//        );
-
-        return recommendationMapper.toDynamicRecommendationDto(recommendation);
+        return new DynamicRecommendationDTO();
     }
 
     @Override
