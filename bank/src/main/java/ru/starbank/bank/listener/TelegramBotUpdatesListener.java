@@ -1,4 +1,4 @@
-package ru.starbank.bank.telegram.listener;
+package ru.starbank.bank.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -28,7 +28,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private RecommendationServiceImpl recommendationService;
 
     @Autowired
-    private MessageProcessor messageProcessor;
+    MessageProcessor messageProcessor;
 
     @PostConstruct
     public void init() {
@@ -40,16 +40,35 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
 
+
             if (update.message() != null) {
                 Message message = update.message();
                 String messageText = message.text();
                 Chat chat = message.chat();
                 long chatId = chat.id();
 
-                messageProcessor.processMessage(messageText, chatId);
+
+                if ("/start".equals(messageText)) {
+                    sendWelcomeMessage(chatId);
+                } else {
+
+                    messageProcessor.processMessage(messageText, chatId);
+                    sendConfirmationMessage(chatId);
+                }
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
-}
 
+    private void sendWelcomeMessage(long chatId) {
+        String welcomeMessage = "Привет! Добро пожаловать в нашего бота!";
+        SendMessage message = new SendMessage(chatId, welcomeMessage);
+        telegramBot.execute(message);
+    }
+
+    private void sendConfirmationMessage(long chatId) {
+        String confirmationMessage = "Ваше напоминание успешно добавлено!";
+        SendMessage message = new SendMessage(chatId, confirmationMessage);
+        telegramBot.execute(message);
+    }
+}
