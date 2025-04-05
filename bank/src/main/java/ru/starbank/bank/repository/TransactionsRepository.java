@@ -1,19 +1,19 @@
 package ru.starbank.bank.repository;
 
-import ru.starbank.bank.exceptions.IllegalResultException;
-import ru.starbank.bank.exceptions.SqlRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.starbank.bank.exceptions.IllegalResultException;
+import ru.starbank.bank.exceptions.SqlRequestException;
 import ru.starbank.bank.model.DynamicRecommendation;
-import ru.starbank.bank.model.Rule;
 
 import java.util.List;
 import java.util.Optional;
-
 import java.util.UUID;
 
 @Repository
@@ -27,7 +27,7 @@ public class TransactionsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
+    @Cacheable(value = "transactionCounts", key = "{#userId, #productType}")
     public int countTransactionsByUserIdProductType(UUID userId, String productType) {
 
         String sql = """
@@ -44,7 +44,7 @@ public class TransactionsRepository {
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
-        } catch (SqlRequestException e) {
+        } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query.");
         }
@@ -58,6 +58,7 @@ public class TransactionsRepository {
         return result;
     }
 
+    @Cacheable(value = "transactionSumCompare", key = "{#userId, #productType, #transactionType}")
     public int compareTransactionSumByUserIdProductType(UUID userId, String productType, String transactionType) {
 
         String userIdString = userId.toString();
@@ -74,8 +75,7 @@ public class TransactionsRepository {
 
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, transactionType);
-            logger.info("RESULT {}", result);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query.");
         }
@@ -92,6 +92,7 @@ public class TransactionsRepository {
         return result;
     }
 
+    @Cacheable(value = "transactionSumCompareDepositWithdraw", key = "{#userId, #productType, #comparison}")
     public int compareTransactionSumByUserIdProductTypeDepositWithdraw(UUID userId, String productType, String comparison) {
 
         String userIdString = userId.toString();
@@ -121,9 +122,10 @@ public class TransactionsRepository {
                         """;
 
         Integer result = null;
+
         try {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, userIdString, productType);
-        } catch (SqlRequestException e) {
+        } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query.");
         }
@@ -135,6 +137,12 @@ public class TransactionsRepository {
 
         return result;
     }
+
+    @CacheEvict(value = {"transactionCounts", "transactionSumCompare", "transactionSumCompareDepositWithdraw"}, allEntries = true)
+    public void clearCache() {
+        logger.info("clearCache - Clearing the entire cache");
+    }
+
 
     public Optional<List<DynamicRecommendation>> getRecommendationsByFirstNameAndLastName(String firstName, String lastName) {
 
@@ -171,8 +179,6 @@ public class TransactionsRepository {
 
         return Optional.empty();
     }
-
-
 
 
     public List<DynamicRecommendation> getRecommendationsByUserId(UUID userId) {

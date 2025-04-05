@@ -76,11 +76,10 @@ public class DynamicRecommendation {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DynamicRecommendation that = (DynamicRecommendation) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-                && Objects.equals(productId, that.productId) && Objects.equals(text, that.text)
-                && Objects.equals(ruleList, that.ruleList);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(productId, that.productId) && Objects.equals(text, that.text) && Objects.equals(ruleList, that.ruleList);
     }
 
     @Override

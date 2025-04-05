@@ -26,7 +26,7 @@ public class ManagementController {
 
     @PostMapping("/clear-caches")
     public ResponseEntity<HttpStatus> clearAllCache() {
-        service.clearAllCache();
+        service.clearAllCaches();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
