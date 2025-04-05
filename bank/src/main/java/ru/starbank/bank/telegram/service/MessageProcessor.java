@@ -19,6 +19,7 @@ public class MessageProcessor {
     private final Logger logger = LoggerFactory.getLogger(MessageProcessor.class);
 
 
+
     private final MessageSender messageSender;
     private final RecommendationService recommendationService;
     private final MessageServiceImpl messageService;

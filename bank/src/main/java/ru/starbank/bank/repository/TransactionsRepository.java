@@ -169,6 +169,8 @@ public class TransactionsRepository {
         return result;
     }
 
+
+
     public Optional<List<DynamicRecommendation>> getRecommendationsByFirstNameAndLastName(String firstName, String lastName) {
 
         if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty()) {
