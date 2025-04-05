@@ -1,5 +1,7 @@
 package ru.starbank.bank.dto;
 
+import ru.starbank.bank.model.Rule;
+
 import java.util.List;
 
 public class RuleDTO {
@@ -7,10 +9,7 @@ public class RuleDTO {
     private List<String> arguments;
     private boolean negate;
 
-    public RuleDTO(String query, List<String> arguments, boolean negate) {
-        this.query = query;
-        this.arguments = arguments;
-        this.negate = negate;
+    public RuleDTO() {
     }
 
     public String getQuery() {
@@ -36,4 +35,11 @@ public class RuleDTO {
     public void setNegate(boolean negate) {
         this.negate = negate;
     }
+
+//    public static RuleDTO from(Rule rule) {
+//        return new RuleDTO(
+//                rule.getQuery(),
+//                rule.getArguments(),
+//                rule.isNegate());
+//    }
 }
