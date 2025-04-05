@@ -5,15 +5,14 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Chat;
+import com.pengrad.telegrambot.request.SendMessage;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.service.Impl.RecommendationServiceImpl;
-import ru.starbank.bank.telegram.service.MessageProcessor;
-import ru.starbank.bank.telegram.service.MessageSender;
-import ru.starbank.bank.telegram.service.impl.MessageSenderImpl; // Импортируйте новый класс
+import ru.starbank.bank.telegram.MessageProcessor;
 
 import java.util.List;
 
@@ -21,9 +20,6 @@ import java.util.List;
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
-
-    private MessageSender messageSender;
-
 
     @Autowired
     private TelegramBot telegramBot;
@@ -33,9 +29,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     private MessageProcessor messageProcessor;
-
-    @Autowired
-    private MessageSenderImpl messageSenderImpl; // Внедрите новый класс
 
     @PostConstruct
     public void init() {
@@ -53,15 +46,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Chat chat = message.chat();
                 long chatId = chat.id();
 
-                if ("/start".equals(messageText)) {
-                    messageSender.sendWelcomeMessage(chatId); // Используйте MessageService
-                }
-                if (messageText.startsWith("/recomend")) {
-                    messageProcessor.processMessage(messageText, chatId);
-                }
+                messageProcessor.processMessage(messageText, chatId);
             }
-
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 }
+

@@ -1,4 +1,4 @@
-package ru.starbank.bank.telegram.config;
+package ru.starbank.bank.telegram;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.DeleteMyCommands;
