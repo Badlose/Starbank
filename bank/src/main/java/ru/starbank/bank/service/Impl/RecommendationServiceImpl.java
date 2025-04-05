@@ -1,6 +1,8 @@
 package ru.starbank.bank.service.Impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +25,8 @@ import java.util.UUID;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
+
+
 
     private final RecommendationsRepository recommendationsRepository;
     private final RulesRepository rulesRepository;
@@ -156,5 +160,10 @@ public class RecommendationServiceImpl implements RecommendationService {
         List<Statistic> statistics = statisticRepository.findAll();
         return statistics;
     }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+
+
 
 }
