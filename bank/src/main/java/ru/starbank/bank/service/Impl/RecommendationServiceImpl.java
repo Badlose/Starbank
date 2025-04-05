@@ -1,8 +1,6 @@
 package ru.starbank.bank.service.Impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.starbank.bank.dto.*;
@@ -19,8 +17,6 @@ import java.util.UUID;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
-
-
 
     private final RecommendationsRepository recommendationsRepository;
 
@@ -109,10 +105,5 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         return null;
     }
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-
-
 
 }
