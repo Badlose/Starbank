@@ -1,8 +1,11 @@
 package ru.starbank.bank.service.Impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 import org.springframework.web.server.ResponseStatusException;
 import ru.starbank.bank.dto.*;
 import ru.starbank.bank.dto.mapper.DynamicRecommendationMapper;
@@ -34,6 +37,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final UserRecommendationMapper userRecommendationMapper;
     private final ListDynamicRecommendationMapper listDynamicRecommendationMapper;
     private final CheckCorrect checkCorrect;
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationServiceImpl.class);
+
 
     public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository,
                                      RulesRepository rulesRepository,
@@ -52,6 +57,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     @Transactional
     public UserRecommendationsDTO getRecommendation(UUID userId) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
         List<DynamicRecommendation> recommendationListForDto = new ArrayList<>();
 
@@ -63,6 +70,10 @@ public class RecommendationServiceImpl implements RecommendationService {
                 recommendationListForDto.add(recommendation);
             }
         }
+        stopWatch.stop();
+        long executionTime = stopWatch.getTotalTimeNanos();
+        logger.info("ЛОГГЕР ИЗ ГЕТ РЕКОММЕНДЕЙШН {} ms for user {}.",
+                executionTime, userId);
         return (UserRecommendationsDTO) userRecommendationMapper.toRecommendationResponseDto(
                 userId, recommendationListForDto);
     }

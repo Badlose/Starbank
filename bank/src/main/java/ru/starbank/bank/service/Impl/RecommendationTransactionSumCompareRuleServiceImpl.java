@@ -49,7 +49,7 @@ public class RecommendationTransactionSumCompareRuleServiceImpl implements Recom
             value = repository.compareTransactionSumByUserIdProductType(userId, productType, transactionType);
         } finally {
             stopWatch.stop();
-            long executionTime = stopWatch.getTotalTimeMillis();
+            long executionTime = stopWatch.getTotalTimeNanos();
             logger.info("Query executed in {} ms for user {} and product type {} and transaction type {}.",
                     executionTime, userId, productType, transactionType);
         }

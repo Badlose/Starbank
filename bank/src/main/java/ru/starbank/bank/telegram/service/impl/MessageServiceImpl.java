@@ -1,7 +1,11 @@
 package ru.starbank.bank.telegram.service.impl;
 
+import org.springdoc.core.data.DataRestRepository;
 import org.springframework.stereotype.Service;
+import ru.starbank.bank.dto.UserRecommendationsDTO;
+import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.TransactionsRepository;
+import ru.starbank.bank.service.RecommendationService;
 import ru.starbank.bank.telegram.service.MessageService;
 
 import java.util.UUID;
@@ -9,26 +13,12 @@ import java.util.UUID;
 @Service
 public class MessageServiceImpl implements MessageService {
     private final TransactionsRepository transactionsRepository;
+    private final RecommendationService recommendationService;
 
-    public MessageServiceImpl(TransactionsRepository transactionsRepository) {
+    public MessageServiceImpl(TransactionsRepository transactionsRepository,
+                              RecommendationService recommendationService) {
         this.transactionsRepository = transactionsRepository;
-    }
-
-
-    String extractUsername(String messageText) {
-        // Убедимся, что сообщение начинается с /recommend
-        if (messageText.startsWith("/recommend")) {
-            // Разделяем строку по пробелам
-            String[] parts = messageText.split(" ");
-
-            // Проверяем, есть ли дополнительная часть после команды
-            if (parts.length > 1) {
-                // Возвращаем имя пользователя, убирая лишние символы (например, пробелы)
-                return parts[1].trim();
-            }
-        }
-        // Если команда не распознана или имя пользователя отсутствует, возвращаем null
-        return null;
+        this.recommendationService = recommendationService;
     }
 
     public UUID getUserIdByUsername(String userName) {
@@ -41,6 +31,10 @@ public class MessageServiceImpl implements MessageService {
         String fullName = transactionsRepository.getFirstNameLastNameByUserName(userName);
 
         return fullName;
+    }
+
+    public UserRecommendationsDTO getRecommendations(UUID userId) {
+        return recommendationService.getRecommendation(userId);
     }
 
 }

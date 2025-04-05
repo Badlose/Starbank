@@ -45,7 +45,7 @@ public class RecommendationUserOfRuleServiceImpl implements RecommendationRuleSe
             result = repository.countTransactionsByUserIdProductType(userId, productType);
         } finally {
             stopWatch.stop();
-            long executionTime = stopWatch.getTotalTimeMillis();
+            long executionTime = stopWatch.getTotalTimeNanos();
             logger.info("Query executed in {} ms for user {} and product type {}.",
                     executionTime, userId, productType);
         }

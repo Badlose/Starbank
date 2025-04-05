@@ -47,7 +47,7 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl i
             result = repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId, productType, comparison);
         } finally {
             stopWatch.stop();
-            long executionTime = stopWatch.getTotalTimeMillis();
+            long executionTime = stopWatch.getTotalTimeNanos();
             logger.info("Query executed in {} ms for user {} and product type {} and comparison symbol {}.",
                     executionTime, userId, productType, comparison);
         }

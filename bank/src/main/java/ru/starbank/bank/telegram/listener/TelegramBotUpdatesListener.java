@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ru.starbank.bank.service.Impl.RecommendationServiceImpl;
 import ru.starbank.bank.telegram.service.MessageProcessor;
 import ru.starbank.bank.telegram.service.MessageSender;
+import ru.starbank.bank.telegram.service.MessageService;
 import ru.starbank.bank.telegram.service.impl.MessageSenderImpl;
 
 
@@ -27,15 +28,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private TelegramBot telegramBot;
 
-    @Autowired
-    private RecommendationServiceImpl recommendationService;
-
-    private MessageSender messageSender;
-
+    private final MessageSender messageSender;
 
     private final MessageProcessor messageProcessor;
 
-    public TelegramBotUpdatesListener(MessageProcessor messageProcessor) {
+    public TelegramBotUpdatesListener(MessageSender messageSender, MessageProcessor messageProcessor) {
+        this.messageSender = messageSender;
         this.messageProcessor = messageProcessor;
     }
 
@@ -59,10 +57,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                 if ("/start".equals(messageText)) {
                     messageSender.sendWelcomeMessage(chatId);
+                } else if (messageText.startsWith("/recommend")) {
+                    messageSender.sendMessage(chatId, messageProcessor.processMessage(messageText));
                 } else {
-
-                    messageProcessor.processMessage(messageText, chatId);
-
+                    messageSender.sendErrorMessage(chatId);
                 }
             }
         });

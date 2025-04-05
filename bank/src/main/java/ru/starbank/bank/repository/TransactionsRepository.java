@@ -149,7 +149,7 @@ public class TransactionsRepository {
     }
 
     public String getFirstNameLastNameByUserName(String userName) {
-        String sql = "SELECT first_name  ' '  last_name AS full_name FROM USERS u WHERE u.username = ?";
+        String sql = "SELECT first_name || ' ' || last_name AS full_name FROM USERS u WHERE u.username = ?";
         String userFirstNameLastName;
         try {
             userFirstNameLastName = jdbcTemplate.queryForObject(sql, String.class, userName);
@@ -170,3 +170,4 @@ public class TransactionsRepository {
         return userId;
     }
 }
+
