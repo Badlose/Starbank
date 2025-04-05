@@ -14,6 +14,10 @@ import ru.starbank.bank.model.DynamicRecommendation;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import java.util.UUID;
 
 @Repository
@@ -143,7 +147,6 @@ public class TransactionsRepository {
         logger.info("clearCache - Clearing the entire cache");
     }
 
-
     public Optional<List<DynamicRecommendation>> getRecommendationsByFirstNameAndLastName(String firstName, String lastName) {
 
         if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty()) {
@@ -153,39 +156,8 @@ public class TransactionsRepository {
 
         String sql = "SELECT ID FROM USERS WHERE FIRST_NAME = ? AND LAST_NAME = ?";
 
-        try {
-            logger.debug("Запрос идентификатора пользователя для {} {}", firstName, lastName);
-
-
-            Optional<UUID> userIdOptional = Optional.of(jdbcTemplate.queryForObject(sql, UUID.class
-                    , firstName.trim()
-                    , lastName.trim()));
-
-            if (userIdOptional.isPresent()) {
-
-                List<DynamicRecommendation> recommendations = getRecommendationsByUserId(userIdOptional.get());
-                logger.debug("Найдены рекомендации для пользователя {} {}: {}", firstName, lastName, recommendations.size());
-                return Optional.of(recommendations);
-            } else {
-                logger.info("Пользователь с именем {} и фамилией {} не найден.", firstName, lastName);
-            }
-        } catch (DataAccessException e) {
-            logger.error("Ошибка доступа к базе данных при получении идентификатора пользователя для {} {}: {}",
-                    firstName, lastName, e.getMessage(), e);
-        } catch (Exception e) {
-            logger.error("Непредвиденная ошибка при получении идентификатора пользователя для {} {}: {}",
-                    firstName, lastName, e.getMessage(), e);
-        }
-
-        return Optional.empty();
-    }
-
-
     public List<DynamicRecommendation> getRecommendationsByUserId(UUID userId) {
-
 
         return List.of();
     }
-}
-
 
