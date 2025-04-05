@@ -108,6 +108,7 @@
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.github.pengrad</groupId>
             <artifactId>java-telegram-bot-api</artifactId>
@@ -119,7 +120,6 @@
             <artifactId>telegrambots-spring-boot-starter</artifactId>
             <version>6.0.1</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.mapstruct</groupId>

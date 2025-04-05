@@ -27,7 +27,7 @@ public class TransactionsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Cacheable(value = "transactionCounts", key = "{#userId, #productType}")
+    @Cacheable(value = "transactionCounts")
     public int countTransactionsByUserIdProductType(UUID userId, String productType) {
 
         String sql = """
@@ -58,7 +58,7 @@ public class TransactionsRepository {
         return result;
     }
 
-    @Cacheable(value = "transactionSumCompare", key = "{#userId, #productType, #transactionType}")
+    @Cacheable(value = "transactionSumCompare")
     public int compareTransactionSumByUserIdProductType(UUID userId, String productType, String transactionType) {
 
         String userIdString = userId.toString();
@@ -92,7 +92,7 @@ public class TransactionsRepository {
         return result;
     }
 
-    @Cacheable(value = "transactionSumCompareDepositWithdraw", key = "{#userId, #productType, #comparison}")
+    @Cacheable(value = "transactionSumCompareDepositWithdraw")
     public int compareTransactionSumByUserIdProductTypeDepositWithdraw(UUID userId, String productType, String comparison) {
 
         String userIdString = userId.toString();

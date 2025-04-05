@@ -4,21 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.dto.InfoDTO;
 import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.ManagementService;
 
-import java.util.Objects;
-
 @Service
 public class ManagementServiceImpl implements ManagementService {
 
     private static final Logger logger = LoggerFactory.getLogger(ManagementServiceImpl.class);
-
-    @Autowired
-    private CaffeineCacheManager cacheManager;
 
     @Autowired
     private BuildProperties buildProperties;
@@ -39,11 +33,7 @@ public class ManagementServiceImpl implements ManagementService {
 
     @Override
     public void clearAllCaches() {
-//        logger.info(cacheManager.getCacheNames().toString());
-//        cacheManager.getCacheNames()
-//                .forEach(name -> Objects.requireNonNull(cacheManager.getCache(name)).clear());
-//        logger.info("All caches cleared");
-        logger.info(cacheManager.getCacheNames().toString());
+
         repository.clearCache();
 
     }
