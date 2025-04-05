@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.starbank.bank.exceptions.IllegalResultException;
@@ -147,17 +148,25 @@ public class TransactionsRepository {
         logger.info("clearCache - Clearing the entire cache");
     }
 
-    public Optional<List<DynamicRecommendation>> getRecommendationsByFirstNameAndLastName(String firstName, String lastName) {
-
-        if (firstName == null || firstName.trim().isEmpty() || lastName == null || lastName.trim().isEmpty()) {
-            logger.info("Имя или фамилия должны быть непустыми. Возвращает Optional.empty().");
-            return Optional.empty();
+    public String getFirstNameLastNameByUserName(String userName) {
+        String sql = "SELECT first_name  ' '  last_name AS full_name FROM USERS u WHERE u.username = ?";
+        String userFirstNameLastName;
+        try {
+            userFirstNameLastName = jdbcTemplate.queryForObject(sql, String.class, userName);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
-
-        String sql = "SELECT ID FROM USERS WHERE FIRST_NAME = ? AND LAST_NAME = ?";
-
-    public List<DynamicRecommendation> getRecommendationsByUserId(UUID userId) {
-
-        return List.of();
+        return userFirstNameLastName;
     }
 
+    public UUID getUserIdByUserName(String userName) {
+        String sql = "SELECT id FROM USERS WHERE username = ?";
+        UUID userId;
+        try {
+            userId = jdbcTemplate.queryForObject(sql, UUID.class, userName);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+        return userId;
+    }
+}

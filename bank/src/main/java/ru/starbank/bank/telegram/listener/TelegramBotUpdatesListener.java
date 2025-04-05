@@ -1,4 +1,4 @@
-package ru.starbank.bank.listener;
+package ru.starbank.bank.telegram.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -12,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.service.Impl.RecommendationServiceImpl;
-import ru.starbank.bank.telegram.MessageProcessor;
+import ru.starbank.bank.telegram.service.MessageProcessor;
+import ru.starbank.bank.telegram.service.MessageSender;
+import ru.starbank.bank.telegram.service.impl.MessageSenderImpl;
+
 
 import java.util.List;
 
@@ -27,8 +30,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private RecommendationServiceImpl recommendationService;
 
-    @Autowired
-    MessageProcessor messageProcessor;
+    private MessageSender messageSender;
+
+
+    private final MessageProcessor messageProcessor;
+
+    public TelegramBotUpdatesListener(MessageProcessor messageProcessor) {
+        this.messageProcessor = messageProcessor;
+    }
 
     @PostConstruct
     public void init() {
@@ -49,26 +58,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
 
                 if ("/start".equals(messageText)) {
-                    sendWelcomeMessage(chatId);
+                    messageSender.sendWelcomeMessage(chatId);
                 } else {
 
                     messageProcessor.processMessage(messageText, chatId);
-                    sendConfirmationMessage(chatId);
+
                 }
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
-    private void sendWelcomeMessage(long chatId) {
-        String welcomeMessage = "Привет! Добро пожаловать в нашего бота!";
-        SendMessage message = new SendMessage(chatId, welcomeMessage);
-        telegramBot.execute(message);
-    }
 
-    private void sendConfirmationMessage(long chatId) {
-        String confirmationMessage = "Ваше напоминание успешно добавлено!";
-        SendMessage message = new SendMessage(chatId, confirmationMessage);
-        telegramBot.execute(message);
-    }
 }
