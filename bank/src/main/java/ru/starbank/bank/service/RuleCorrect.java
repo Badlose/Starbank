@@ -2,7 +2,7 @@ package ru.starbank.bank.service;
 
 import ru.starbank.bank.model.Rule;
 
-public interface RuleService {
+public interface RuleCorrect {
 
     void checkRule(Rule rule);
 }

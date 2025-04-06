@@ -36,14 +36,14 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final DynamicRecommendationMapper recommendationMapper;
     private final UserRecommendationMapper userRecommendationMapper;
     private final ListDynamicRecommendationMapper listDynamicRecommendationMapper;
-    private final CheckCorrect checkCorrect;
+    private final RecommendationCorrectImpl checkCorrect;
     private static final Logger logger = LoggerFactory.getLogger(RecommendationServiceImpl.class);
 
 
     public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository,
                                      RulesRepository rulesRepository,
                                      StatisticRepository statisticRepository,
-                                     RecommendationCheckerService checkerService, DynamicRecommendationMapper recommendationMapper, UserRecommendationMapper userRecommendationMapper, ListDynamicRecommendationMapper listDynamicRecommendationMapper, CheckCorrect checkCorrect) {
+                                     RecommendationCheckerService checkerService, DynamicRecommendationMapper recommendationMapper, UserRecommendationMapper userRecommendationMapper, ListDynamicRecommendationMapper listDynamicRecommendationMapper, RecommendationCorrectImpl checkCorrect) {
         this.recommendationsRepository = recommendationsRepository;
         this.rulesRepository = rulesRepository;
         this.statisticRepository = statisticRepository;

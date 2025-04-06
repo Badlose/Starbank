@@ -7,7 +7,7 @@ import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.service.RecommendationCheckerService;
 import ru.starbank.bank.service.RecommendationRuleService;
-import ru.starbank.bank.service.RuleService;
+import ru.starbank.bank.service.RuleCorrect;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class RecommendationCheckerServiceImpl implements RecommendationCheckerService {
 
     private final List<RecommendationRuleService> ruleSets;
-    private final RuleService ruleService;
+    private final RuleCorrect ruleService;
 
 
     public RecommendationCheckerServiceImpl(@Qualifier("USER_OF") RecommendationRuleService ruleUserOf,
@@ -24,7 +24,7 @@ public class RecommendationCheckerServiceImpl implements RecommendationCheckerSe
                                             @Qualifier("TRANSACTION_SUM_COMPARE")
                                             RecommendationRuleService ruleTransactionSumCompare,
                                             @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
-                                            RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, RuleService ruleService) {
+                                            RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, RuleCorrect ruleService) {
         this.ruleService = ruleService;
         this.ruleSets = List.of(
                 ruleUserOf,

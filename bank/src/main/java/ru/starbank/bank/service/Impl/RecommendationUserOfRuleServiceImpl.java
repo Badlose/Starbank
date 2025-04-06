@@ -8,7 +8,7 @@ import org.springframework.util.StopWatch;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.RecommendationRuleService;
-import ru.starbank.bank.service.RuleService;
+import ru.starbank.bank.service.RuleCorrect;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,12 +19,12 @@ public class RecommendationUserOfRuleServiceImpl implements RecommendationRuleSe
 
     private final TransactionsRepository repository;
 
-    private final RuleService ruleService;
+    private final RuleCorrect ruleService;
 
     private static final Logger logger = LoggerFactory.getLogger(RecommendationUserOfRuleServiceImpl.class);
 
 
-    public RecommendationUserOfRuleServiceImpl(TransactionsRepository repository, RuleService ruleService) {
+    public RecommendationUserOfRuleServiceImpl(TransactionsRepository repository, RuleCorrect ruleService) {
         this.repository = repository;
         this.ruleService = ruleService;
     }
