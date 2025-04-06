@@ -43,7 +43,7 @@ public class TransactionsRepository {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
         } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SqlRequestException("Error executing query.");
+            throw new SqlRequestException("Error executing query countTransactionsByUserIdProductType.");
         }
 
         if (result == null) {
@@ -74,7 +74,7 @@ public class TransactionsRepository {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, transactionType);
         } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SqlRequestException("Error executing query.");
+            throw new SqlRequestException("Error executing query compareTransactionSumByUserIdProductType.");
         }
 
         if (result == null) {
@@ -124,7 +124,7 @@ public class TransactionsRepository {
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType, userIdString, productType);
         } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
-            throw new SqlRequestException("Error executing query.");
+            throw new SqlRequestException("Error executing query compareTransactionSumByUserIdProductTypeDepositWithdraw.");
         }
 
         if (result == null) {
@@ -146,9 +146,17 @@ public class TransactionsRepository {
         String userFirstNameLastName;
         try {
             userFirstNameLastName = jdbcTemplate.queryForObject(sql, String.class, userName);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
+        } catch (Exception e) {
+            logger.error("Error executing query: {}", e.getMessage(), e);
+            throw new SqlRequestException("Error executing query getFirstNameLastNameByUserName");
         }
+
+        if (userFirstNameLastName == null) {
+            logger.warn("Query returned null for username {}.", userName);
+            throw new IllegalResultException();
+        }
+
+        logger.info("Query returned: {}", userFirstNameLastName);
         return userFirstNameLastName;
     }
 
@@ -157,9 +165,11 @@ public class TransactionsRepository {
         UUID userId;
         try {
             userId = jdbcTemplate.queryForObject(sql, UUID.class, userName);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
+        } catch (Exception e) {
+            logger.error("Error executing query: {}", e.getMessage(), e);
+            throw new SqlRequestException("Error executing query getUserIdByUserName");
         }
+        logger.info("Query returned: {}", userId);
         return userId;
     }
 }
