@@ -35,7 +35,9 @@ public class MessageProcessor {
     }
 
     public String processMessage(String messageText) {
-        String username = messageText.substring("/recommend ".length()).trim();
+        String username = messageText.substring("/recommend".length()).trim(); //не то
+
+
         UUID userId = messageService.getUserIdByUsername(username);
         String fullName = messageService.getFirstNameLastNameByUserName(username);
         UserRecommendationsDTO recommendationsDTO = messageService.getRecommendations(userId);

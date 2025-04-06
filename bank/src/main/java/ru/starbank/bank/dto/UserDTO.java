@@ -45,11 +45,13 @@ public class UserDTO {
         this.product_text = product_text;
     }
 
-//    public static UserDTO from(DynamicRecommendation recommendation) {
-//        return new UserDTO(
-//                recommendation.getName(),
-//                recommendation.getProductId(),
-//                recommendation.getText());
-//    }
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "product_name='" + product_name + '\'' +
+                ", product_id=" + product_id +
+                ", product_text='" + product_text + '\'' +
+                '}';
+    }
 }
 

@@ -99,30 +99,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     @Transactional
     public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
-//        List<DynamicRecommendation> recommendations = recommendationsRepository.findAll();
-//        List<DynamicRecommendationDTO> data = new ArrayList<>();
-
-
-//        for (DynamicRecommendation recommendation : recommendations) {
-//            List<RuleDTO> ruleDtoList = recommendation.getRuleList().stream()
-//                    .map(rule -> new RuleDTO(
-//                            rule.getQuery(),
-//                            rule.getArguments(),
-//                            rule.isNegate()
-//                    ))
-//                    .toList();
-//            DynamicRecommendationDTO recommendationDTO = recommendationMapper.toDynamicRecommendationDTO(recommendation);
-//            DynamicRecommendationDTO recommendationDTO = new DynamicRecommendationDTO(
-//                    recommendation.getId(),
-//                    recommendation.getName(),
-//                    recommendation.getProductId(),
-//                    recommendation.getText(),
-//                    ruleDtoList
-//            );
-//            data.add(recommendationDTO);
-//        }
-//        ListDynamicRecommendationDTO dynamicRecommendationDTOList = new ListDynamicRecommendationDTO(data);
-
 
         return listDynamicRecommendationMapper.toRecommendationListResponseDto(recommendationsRepository.findAll());
     }

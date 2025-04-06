@@ -33,4 +33,11 @@ public class UserRecommendationsDTO {
         this.recommendations = recommendations;
     }
 
+    @Override
+    public String toString() {
+        return "UserRecommendationsDTO{" +
+                "userId=" + userId +
+                ", recommendations=" + recommendations +
+                '}';
+    }
 }
