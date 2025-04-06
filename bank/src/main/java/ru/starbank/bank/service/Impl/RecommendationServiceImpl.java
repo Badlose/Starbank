@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 import org.springframework.web.server.ResponseStatusException;
-import ru.starbank.bank.dto.*;
+import ru.starbank.bank.dto.DynamicRecommendationDTO;
+import ru.starbank.bank.dto.ListDynamicRecommendationDTO;
+import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.dto.mapper.DynamicRecommendationMapper;
 import ru.starbank.bank.dto.mapper.ListDynamicRecommendationMapper;
 import ru.starbank.bank.dto.mapper.UserRecommendationMapper;
-import ru.starbank.bank.exceptions.SqlRequestException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.model.Statistic;
-import ru.starbank.bank.model.enums.QueryEnum;
 import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
 import ru.starbank.bank.repository.StatisticRepository;
@@ -74,14 +74,14 @@ public class RecommendationServiceImpl implements RecommendationService {
         long executionTime = stopWatch.getTotalTimeNanos();
         logger.info("ЛОГГЕР ИЗ ГЕТ РЕКОММЕНДЕЙШН {} ms for user {}.",
                 executionTime, userId);
-        return (UserRecommendationsDTO) userRecommendationMapper.toRecommendationResponseDto(
+        return userRecommendationMapper.toRecommendationResponseDto(
                 userId, recommendationListForDto);
     }
 
     @Override
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
-        if(checkCorrect.checkRecommendationCorrect(recommendation)){
+        if (checkCorrect.checkRecommendationCorrect(recommendation)) {
             recommendationsRepository.save(recommendation);
 
             Statistic statistic = new Statistic(recommendation.getId(), 0);
@@ -92,14 +92,12 @@ public class RecommendationServiceImpl implements RecommendationService {
                 rulesRepository.save(rule);
             }
             return recommendationMapper.toDynamicRecommendationDto(recommendation);
-        }
-        return new DynamicRecommendationDTO();
+        } else throw new RuntimeException("rec invalid");
     }
 
     @Override
     @Transactional
     public ListDynamicRecommendationDTO getAllDynamicRecommendations() {
-
         return listDynamicRecommendationMapper.toRecommendationListResponseDto(recommendationsRepository.findAll());
     }
 
@@ -111,19 +109,16 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         statisticRepository.deleteById(recommendation.getId());
 
-        for (Rule e : recommendation.getRuleList()) { //апускать удаление рулов если удалили статы
+        for (Rule e : recommendation.getRuleList()) { //запускать удаление рулов если удалили статы
             rulesRepository.deleteById(e.getId());
         }
 
         recommendationsRepository.deleteById(id); //запускать если удалили рулы
-
-
     }
 
     @Override
     public List<Statistic> getStatistics() {
-        List<Statistic> statistics = statisticRepository.findAll();
-        return statistics;
+        return statisticRepository.findAll();
     }
 
 }

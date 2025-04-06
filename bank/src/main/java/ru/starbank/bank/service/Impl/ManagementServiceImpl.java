@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.dto.InfoDTO;
@@ -39,8 +40,33 @@ public class ManagementServiceImpl implements ManagementService {
     public void clearAllCaches() {
         logger.info(cacheManager.getCacheNames().toString());
         logger.info(Objects.requireNonNull(cacheManager.getCache("transactionSumCompareDepositWithdraw")).toString());
+        logger.info(String.valueOf(isCacheEmpty("transactionCounts")));
+        logger.info(String.valueOf(isCacheEmpty("transactionSumCompare")));
+        logger.info(String.valueOf(isCacheEmpty("transactionSumCompareDepositWithdraw")));
         repository.clearCache();
         logger.info(cacheManager.getCacheNames().toString());
+        logger.info(String.valueOf(isCacheEmpty("transactionCounts")));
+        logger.info(String.valueOf(isCacheEmpty("transactionSumCompare")));
+        logger.info(String.valueOf(isCacheEmpty("transactionSumCompareDepositWithdraw")));
         logger.info(Objects.requireNonNull(cacheManager.getCache("transactionSumCompareDepositWithdraw")).getClass().toString());
+    }
+
+    public boolean isCacheEmpty(String cacheName) {
+        Cache cache = cacheManager.getCache(cacheName);
+        if (cache != null) {
+            Object nativeCache = cache.getNativeCache();
+
+            if (nativeCache instanceof com.github.benmanes.caffeine.cache.Cache) {
+                com.github.benmanes.caffeine.cache.Cache caffeineCache = (com.github.benmanes.caffeine.cache.Cache) nativeCache;
+                return caffeineCache.estimatedSize() == 0;
+            } else {
+                logger.info("Неизвестная реализация кэша: {}", nativeCache.getClass().getName());
+                return false;
+            }
+
+        } else {
+            logger.info("Кэш с именем '{}' не найден.", cacheName);
+            return true;
+        }
     }
 }
