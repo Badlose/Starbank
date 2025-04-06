@@ -6,8 +6,8 @@ import ru.starbank.bank.exceptions.IncorrectRuleQueryException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.service.CheckRecommendationByUserIdService;
-import ru.starbank.bank.service.RecommendationRuleService;
 import ru.starbank.bank.service.CheckRuleService;
+import ru.starbank.bank.service.RecommendationRuleService;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,9 +22,9 @@ public class CheckRecommendationByUserIdServiceImpl implements CheckRecommendati
     public CheckRecommendationByUserIdServiceImpl(@Qualifier("USER_OF") RecommendationRuleService ruleUserOf,
                                                   @Qualifier("ACTIVE_USER_OF") RecommendationRuleService ruleActiveUserOf,
                                                   @Qualifier("TRANSACTION_SUM_COMPARE")
-                                            RecommendationRuleService ruleTransactionSumCompare,
+                                                  RecommendationRuleService ruleTransactionSumCompare,
                                                   @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
-                                            RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, CheckRuleService ruleService) {
+                                                  RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, CheckRuleService ruleService) {
         this.ruleService = ruleService;
         this.ruleSets = List.of(
                 ruleUserOf,
@@ -61,31 +61,5 @@ public class CheckRecommendationByUserIdServiceImpl implements CheckRecommendati
         }
         return check && (checkOr || checkIf);
     }
-}
 
-//        if (ruleSets != null) {
-//            checkResult = checkResult || ruleSet.check(userId, rule);
-//        } else {
-//            throw new NullPointerException("Ruleset is null exception");
-//        }
-//
-//        boolean resultCheck = true;
-//        boolean check = false;
-//        boolean checkIf = true;
-//
-//        for (Rule rule : recommendation.getRuleList()) {
-//
-//            if (rule.getArguments().contains("OR")) {
-//
-//                check = check || ruleSets.stream()
-//                        .allMatch(r -> r.check(userId, rule));
-//                checkIf = false;
-//
-//            } else {
-//
-//                resultCheck = resultCheck && ruleSets.stream()
-//                        .allMatch(r -> r.check(userId, rule));
-//            }
-//        }
-//
-//        return resultCheck && (check || checkIf);
+}

@@ -129,4 +129,5 @@ public class StaticRecommendationDBInitializer {
             throw new StaticRecommendationInitializerException("Exception when initializing static recommendations");
         }
     }
+
 }

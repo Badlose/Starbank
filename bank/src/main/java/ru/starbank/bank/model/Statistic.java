@@ -46,5 +46,4 @@ public class Statistic {
         this.counter = counter;
     }
 
-
 }

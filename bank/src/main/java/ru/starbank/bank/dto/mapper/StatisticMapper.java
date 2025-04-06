@@ -22,4 +22,5 @@ public interface StatisticMapper {
         response.setStats(mapStatisticListToStatisticDtoList(statisticList));
         return response;
     }
+
 }

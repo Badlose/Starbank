@@ -25,4 +25,5 @@ public interface DynamicRecommendationMapper {
     RuleDTO toRuleDto(Rule rule);
 
     List<RuleDTO> mapRuleListToRuleDtoList(List<Rule> ruleList);
+
 }

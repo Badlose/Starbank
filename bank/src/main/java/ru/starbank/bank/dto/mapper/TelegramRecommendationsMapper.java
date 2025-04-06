@@ -24,5 +24,6 @@ public interface TelegramRecommendationsMapper {
         telegramRecommendationDTO.setProductText(concatenatedText);
         return telegramRecommendationDTO;
     }
+
 }
 

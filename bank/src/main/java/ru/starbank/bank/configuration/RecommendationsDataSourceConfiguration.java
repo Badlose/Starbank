@@ -36,4 +36,5 @@ public class RecommendationsDataSourceConfiguration {
     public DataSource defaultDataSource(DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().build();
     }
+
 }

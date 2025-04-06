@@ -7,5 +7,4 @@ import ru.starbank.bank.model.Rule;
 @Repository
 public interface RulesRepository extends JpaRepository<Rule, Long> {
 
-
 }

@@ -28,4 +28,5 @@ public interface UserRecommendationMapper {
         response.setRecommendations(recommendationDTOS);
         return response;
     }
+
 }

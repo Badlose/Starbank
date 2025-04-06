@@ -19,8 +19,8 @@ import ru.starbank.bank.model.Statistic;
 import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
 import ru.starbank.bank.repository.StatisticRepository;
-import ru.starbank.bank.service.CheckRecommendationService;
 import ru.starbank.bank.service.CheckRecommendationByUserIdService;
+import ru.starbank.bank.service.CheckRecommendationService;
 import ru.starbank.bank.service.RecommendationService;
 
 import java.util.ArrayList;
@@ -39,7 +39,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final UserRecommendationMapper userRecommendationMapper;
     private final ListDynamicRecommendationMapper listDynamicRecommendationMapper;
     private static final Logger logger = LoggerFactory.getLogger(RecommendationServiceImpl.class);
-
 
     public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository,
                                      RulesRepository rulesRepository,
@@ -69,8 +68,6 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         for (DynamicRecommendation recommendation : recommendations) {
 
-
-
             boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
             if (resultCheck) {
                 Statistic statistic = statisticRepository.findByRecommendationId(recommendation.getId());
@@ -80,7 +77,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         }
         stopWatch.stop();
         long executionTime = stopWatch.getTotalTimeNanos();
-        logger.info("ЛОГГЕР ИЗ ГЕТ РЕКОММЕНДЕЙШН {} ms for user {}.",
+        logger.info("GetRecommendation method time {} ns for user {}.",
                 executionTime, userId);
         return userRecommendationMapper.toRecommendationResponseDto(
                 userId, recommendationListForDto);
@@ -117,11 +114,11 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         statisticRepository.deleteById(recommendation.getId());
 
-        for (Rule e : recommendation.getRuleList()) { //запускать удаление рулов если удалили статы
+        for (Rule e : recommendation.getRuleList()) {
             rulesRepository.deleteById(e.getId());
         }
 
-        recommendationsRepository.deleteById(id); //запускать если удалили рулы
+        recommendationsRepository.deleteById(id);
     }
 
     @Override

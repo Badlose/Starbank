@@ -40,4 +40,5 @@ public class UserRecommendationsDTO {
                 ", recommendations=" + recommendations +
                 '}';
     }
+
 }

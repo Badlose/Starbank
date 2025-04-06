@@ -14,4 +14,5 @@ public class ListDynamicRecommendationDTO {
     public void setData(List<DynamicRecommendationDTO> data) {
         this.data = data;
     }
+
 }

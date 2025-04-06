@@ -9,7 +9,6 @@ import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface ListDynamicRecommendationMapper {
@@ -36,4 +35,5 @@ public interface ListDynamicRecommendationMapper {
         response.setData(data);
         return response;
     }
+
 }

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.dto.TelegramRecommendationDTO;
-import ru.starbank.bank.telegram.service.MessageProcessorService;
 import ru.starbank.bank.telegram.messageSender.MessageSender;
+import ru.starbank.bank.telegram.service.MessageProcessorService;
 
 import java.util.UUID;
 

@@ -9,5 +9,6 @@ public interface MessageProcessorService {
     void sendErrorMessage(long chatId);
 
     void sendRecommendationMessage(long chatId, String messageText);
+
 }
 

@@ -54,4 +54,5 @@ public class CheckRuleServiceImpl implements CheckRuleService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "more Arguments");
         }
     }
+
 }

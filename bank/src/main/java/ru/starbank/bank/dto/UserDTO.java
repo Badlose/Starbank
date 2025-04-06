@@ -1,7 +1,5 @@
 package ru.starbank.bank.dto;
 
-import ru.starbank.bank.model.DynamicRecommendation;
-
 import java.util.UUID;
 
 public class UserDTO {
@@ -53,5 +51,6 @@ public class UserDTO {
                 ", product_text='" + product_text + '\'' +
                 '}';
     }
+
 }
 

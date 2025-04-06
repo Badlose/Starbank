@@ -19,7 +19,7 @@ public interface RecommendationService {
 
     void deleteDynamicRecommendation(Long recommendationId);
 
-
     List<Statistic> getStatistics();
+
 }
 

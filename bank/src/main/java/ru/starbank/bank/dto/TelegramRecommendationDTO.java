@@ -4,7 +4,6 @@ public class TelegramRecommendationDTO {
 
     private String productText;
 
-
     public String getProductText() {
         return productText;
     }
@@ -17,4 +16,5 @@ public class TelegramRecommendationDTO {
     public String toString() {
         return productText;
     }
+
 }

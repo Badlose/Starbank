@@ -97,4 +97,5 @@ public class DynamicRecommendation {
                 ", ruleList=" + ruleList +
                 '}';
     }
+
 }

@@ -14,18 +14,20 @@ public class CheckRecommendationServiceImpl implements CheckRecommendationServic
     private CheckRuleService checkRuleService;
 
     public boolean checkRecommendationCorrect(DynamicRecommendation recommendation) {
-        if(recommendation == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid field");
-        }if (recommendation.getName()==null || recommendation.getProductId()==null || recommendation.getText()==null || recommendation.getRuleList()==null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid field");
+        if (recommendation == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid field");
+        }
+        if (recommendation.getName() == null || recommendation.getProductId() == null || recommendation.getText() == null || recommendation.getRuleList() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid field");
         } else {
-            if(recommendation.getRuleList().isEmpty()){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"RuleList is empty");
+            if (recommendation.getRuleList().isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RuleList is empty");
             }
-            for(Rule rule: recommendation.getRuleList()){
+            for (Rule rule : recommendation.getRuleList()) {
                 checkRuleService.checkRule(rule);
             }
         }
         return true;
     }
+
 }

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
-import ru.starbank.bank.service.RecommendationRuleService;
 import ru.starbank.bank.service.CheckRuleService;
+import ru.starbank.bank.service.RecommendationRuleService;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +50,7 @@ public class RecommendationTransactionSumCompareRuleServiceImpl implements Recom
         } finally {
             stopWatch.stop();
             long executionTime = stopWatch.getTotalTimeNanos();
-            logger.info("Query executed in {} ms for user {} and product type {} and transaction type {}.",
+            logger.info("Query executed in {} ns for user {} and product type {} and transaction type {}.",
                     executionTime, userId, productType, transactionType);
         }
 
@@ -64,4 +64,5 @@ public class RecommendationTransactionSumCompareRuleServiceImpl implements Recom
         }
         return rule.isNegate() == result;
     }
+
 }

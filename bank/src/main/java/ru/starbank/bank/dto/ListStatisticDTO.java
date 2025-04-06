@@ -16,4 +16,5 @@ public class ListStatisticDTO {
     public void setStats(List<StatisticDTO> stats) {
         this.stats = stats;
     }
+
 }

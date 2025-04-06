@@ -5,4 +5,5 @@ public class IncorrectRuleArgumentsException extends RuntimeException {
     public IncorrectRuleArgumentsException(String message) {
         super(message);
     }
+
 }

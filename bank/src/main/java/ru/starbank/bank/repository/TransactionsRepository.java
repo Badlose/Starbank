@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.starbank.bank.exceptions.IllegalResultException;
@@ -172,5 +171,6 @@ public class TransactionsRepository {
         logger.info("Query returned: {}", userId);
         return userId;
     }
+
 }
 

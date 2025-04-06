@@ -6,5 +6,7 @@ import ru.starbank.bank.model.Statistic;
 
 @Repository
 public interface StatisticRepository extends JpaRepository<Statistic, Long> {
+
     Statistic findByRecommendationId(Long id);
+
 }

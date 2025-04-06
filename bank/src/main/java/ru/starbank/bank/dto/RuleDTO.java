@@ -1,7 +1,5 @@
 package ru.starbank.bank.dto;
 
-import ru.starbank.bank.model.Rule;
-
 import java.util.List;
 
 public class RuleDTO {
@@ -36,10 +34,4 @@ public class RuleDTO {
         this.negate = negate;
     }
 
-//    public static RuleDTO from(Rule rule) {
-//        return new RuleDTO(
-//                rule.getQuery(),
-//                rule.getArguments(),
-//                rule.isNegate());
-//    }
 }

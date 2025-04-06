@@ -29,4 +29,5 @@ public class ManagementController {
         service.clearAllCaches();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }
