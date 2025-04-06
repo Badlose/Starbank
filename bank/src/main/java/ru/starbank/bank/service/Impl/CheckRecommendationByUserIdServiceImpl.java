@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.starbank.bank.exceptions.IncorrectRuleQueryException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
-import ru.starbank.bank.service.CheckRecommendationByRulesService;
+import ru.starbank.bank.service.CheckRecommendationByUserIdService;
 import ru.starbank.bank.service.RecommendationRuleService;
 import ru.starbank.bank.service.CheckRuleService;
 
@@ -13,17 +13,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class CheckCheckRecommendationByRulesServiceImpl implements CheckRecommendationByRulesService {
+public class CheckRecommendationByUserIdServiceImpl implements CheckRecommendationByUserIdService {
 
     private final List<RecommendationRuleService> ruleSets;
     private final CheckRuleService ruleService;
 
 
-    public CheckCheckRecommendationByRulesServiceImpl(@Qualifier("USER_OF") RecommendationRuleService ruleUserOf,
-                                                      @Qualifier("ACTIVE_USER_OF") RecommendationRuleService ruleActiveUserOf,
-                                                      @Qualifier("TRANSACTION_SUM_COMPARE")
+    public CheckRecommendationByUserIdServiceImpl(@Qualifier("USER_OF") RecommendationRuleService ruleUserOf,
+                                                  @Qualifier("ACTIVE_USER_OF") RecommendationRuleService ruleActiveUserOf,
+                                                  @Qualifier("TRANSACTION_SUM_COMPARE")
                                             RecommendationRuleService ruleTransactionSumCompare,
-                                                      @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
+                                                  @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
                                             RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, CheckRuleService ruleService) {
         this.ruleService = ruleService;
         this.ruleSets = List.of(

@@ -25,7 +25,6 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
-
     @GetMapping("/userId/{userId}")
     public UserRecommendationsDTO getRecommendation(
             @Parameter(description = "Идентификатор поля (UUID)",
@@ -34,7 +33,6 @@ public class RecommendationController {
             @PathVariable UUID userId) {
         return recommendationService.getRecommendation(userId);
     }
-
 
     @PostMapping("/rule/{recommendation}")
     public DynamicRecommendationDTO postNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {

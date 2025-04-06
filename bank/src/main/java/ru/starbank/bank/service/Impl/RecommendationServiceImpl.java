@@ -20,7 +20,7 @@ import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
 import ru.starbank.bank.repository.StatisticRepository;
 import ru.starbank.bank.service.CheckRecommendationService;
-import ru.starbank.bank.service.CheckRecommendationByRulesService;
+import ru.starbank.bank.service.CheckRecommendationByUserIdService;
 import ru.starbank.bank.service.RecommendationService;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.UUID;
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
 
-    private final CheckRecommendationByRulesService checkerService;
+    private final CheckRecommendationByUserIdService checkerService;
     private final CheckRecommendationService checkRecommendation;
     private final RecommendationsRepository recommendationsRepository;
     private final RulesRepository rulesRepository;
@@ -44,7 +44,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository,
                                      RulesRepository rulesRepository,
                                      StatisticRepository statisticRepository,
-                                     CheckRecommendationByRulesService checkerService,
+                                     CheckRecommendationByUserIdService checkerService,
                                      DynamicRecommendationMapper recommendationMapper,
                                      UserRecommendationMapper userRecommendationMapper,
                                      ListDynamicRecommendationMapper listDynamicRecommendationMapper,

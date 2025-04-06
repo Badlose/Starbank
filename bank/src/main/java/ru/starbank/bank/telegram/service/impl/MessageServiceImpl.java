@@ -26,18 +26,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     public UUID getUserIdByUsername(String userName) {
-        if (userName.equals("cd515076-5d8a-44be-930e-8d4fcb79f42d")) {
-            return UUID.fromString("f37ba8a8-3cd5-4976-9f74-2b21f105da67");
-        }
-        if (userName == null) {
-            return UUID.fromString("f37ba8a8-3cd5-4976-9f74-2b21f105da67");
-        }
-
-        if (userName.length() == 0) {
-            return UUID.fromString("f37ba8a8-3cd5-4976-9f74-2b21f105da67");
-        }
         UUID userId = transactionsRepository.getUserIdByUserName(userName);
-
         return userId;
     }
 
