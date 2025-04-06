@@ -1,11 +1,9 @@
 package ru.starbank.bank.telegram.service.impl;
 
-import org.springdoc.core.data.DataRestRepository;
 import org.springframework.stereotype.Service;
 import ru.starbank.bank.dto.TelegramRecommendationDTO;
 import ru.starbank.bank.dto.UserRecommendationsDTO;
 import ru.starbank.bank.dto.mapper.TelegramRecommendationsMapper;
-import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.RecommendationService;
 import ru.starbank.bank.telegram.service.MessageService;
@@ -26,14 +24,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     public UUID getUserIdByUsername(String userName) {
-        UUID userId = transactionsRepository.getUserIdByUserName(userName);
-        return userId;
+        return transactionsRepository.getUserIdByUserName(userName);
     }
 
     public String getFirstNameLastNameByUserName(String userName) {
-        String fullName = transactionsRepository.getFirstNameLastNameByUserName(userName);
 
-        return fullName;
+        return transactionsRepository.getFirstNameLastNameByUserName(userName);
     }
 
     public TelegramRecommendationDTO getRecommendations(UUID userId) {
@@ -41,7 +37,6 @@ public class MessageServiceImpl implements MessageService {
 
         return telegramRecommendationsMapper.userDTOListToTelegramRecommendationDTO(
                 userRecommendationsDTO.getRecommendations());
-
     }
 
 }

@@ -68,6 +68,9 @@ public class RecommendationServiceImpl implements RecommendationService {
         List<DynamicRecommendation> recommendationListForDto = new ArrayList<>();
 
         for (DynamicRecommendation recommendation : recommendations) {
+
+
+
             boolean resultCheck = checkerService.checkDynamicRecommendation(userId, recommendation);
             if (resultCheck) {
                 Statistic statistic = statisticRepository.findByRecommendationId(recommendation.getId());

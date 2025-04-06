@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.starbank.bank.telegram.service.MessageProcessor;
-import ru.starbank.bank.telegram.service.MessageSender;
+import ru.starbank.bank.telegram.service.MessageProcessorService;
+import ru.starbank.bank.telegram.messageSender.MessageSender;
 
 import java.util.List;
 
@@ -19,17 +19,16 @@ import java.util.List;
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+    private final String ERROR_MESSAGE = "Произошла ошибка при обработке вашего запроса." +
+            "\nПожалуйста, попробуйте еще раз.";
 
     @Autowired
     private TelegramBot telegramBot;
 
-    private final MessageSender messageSender;
+    private final MessageProcessorService messageProcessorService;
 
-    private final MessageProcessor messageProcessor;
-
-    public TelegramBotUpdatesListener(MessageSender messageSender, MessageProcessor messageProcessor) {
-        this.messageSender = messageSender;
-        this.messageProcessor = messageProcessor;
+    public TelegramBotUpdatesListener(MessageProcessorService messageProcessorService, MessageSender messageSender) {
+        this.messageProcessorService = messageProcessorService;
     }
 
     @PostConstruct
@@ -52,18 +51,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     chatId = chat.id();
 
                     if ("/start".equals(messageText)) {
-                        messageSender.sendWelcomeMessage(chatId);
+                        messageProcessorService.sendWelcomeMessage(chatId);
                     } else if (messageText.startsWith("/recommend")) {
-                        String responseMessage = messageProcessor.processMessage(messageText);
-                        messageSender.sendMessage(chatId, responseMessage);
+                        messageProcessorService.sendRecommendationMessage(chatId, messageText);
                     } else {
-                        messageSender.sendErrorMessage(chatId);
+                        messageProcessorService.sendErrorMessage(chatId);
                     }
                 }
             } catch (Exception e) {
                 logger.error("Error processing update: {}", e.getMessage(), e);
-                messageSender.sendMessage(chatId, "Произошла ошибка при обработке вашего запроса." +
-                        "\nПожалуйста, попробуйте еще раз.");
+                messageProcessorService.sendMessage(chatId, ERROR_MESSAGE);
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;

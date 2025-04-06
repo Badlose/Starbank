@@ -1,7 +1,6 @@
 package ru.starbank.bank.staticRecommendations;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.starbank.bank.exceptions.StaticRecommendationInitializerException;
@@ -25,7 +24,7 @@ public class StaticRecommendationDBInitializer {
 
     private static final String INVEST500ID = "147f6a0f-3b91-413b-ab99-87f081d60d5a";
     private static final String INVEST500NAME = "Invest500";
-    private static final String INVEST500TEXT = "Откройте свой путь к успеху с индивидуальным инвестиционным счетом (ИИС) от нашего банка! " +
+    private static final String INVEST500TEXT = "\nОткройте свой путь к успеху с индивидуальным инвестиционным счетом (ИИС) от нашего банка! " +
             "Воспользуйтесь налоговыми льготами и начните инвестировать с умом. Пополните счет до конца года и получите выгоду в виде вычета на взнос в следующем налоговом периоде. " +
             "Не упустите возможность разнообразить свой портфель, снизить риски и следить за актуальными рыночными тенденциями. Откройте ИИС сегодня и станьте ближе к финансовой независимости!";
 
@@ -50,6 +49,7 @@ public class StaticRecommendationDBInitializer {
     private static final String SIMPLELOANID = "ab138afb-f3ba-4a93-b74f-0fcee86d447f";
     private static final String SIMPLELOANNAME = "Простой кредит";
     private static final String SIMPLELOANTEXT = """
+                        
             Откройте мир выгодных кредитов с нами!
 
             Ищете способ быстро и без лишних хлопот получить нужную сумму? Тогда наш выгодный кредит — именно то, что вам нужно! Мы предлагаем низкие процентные ставки, гибкие условия и индивидуальный подход к каждому клиенту.
@@ -93,25 +93,40 @@ public class StaticRecommendationDBInitializer {
             new DynamicRecommendation(SIMPLELOANNAME, UUID.fromString(SIMPLELOANID), SIMPLELOANTEXT, SIMPLELOANRULES)
     ));
 
+    //какой тут может быть негатив? напрашивается исключение
     @PostConstruct
     @Transactional
-    @CacheEvict(value = "recommendationsCache", allEntries = true)
     public void initializeStaticRecommendations() {
-        for (DynamicRecommendation recommendation : recommendationList) {
-            DynamicRecommendation existingRecommendations = recommendationsRepository.findByName(recommendation.getName());
-            if (existingRecommendations == null) {
+        try {
+            for (DynamicRecommendation recommendation : recommendationList) {
+                DynamicRecommendation existingRecommendations = recommendationsRepository.findByName(recommendation.getName());
+                if (existingRecommendations == null) {
 
-                recommendationsRepository.save(recommendation);
-                Statistic statistic = new Statistic(recommendation.getId(), 0);
+                    try {
+                        recommendationsRepository.save(recommendation);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
 
-                statisticRepository.save(statistic);
-                for (Rule rule : recommendation.getRuleList()) {
-                    rule.setDynamicRecommendation(recommendation);
-                    rulesRepository.save(rule);
+                    Statistic statistic = new Statistic(recommendation.getId(), 0);
+                    try {
+                        statisticRepository.save(statistic);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    for (Rule rule : recommendation.getRuleList()) {
+                        rule.setDynamicRecommendation(recommendation);
+                        try {
+                            rulesRepository.save(rule);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
             }
-        }//какой тут может быть негатив? напрашивается исключение
-    } //                throw new StaticRecommendationInitializerException("Exception when initializing static recommendations");
-
-
+        } catch (RuntimeException e) {
+            throw new StaticRecommendationInitializerException("Exception when initializing static recommendations");
+        }
+    }
 }
