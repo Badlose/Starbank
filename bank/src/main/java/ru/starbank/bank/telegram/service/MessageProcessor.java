@@ -21,21 +21,18 @@ public class MessageProcessor {
     private final Logger logger = LoggerFactory.getLogger(MessageProcessor.class);
 
     private final MessageServiceImpl messageService;
-    private final MessageSender messageSender;
-
 
 
     @Autowired
     private TelegramBot telegramBot;
 
-    public MessageProcessor(MessageServiceImpl messageService,
-                            MessageSender messageSender) {
+    public MessageProcessor(MessageServiceImpl messageService) {
         this.messageService = messageService;
-        this.messageSender = messageSender;
     }
 
     public String processMessage(String messageText) {
-        String username = messageText.substring("/recommend ".length()).trim();
+        String username = messageText.substring("/recommend".length()).trim(); //не то
+
         UUID userId = messageService.getUserIdByUsername(username);
         String fullName = messageService.getFirstNameLastNameByUserName(username);
         UserRecommendationsDTO recommendationsDTO = messageService.getRecommendations(userId);

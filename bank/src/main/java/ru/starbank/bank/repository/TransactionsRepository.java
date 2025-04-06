@@ -5,19 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.starbank.bank.exceptions.IllegalResultException;
 import ru.starbank.bank.exceptions.SqlRequestException;
-import ru.starbank.bank.model.DynamicRecommendation;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
@@ -59,7 +51,7 @@ public class TransactionsRepository {
             throw new IllegalResultException();
         }
 
-        logger.debug("Query returned: {}", result);
+        logger.info("Query returned: {}", result);
         return result;
     }
 
@@ -93,7 +85,7 @@ public class TransactionsRepository {
             throw new IllegalResultException();
         }
 
-        logger.debug("Query returned: {}", result);
+        logger.info("Query returned: {}", result);
         return result;
     }
 
@@ -140,6 +132,7 @@ public class TransactionsRepository {
             throw new IllegalResultException();
         }
 
+        logger.info("Query returned: {}", result);
         return result;
     }
 
@@ -149,7 +142,7 @@ public class TransactionsRepository {
     }
 
     public String getFirstNameLastNameByUserName(String userName) {
-        String sql = "SELECT first_name || ' ' || last_name AS full_name FROM USERS u WHERE u.username = ?";
+        String sql = "SELECT FIRST_NAME || ' ' || LAST_NAME AS FULL_NAME FROM USERS u WHERE u.USERNAME = ?";
         String userFirstNameLastName;
         try {
             userFirstNameLastName = jdbcTemplate.queryForObject(sql, String.class, userName);
@@ -160,7 +153,7 @@ public class TransactionsRepository {
     }
 
     public UUID getUserIdByUserName(String userName) {
-        String sql = "SELECT id FROM USERS WHERE username = ?";
+        String sql = "SELECT ID FROM USERS WHERE USERNAME = ?";
         UUID userId;
         try {
             userId = jdbcTemplate.queryForObject(sql, UUID.class, userName);

@@ -6,7 +6,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +24,10 @@ public class CacheConfigurations {
 
     Caffeine<Object, Object> caffeineCacheBuilder() {
         return Caffeine.newBuilder()
-                .maximumSize(1000)
+                .initialCapacity(100)
+                .maximumSize(500)
                 .expireAfterWrite(10, TimeUnit.MINUTES)
                 .recordStats();
     }
+
 }
