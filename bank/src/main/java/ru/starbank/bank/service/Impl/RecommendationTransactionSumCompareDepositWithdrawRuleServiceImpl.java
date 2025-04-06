@@ -8,7 +8,7 @@ import org.springframework.util.StopWatch;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
 import ru.starbank.bank.service.RecommendationRuleService;
-import ru.starbank.bank.service.RuleCorrect;
+import ru.starbank.bank.service.CheckRuleService;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,13 +19,13 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl i
 
     private final TransactionsRepository repository;
 
-    private final RuleCorrect ruleService;
+    private final CheckRuleService ruleService;
 
     private static final Logger logger = LoggerFactory.getLogger(
             RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl.class);
 
 
-    public RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl(TransactionsRepository repository, RuleCorrect ruleService) {
+    public RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl(TransactionsRepository repository, CheckRuleService ruleService) {
         this.repository = repository;
         this.ruleService = ruleService;
     }

@@ -19,7 +19,8 @@ import ru.starbank.bank.model.Statistic;
 import ru.starbank.bank.repository.RecommendationsRepository;
 import ru.starbank.bank.repository.RulesRepository;
 import ru.starbank.bank.repository.StatisticRepository;
-import ru.starbank.bank.service.RecommendationCheckerService;
+import ru.starbank.bank.service.CheckRecommendationService;
+import ru.starbank.bank.service.CheckRecommendationByRulesService;
 import ru.starbank.bank.service.RecommendationService;
 
 import java.util.ArrayList;
@@ -29,21 +30,25 @@ import java.util.UUID;
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
 
+    private final CheckRecommendationByRulesService checkerService;
+    private final CheckRecommendationService checkRecommendation;
     private final RecommendationsRepository recommendationsRepository;
     private final RulesRepository rulesRepository;
     private final StatisticRepository statisticRepository;
-    private final RecommendationCheckerService checkerService;
     private final DynamicRecommendationMapper recommendationMapper;
     private final UserRecommendationMapper userRecommendationMapper;
     private final ListDynamicRecommendationMapper listDynamicRecommendationMapper;
-    private final RecommendationCorrectImpl checkCorrect;
     private static final Logger logger = LoggerFactory.getLogger(RecommendationServiceImpl.class);
 
 
     public RecommendationServiceImpl(RecommendationsRepository recommendationsRepository,
                                      RulesRepository rulesRepository,
                                      StatisticRepository statisticRepository,
-                                     RecommendationCheckerService checkerService, DynamicRecommendationMapper recommendationMapper, UserRecommendationMapper userRecommendationMapper, ListDynamicRecommendationMapper listDynamicRecommendationMapper, RecommendationCorrectImpl checkCorrect) {
+                                     CheckRecommendationByRulesService checkerService,
+                                     DynamicRecommendationMapper recommendationMapper,
+                                     UserRecommendationMapper userRecommendationMapper,
+                                     ListDynamicRecommendationMapper listDynamicRecommendationMapper,
+                                     CheckRecommendationServiceImpl checkRecommendation) {
         this.recommendationsRepository = recommendationsRepository;
         this.rulesRepository = rulesRepository;
         this.statisticRepository = statisticRepository;
@@ -51,7 +56,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         this.recommendationMapper = recommendationMapper;
         this.userRecommendationMapper = userRecommendationMapper;
         this.listDynamicRecommendationMapper = listDynamicRecommendationMapper;
-        this.checkCorrect = checkCorrect;
+        this.checkRecommendation = checkRecommendation;
     }
 
     @Override
@@ -81,7 +86,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     @Transactional
     public DynamicRecommendationDTO createNewDynamicRecommendation(DynamicRecommendation recommendation) {
-        if (checkCorrect.checkRecommendationCorrect(recommendation)) {
+        if (checkRecommendation.checkRecommendationCorrect(recommendation)) {
             recommendationsRepository.save(recommendation);
 
             Statistic statistic = new Statistic(recommendation.getId(), 0);

@@ -4,17 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.starbank.bank.exceptions.IncorrectRuleArgumentsException;
-import ru.starbank.bank.exceptions.IncorrectRuleException;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.model.enums.QueryEnum;
 import ru.starbank.bank.model.enums.TypeOfProductEnum;
-import ru.starbank.bank.service.RuleCorrect;
+import ru.starbank.bank.service.CheckRuleService;
 
 import java.util.List;
 
 @Service
-public class RuleCorrectImpl implements RuleCorrect {
+public class CheckRuleServiceImpl implements CheckRuleService {
 
     @Override
     public void checkRule(Rule rule) {
@@ -48,7 +46,7 @@ public class RuleCorrectImpl implements RuleCorrect {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid OR");
                 }
             }else{
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"more Arguments");
+//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"more Arguments");
             }
 
         }

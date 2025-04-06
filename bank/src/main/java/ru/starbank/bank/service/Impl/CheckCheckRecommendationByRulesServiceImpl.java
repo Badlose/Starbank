@@ -5,26 +5,26 @@ import org.springframework.stereotype.Component;
 import ru.starbank.bank.exceptions.IncorrectRuleQueryException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
-import ru.starbank.bank.service.RecommendationCheckerService;
+import ru.starbank.bank.service.CheckRecommendationByRulesService;
 import ru.starbank.bank.service.RecommendationRuleService;
-import ru.starbank.bank.service.RuleCorrect;
+import ru.starbank.bank.service.CheckRuleService;
 
 import java.util.List;
 import java.util.UUID;
 
 @Component
-public class RecommendationCheckerServiceImpl implements RecommendationCheckerService {
+public class CheckCheckRecommendationByRulesServiceImpl implements CheckRecommendationByRulesService {
 
     private final List<RecommendationRuleService> ruleSets;
-    private final RuleCorrect ruleService;
+    private final CheckRuleService ruleService;
 
 
-    public RecommendationCheckerServiceImpl(@Qualifier("USER_OF") RecommendationRuleService ruleUserOf,
-                                            @Qualifier("ACTIVE_USER_OF") RecommendationRuleService ruleActiveUserOf,
-                                            @Qualifier("TRANSACTION_SUM_COMPARE")
+    public CheckCheckRecommendationByRulesServiceImpl(@Qualifier("USER_OF") RecommendationRuleService ruleUserOf,
+                                                      @Qualifier("ACTIVE_USER_OF") RecommendationRuleService ruleActiveUserOf,
+                                                      @Qualifier("TRANSACTION_SUM_COMPARE")
                                             RecommendationRuleService ruleTransactionSumCompare,
-                                            @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
-                                            RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, RuleCorrect ruleService) {
+                                                      @Qualifier("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")
+                                            RecommendationRuleService ruleTransactionSumCompareDepositWithdraw, CheckRuleService ruleService) {
         this.ruleService = ruleService;
         this.ruleSets = List.of(
                 ruleUserOf,
