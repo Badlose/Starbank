@@ -35,7 +35,7 @@ public class RecommendationController {
     }
 
     @PostMapping("/rule/{recommendation}")
-    public DynamicRecommendationDTO postNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {
+    public DynamicRecommendationDTO createNewDynamicRecommendation(@RequestBody DynamicRecommendation recommendation) {
         return recommendationService.createNewDynamicRecommendation(recommendation);
     }
 
