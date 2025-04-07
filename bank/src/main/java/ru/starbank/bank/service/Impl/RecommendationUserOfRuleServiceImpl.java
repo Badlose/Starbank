@@ -19,14 +19,11 @@ public class RecommendationUserOfRuleServiceImpl implements RecommendationRuleSe
 
     private final TransactionsRepository repository;
 
-    private final CheckRuleService ruleService;
-
     private static final Logger logger = LoggerFactory.getLogger(RecommendationUserOfRuleServiceImpl.class);
 
 
-    public RecommendationUserOfRuleServiceImpl(TransactionsRepository repository, CheckRuleService ruleService) {
+    public RecommendationUserOfRuleServiceImpl(TransactionsRepository repository) {
         this.repository = repository;
-        this.ruleService = ruleService;
     }
 
     @Override
@@ -35,8 +32,6 @@ public class RecommendationUserOfRuleServiceImpl implements RecommendationRuleSe
         List<String> arguments = rule.getArguments();
         String productType = arguments.get(0);
         int result;
-
-        ruleService.checkRule(rule);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

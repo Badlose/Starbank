@@ -19,14 +19,11 @@ public class RecommendationTransactionSumCompareRuleServiceImpl implements Recom
 
     private final TransactionsRepository repository;
 
-    private final CheckRuleService ruleService;
-
     private static final Logger logger = LoggerFactory.getLogger(RecommendationTransactionSumCompareRuleServiceImpl.class);
 
 
-    public RecommendationTransactionSumCompareRuleServiceImpl(TransactionsRepository repository, CheckRuleService ruleService) {
+    public RecommendationTransactionSumCompareRuleServiceImpl(TransactionsRepository repository) {
         this.repository = repository;
-        this.ruleService = ruleService;
     }
 
     @Override
@@ -39,8 +36,6 @@ public class RecommendationTransactionSumCompareRuleServiceImpl implements Recom
         int threshold = Integer.parseInt(arguments.get(3));
         String operator = arguments.get(2);
         int value;
-
-        ruleService.checkRule(rule);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

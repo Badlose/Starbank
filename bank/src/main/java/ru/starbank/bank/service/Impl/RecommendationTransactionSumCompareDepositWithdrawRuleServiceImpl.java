@@ -19,15 +19,12 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl i
 
     private final TransactionsRepository repository;
 
-    private final CheckRuleService ruleService;
-
     private static final Logger logger = LoggerFactory.getLogger(
             RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl.class);
 
 
-    public RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl(TransactionsRepository repository, CheckRuleService ruleService) {
+    public RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl(TransactionsRepository repository) {
         this.repository = repository;
-        this.ruleService = ruleService;
     }
 
     @Override
@@ -37,8 +34,6 @@ public class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImpl i
         String productType = arguments.get(0);
         String comparison = rule.getArguments().get(1);
         int result;
-
-        ruleService.checkRule(rule);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

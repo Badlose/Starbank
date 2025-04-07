@@ -42,7 +42,9 @@ public class CheckRecommendationByUserIdServiceImpl implements CheckRecommendati
         boolean checkIf = true;
 
         for (Rule rule : recommendation.getRuleList()) {
+
             ruleService.checkRule(rule);
+
             switch (rule.getQuery()) {
                 case "USER_OF" -> check = check && ruleSets.get(0).check(userId, rule);
                 case "ACTIVE_USER_OF" -> check = check && ruleSets.get(1).check(userId, rule);
