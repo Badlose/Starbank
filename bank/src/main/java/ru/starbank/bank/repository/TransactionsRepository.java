@@ -45,11 +45,6 @@ public class TransactionsRepository {
             throw new SqlRequestException("Error executing query countTransactionsByUserIdProductType.");
         }
 
-        if (result == null) {
-            logger.warn("Query returned null for user {} and product type {}.", userIdString, productType);
-            throw new IllegalResultException();
-        }
-
         logger.info("Query returned: {}", result);
         return result;
     }
@@ -74,14 +69,6 @@ public class TransactionsRepository {
         } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query compareTransactionSumByUserIdProductType.");
-        }
-
-        if (result == null) {
-            logger.warn("Query returned null for user {} and product type {} and transaction type {}.",
-                    userIdString,
-                    productType,
-                    transactionType);
-            throw new IllegalResultException();
         }
 
         logger.info("Query returned: {}", result);
@@ -125,12 +112,6 @@ public class TransactionsRepository {
             logger.error("Error executing query: {}", e.getMessage(), e);
             throw new SqlRequestException("Error executing query compareTransactionSumByUserIdProductTypeDepositWithdraw.");
         }
-
-        if (result == null) {
-            logger.warn("Query returned null for user {} and product type {}.", userIdString, productType);
-            throw new IllegalResultException();
-        }
-
         logger.info("Query returned: {}", result);
         return result;
     }
