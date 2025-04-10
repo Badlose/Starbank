@@ -11,7 +11,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
 import ru.starbank.bank.configuration.CacheConfigurations;
 import ru.starbank.bank.configuration.RecommendationsDataSourceConfiguration;
-import ru.starbank.bank.service.Impl.ManagementServiceImpl;
 
 import java.util.UUID;
 
@@ -25,14 +24,15 @@ public class TransactionsRepositoryTests {
     private final CacheManager cacheManager;
     private final CacheConfigurations cacheConfigurations;
     private final RecommendationsDataSourceConfiguration dataSourceConfiguration;
+
     public TransactionsRepositoryTests() {
         this.dataSourceConfiguration = new RecommendationsDataSourceConfiguration();
         this.repository = new TransactionsRepository(dataSourceConfiguration.recommendationsJdbcTemplate(dataSourceConfiguration.recommendationsDataSource("jdbc:h2:file:./transactionTests")));
-        this.cacheConfigurations= new CacheConfigurations();
-        this.cacheManager= cacheConfigurations.cacheManager();
+        this.cacheConfigurations = new CacheConfigurations();
+        this.cacheManager = cacheConfigurations.cacheManager();
     }
 
-    public boolean cacheIsEmpty(String cacheName){
+    public boolean cacheIsEmpty(String cacheName) {
         Cache cache = cacheManager.getCache(cacheName);
         Object nativeCache = cache.getNativeCache();
         if (nativeCache instanceof com.github.benmanes.caffeine.cache.Cache) {
@@ -50,7 +50,7 @@ public class TransactionsRepositoryTests {
         String productType = "DEBIT";
         int expectedCount = 3;
 
-        int actualCount = repository.countTransactionsByUserIdProductType(userId,productType);
+        int actualCount = repository.countTransactionsByUserIdProductType(userId, productType);
 
         Assertions.assertEquals(expectedCount, actualCount);
     }
@@ -62,7 +62,7 @@ public class TransactionsRepositoryTests {
         String transactionType = "DEPOSIT";
         int expectedSum = 93972;
 
-        int actualSum = repository.compareTransactionSumByUserIdProductType(userId,productType,transactionType);
+        int actualSum = repository.compareTransactionSumByUserIdProductType(userId, productType, transactionType);
 
         Assertions.assertEquals(expectedSum, actualSum);
     }
@@ -74,41 +74,42 @@ public class TransactionsRepositoryTests {
         String comparison = "<";
         int expectedValue = 1;
 
-        int actualValue = repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId,productType,comparison);
+        int actualValue = repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId, productType, comparison);
 
-        Assertions.assertEquals(expectedValue,actualValue);
+        Assertions.assertEquals(expectedValue, actualValue);
     }
+
     @Test
-    public void shouldReturnGetFirstNameLastNameByUserName(){
+    public void shouldReturnGetFirstNameLastNameByUserName() {
         String UserName = "quintin.deckow";
         String expectedUserFirstNameLastName = "Rolf Bogisich";
 
         String actualUserFirstNameLastName = repository.getFirstNameLastNameByUserName(UserName);
 
-        Assertions.assertEquals(expectedUserFirstNameLastName,actualUserFirstNameLastName);
+        Assertions.assertEquals(expectedUserFirstNameLastName, actualUserFirstNameLastName);
     }
 
 
     @Test
-    public void shouldReturnGetUserIdByUserName(){
+    public void shouldReturnGetUserIdByUserName() {
         String UserName = "quintin.deckow";
         UUID expectedId = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
 
         UUID actualId = repository.getUserIdByUserName(UserName);
 
-        Assertions.assertEquals(expectedId,actualId);
+        Assertions.assertEquals(expectedId, actualId);
     }
 
     @Test
-    public void shouldReturnClearAllCaches(){
+    public void shouldReturnClearAllCaches() {
         UUID userId = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
         String productType = "DEBIT";
         String cacheName = "transactionCounts";
 
         Assertions.assertTrue(cacheIsEmpty(cacheName));
         logger.info(cacheManager.getCacheNames().toString());
-        repository.countTransactionsByUserIdProductType(userId,productType);
-        logger.info(String.valueOf(repository.countTransactionsByUserIdProductType(userId,productType)));
+        repository.countTransactionsByUserIdProductType(userId, productType);
+        logger.info(String.valueOf(repository.countTransactionsByUserIdProductType(userId, productType)));
         //logger.info(cacheManager.);
         Assertions.assertFalse(cacheIsEmpty(cacheName));
 
