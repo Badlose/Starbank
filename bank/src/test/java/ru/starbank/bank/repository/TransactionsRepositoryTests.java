@@ -116,4 +116,5 @@ public class TransactionsRepositoryTests {
 
         Assertions.assertTrue(cacheIsEmpty(cacheName));
     }
+
 }
