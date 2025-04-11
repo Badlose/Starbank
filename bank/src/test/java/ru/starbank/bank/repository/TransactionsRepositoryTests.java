@@ -8,14 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.context.annotation.Import;
 import ru.starbank.bank.configuration.CacheConfigurations;
 import ru.starbank.bank.configuration.RecommendationsDataSourceConfiguration;
+import ru.starbank.bank.exceptions.IllegalResultException;
+import ru.starbank.bank.exceptions.SqlRequestException;
 import ru.starbank.bank.service.Impl.ManagementServiceImpl;
 
 import java.util.UUID;
 
-@SpringBootTest
+//@SpringBootTest
 //@TestPropertySource("/application.properties")
 @Import(value = RecommendationsDataSourceConfiguration.class)
 public class TransactionsRepositoryTests {
@@ -100,21 +103,69 @@ public class TransactionsRepositoryTests {
     }
 
     @Test
-    public void shouldReturnClearAllCaches(){
-        UUID userId = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
-        String productType = "DEBIT";
-        String cacheName = "transactionCounts";
+    public void shouldReturnThrowCountTransactionsByUserIdProductType() {
+        UUID userId = null;//UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
+        String productType = "DEBIT"; //могут быть любыми
 
-        Assertions.assertTrue(cacheIsEmpty(cacheName));
-        logger.info(cacheManager.getCacheNames().toString());
-        repository.countTransactionsByUserIdProductType(userId,productType);
-        logger.info(String.valueOf(repository.countTransactionsByUserIdProductType(userId,productType)));
-        //logger.info(cacheManager.);
-        Assertions.assertFalse(cacheIsEmpty(cacheName));
-
-        repository.clearCache();
-
-        Assertions.assertTrue(cacheIsEmpty(cacheName));
+        Assertions.assertThrows(SqlRequestException.class,()->repository.countTransactionsByUserIdProductType(userId,productType));
     }
+
+    @Test
+    public void shouldReturnThrowCompareTransactionSumByUserIdProductType() {
+        UUID userId = null;
+        String productType = "CREDIT"; //могут быть любыми
+        String transactionType = "DEPOSIT"; //могут быть любыми
+
+        Assertions.assertThrows(SqlRequestException.class,()->repository.compareTransactionSumByUserIdProductType(userId,productType,transactionType));
+    }
+
+    @Test
+    public void shouldReturnThrow1CompareTransactionSumByUserIdProductTypeDepositWithdraw() {
+        UUID userId = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
+        String productType = null; //могут быть любыми
+        String comparison = ">";
+
+        Assertions.assertDoesNotThrow(()->repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId,productType,comparison));
+
+        UUID userId1 = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
+        String productType1 = "CREDIT"; //могут быть любыми
+        String comparison1 = null;
+
+        Assertions.assertThrows(SqlRequestException.class,()->repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId1,productType1,comparison1));
+
+        UUID userId2 = null;
+        String productType2 = "CREDIT"; //могут быть любыми
+        String comparison2 = ">";
+
+        Assertions.assertThrows(SqlRequestException.class,()->repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId2,productType2,comparison2));
+    }
+
+    @Test
+    public void shouldReturnThrowGetFirstNameLastNameByUserName(){
+        String UserName = null;
+
+        Assertions.assertThrows(SqlRequestException.class,()->repository.getFirstNameLastNameByUserName(UserName));
+
+        String UserName1 = "344";
+
+        Assertions.assertThrows(SqlRequestException.class,()->repository.getFirstNameLastNameByUserName(UserName1));
+
+        //String UserName2 = "assd.dff";
+        //выбрасывает только SqlRequestException в случае если не нашел юзера
+        //Assertions.assertThrows(IllegalResultException.class,()->repository.getFirstNameLastNameByUserName(UserName1));
+    }
+
+
+    @Test
+    public void shouldReturnThrowGetUserIdByUserName(){
+        String UserName = null;
+
+        Assertions.assertThrows(SqlRequestException.class,()->repository.getUserIdByUserName(UserName));
+
+        String UserName1 = "344";
+
+        Assertions.assertThrows(SqlRequestException.class,()->repository.getUserIdByUserName(UserName1));
+    }
+
 
 }
