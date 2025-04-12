@@ -34,10 +34,9 @@ public class TransactionsRepository {
                         AND p.TYPE = ?
                 """;
         String userIdString;
-        if(userId!=null){
+        if (userId != null) {
             userIdString = userId.toString();
-        }
-        else{
+        } else {
             throw new SqlRequestException("UUID is NULL");
         }
 
@@ -57,9 +56,9 @@ public class TransactionsRepository {
     @Cacheable(value = "transactionSumCompare")
     public int compareTransactionSumByUserIdProductType(UUID userId, String productType, String transactionType) {
         String userIdString;
-        if(userId != null){
+        if (userId != null) {
             userIdString = userId.toString();
-        } else{
+        } else {
             throw new SqlRequestException("UUID is NULL");
         }
 
@@ -88,9 +87,9 @@ public class TransactionsRepository {
     @Cacheable(value = "transactionSumCompareDepositWithdraw")
     public int compareTransactionSumByUserIdProductTypeDepositWithdraw(UUID userId, String productType, String comparison) {
         String userIdString;
-        if(userId != null){
+        if (userId != null) {
             userIdString = userId.toString();
-        } else{
+        } else {
             throw new SqlRequestException("UUID is NULL");
         }
         String sql = """
@@ -164,6 +163,7 @@ public class TransactionsRepository {
         }
         logger.info("Query returned: {}", userId);
         return userId;
+
     }
 
 }

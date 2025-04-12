@@ -28,14 +28,15 @@ public class TransactionsRepositoryTests {
     private final CacheManager cacheManager;
     private final CacheConfigurations cacheConfigurations;
     private final RecommendationsDataSourceConfiguration dataSourceConfiguration;
+
     public TransactionsRepositoryTests() {
         this.dataSourceConfiguration = new RecommendationsDataSourceConfiguration();
         this.repository = new TransactionsRepository(dataSourceConfiguration.recommendationsJdbcTemplate(dataSourceConfiguration.recommendationsDataSource("jdbc:h2:file:./transactionTests")));
-        this.cacheConfigurations= new CacheConfigurations();
-        this.cacheManager= cacheConfigurations.cacheManager();
+        this.cacheConfigurations = new CacheConfigurations();
+        this.cacheManager = cacheConfigurations.cacheManager();
     }
 
-    public boolean cacheIsEmpty(String cacheName){
+    public boolean cacheIsEmpty(String cacheName) {
         Cache cache = cacheManager.getCache(cacheName);
         Object nativeCache = cache.getNativeCache();
         if (nativeCache instanceof com.github.benmanes.caffeine.cache.Cache) {
@@ -53,7 +54,7 @@ public class TransactionsRepositoryTests {
         String productType = "DEBIT";
         int expectedCount = 3;
 
-        int actualCount = repository.countTransactionsByUserIdProductType(userId,productType);
+        int actualCount = repository.countTransactionsByUserIdProductType(userId, productType);
 
         Assertions.assertEquals(expectedCount, actualCount);
     }
@@ -65,7 +66,7 @@ public class TransactionsRepositoryTests {
         String transactionType = "DEPOSIT";
         int expectedSum = 93972;
 
-        int actualSum = repository.compareTransactionSumByUserIdProductType(userId,productType,transactionType);
+        int actualSum = repository.compareTransactionSumByUserIdProductType(userId, productType, transactionType);
 
         Assertions.assertEquals(expectedSum, actualSum);
     }
@@ -77,29 +78,30 @@ public class TransactionsRepositoryTests {
         String comparison = "<";
         int expectedValue = 1;
 
-        int actualValue = repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId,productType,comparison);
+        int actualValue = repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId, productType, comparison);
 
-        Assertions.assertEquals(expectedValue,actualValue);
+        Assertions.assertEquals(expectedValue, actualValue);
     }
+
     @Test
-    public void shouldReturnGetFirstNameLastNameByUserName(){
+    public void shouldReturnGetFirstNameLastNameByUserName() {
         String UserName = "quintin.deckow";
         String expectedUserFirstNameLastName = "Rolf Bogisich";
 
         String actualUserFirstNameLastName = repository.getFirstNameLastNameByUserName(UserName);
 
-        Assertions.assertEquals(expectedUserFirstNameLastName,actualUserFirstNameLastName);
+        Assertions.assertEquals(expectedUserFirstNameLastName, actualUserFirstNameLastName);
     }
 
 
     @Test
-    public void shouldReturnGetUserIdByUserName(){
+    public void shouldReturnGetUserIdByUserName() {
         String UserName = "quintin.deckow";
         UUID expectedId = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
 
         UUID actualId = repository.getUserIdByUserName(UserName);
 
-        Assertions.assertEquals(expectedId,actualId);
+        Assertions.assertEquals(expectedId, actualId);
     }
 
     @Test
@@ -107,7 +109,7 @@ public class TransactionsRepositoryTests {
         UUID userId = null;//UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
         String productType = "DEBIT"; //могут быть любыми
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.countTransactionsByUserIdProductType(userId,productType));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.countTransactionsByUserIdProductType(userId, productType));
     }
 
     @Test
@@ -116,7 +118,7 @@ public class TransactionsRepositoryTests {
         String productType = "CREDIT"; //могут быть любыми
         String transactionType = "DEPOSIT"; //могут быть любыми
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.compareTransactionSumByUserIdProductType(userId,productType,transactionType));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.compareTransactionSumByUserIdProductType(userId, productType, transactionType));
     }
 
     @Test
@@ -125,30 +127,30 @@ public class TransactionsRepositoryTests {
         String productType = null; //могут быть любыми
         String comparison = ">";
 
-        Assertions.assertDoesNotThrow(()->repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId,productType,comparison));
+        Assertions.assertDoesNotThrow(() -> repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId, productType, comparison));
 
         UUID userId1 = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
         String productType1 = "CREDIT"; //могут быть любыми
         String comparison1 = null;
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId1,productType1,comparison1));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId1, productType1, comparison1));
 
         UUID userId2 = null;
         String productType2 = "CREDIT"; //могут быть любыми
         String comparison2 = ">";
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId2,productType2,comparison2));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId2, productType2, comparison2));
     }
 
     @Test
-    public void shouldReturnThrowGetFirstNameLastNameByUserName(){
+    public void shouldReturnThrowGetFirstNameLastNameByUserName() {
         String UserName = null;
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.getFirstNameLastNameByUserName(UserName));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.getFirstNameLastNameByUserName(UserName));
 
         String UserName1 = "344";
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.getFirstNameLastNameByUserName(UserName1));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.getFirstNameLastNameByUserName(UserName1));
 
         //String UserName2 = "assd.dff";
         //выбрасывает только SqlRequestException в случае если не нашел юзера
@@ -157,14 +159,15 @@ public class TransactionsRepositoryTests {
 
 
     @Test
-    public void shouldReturnThrowGetUserIdByUserName(){
+    public void shouldReturnThrowGetUserIdByUserName() {
         String UserName = null;
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.getUserIdByUserName(UserName));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.getUserIdByUserName(UserName));
 
         String UserName1 = "344";
 
-        Assertions.assertThrows(SqlRequestException.class,()->repository.getUserIdByUserName(UserName1));
+        Assertions.assertThrows(SqlRequestException.class, () -> repository.getUserIdByUserName(UserName1));
+
     }
 
 
