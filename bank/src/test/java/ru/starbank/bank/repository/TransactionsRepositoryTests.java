@@ -16,6 +16,7 @@ import ru.starbank.bank.exceptions.IllegalResultException;
 import ru.starbank.bank.exceptions.SqlRequestException;
 import ru.starbank.bank.service.Impl.ManagementServiceImpl;
 
+
 import java.util.UUID;
 
 //@SpringBootTest
@@ -102,6 +103,7 @@ public class TransactionsRepositoryTests {
         UUID actualId = repository.getUserIdByUserName(UserName);
 
         Assertions.assertEquals(expectedId, actualId);
+
     }
 
     @Test
@@ -123,15 +125,17 @@ public class TransactionsRepositoryTests {
 
     @Test
     public void shouldReturnThrow1CompareTransactionSumByUserIdProductTypeDepositWithdraw() {
+
         UUID userId = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
         String productType = null; //могут быть любыми
         String comparison = ">";
 
         Assertions.assertDoesNotThrow(() -> repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId, productType, comparison));
-
+      
         UUID userId1 = UUID.fromString("cd515076-5d8a-44be-930e-8d4fcb79f42d");
         String productType1 = "CREDIT"; //могут быть любыми
         String comparison1 = null;
+
 
         Assertions.assertThrows(SqlRequestException.class, () -> repository.compareTransactionSumByUserIdProductTypeDepositWithdraw(userId1, productType1, comparison1));
 
