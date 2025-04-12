@@ -33,12 +33,16 @@ public class TransactionsRepository {
                         WHERE t.USER_ID = ?
                         AND p.TYPE = ?
                 """;
-
-        String userIdString = userId.toString();
+        String userIdString;
+        if (userId != null) {
+            userIdString = userId.toString();
+        } else {
+            throw new SqlRequestException("UUID is NULL");
+        }
 
         Integer result = 0;
 
-        try {
+        try {//Работает всегда можно трай кетч убрать(даже если productType =null)
             result = jdbcTemplate.queryForObject(sql, Integer.class, userIdString, productType);
         } catch (Exception e) {
             logger.error("Error executing query: {}", e.getMessage(), e);
@@ -51,8 +55,13 @@ public class TransactionsRepository {
 
     @Cacheable(value = "transactionSumCompare")
     public int compareTransactionSumByUserIdProductType(UUID userId, String productType, String transactionType) {
+        String userIdString;
+        if (userId != null) {
+            userIdString = userId.toString();
+        } else {
+            throw new SqlRequestException("UUID is NULL");
+        }
 
-        String userIdString = userId.toString();
         String sql = """
                 SELECT COALESCE(SUM(t.AMOUNT), 0)
                 FROM TRANSACTIONS t
@@ -77,9 +86,12 @@ public class TransactionsRepository {
 
     @Cacheable(value = "transactionSumCompareDepositWithdraw")
     public int compareTransactionSumByUserIdProductTypeDepositWithdraw(UUID userId, String productType, String comparison) {
-
-        String userIdString = userId.toString();
-
+        String userIdString;
+        if (userId != null) {
+            userIdString = userId.toString();
+        } else {
+            throw new SqlRequestException("UUID is NULL");
+        }
         String sql = """
                 SELECT
                 CASE
@@ -151,6 +163,7 @@ public class TransactionsRepository {
         }
         logger.info("Query returned: {}", userId);
         return userId;
+
     }
 
 }
