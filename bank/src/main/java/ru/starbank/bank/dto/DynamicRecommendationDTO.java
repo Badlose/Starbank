@@ -15,11 +15,6 @@ public class DynamicRecommendationDTO {
 
     private List<RuleDTO> rule;
 
-    public DynamicRecommendationDTO(long l, String s, String s1) {
-
-
-    }
-
     public String getProduct_name() {
         return product_name;
     }
