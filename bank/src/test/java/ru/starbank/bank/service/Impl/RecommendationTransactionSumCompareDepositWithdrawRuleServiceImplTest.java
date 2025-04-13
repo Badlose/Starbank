@@ -11,8 +11,8 @@ import ru.starbank.bank.repository.TransactionsRepository;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImplTest {
@@ -62,6 +62,31 @@ class RecommendationTransactionSumCompareDepositWithdrawRuleServiceImplTest {
         boolean expectedResult = ruleService.check(userId, givenRule);
 
         assertFalse(expectedResult);
+    }
+
+
+    @Test
+    public void shouldThrowExceptionThenUserIdIsNull() {
+        UUID userId = null;
+        Rule givenRule = new Rule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", List.of("DEBIT", ">"), true);
+
+        assertThrows(Exception.class,
+                () -> repository.compareTransactionSumByUserIdProductType(
+                        userId,
+                        givenRule.getArguments().get(0),
+                        givenRule.getArguments().get(1)));
+    }
+
+    @Test
+    public void shouldThrowExceptionThenRuleIsNull() {
+        UUID userId = UUID.fromString("d4a4d619-9a0c-4fc5-b2cb-76c49409546b");
+        Rule givenRule = null;
+
+        assertThrows(Exception.class,
+                () -> repository.compareTransactionSumByUserIdProductType(
+                        userId,
+                        givenRule.getArguments().get(0),
+                        givenRule.getArguments().get(1)));
     }
 
 }
