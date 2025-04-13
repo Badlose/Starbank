@@ -1,3 +1,8 @@
-2025-04-08 17:19:02.488344+03:00 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found (this database is empty); SQL statement:
-SELECT ID FROM USERS WHERE USERNAME = ? [42104-232]
+2025-04-13 08:22:07.414213+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found (this database is empty); SQL statement:
+SELECT COUNT(*)
+        FROM TRANSACTIONS t
+        INNER JOIN PRODUCTS p ON t.product_id = p.id
+        WHERE t.USER_ID = ?
+        AND p.TYPE = ?
+ [42104-232]
