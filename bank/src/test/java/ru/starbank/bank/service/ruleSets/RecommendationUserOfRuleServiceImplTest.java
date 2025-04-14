@@ -1,10 +1,11 @@
-package ru.starbank.bank.service.Impl;
+package ru.starbank.bank.service.ruleSets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.starbank.bank.configuration.RecommendationsDataSourceConfiguration;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
+import ru.starbank.bank.service.Impl.RecommendationUserOfRuleServiceImpl;
 
 import java.util.List;
 import java.util.UUID;

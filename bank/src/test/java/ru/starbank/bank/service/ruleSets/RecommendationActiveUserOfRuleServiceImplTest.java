@@ -1,4 +1,4 @@
-package ru.starbank.bank.service.Impl;
+package ru.starbank.bank.service.ruleSets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import ru.starbank.bank.configuration.RecommendationsDataSourceConfiguration;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
+import ru.starbank.bank.service.Impl.RecommendationActiveUserOfRuleServiceImpl;
 
 import java.util.List;
 import java.util.UUID;
