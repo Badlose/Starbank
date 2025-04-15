@@ -47,7 +47,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                                      DynamicRecommendationMapper recommendationMapper,
                                      UserRecommendationMapper userRecommendationMapper,
                                      ListDynamicRecommendationMapper listDynamicRecommendationMapper,
-                                     CheckRecommendationServiceImpl checkRecommendation) {
+                                     CheckRecommendationService checkRecommendation) {
         this.recommendationsRepository = recommendationsRepository;
         this.rulesRepository = rulesRepository;
         this.statisticRepository = statisticRepository;
