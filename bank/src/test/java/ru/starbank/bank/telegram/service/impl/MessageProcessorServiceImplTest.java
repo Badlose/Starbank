@@ -74,6 +74,8 @@ class MessageProcessorServiceImplTest {
         messageProcessorService.sendRecommendationMessage(chatId, messageText);
 
         verify(messageSender).sendMessage(chatId, "Пользователь не найден");
+
+        verify(messageService).getUserIdByUsername(username);
         verifyNoMoreInteractions(messageService);
     }
 
