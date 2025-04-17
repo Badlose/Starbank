@@ -61,5 +61,6 @@ public class CacheConfigurationsTest {
 
         assertThat(transactionCountsCache.get("key1")).isNull();
     }
+
 }
 

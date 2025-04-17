@@ -15,11 +15,11 @@ public class DynamicRecommendationDTO {
 
     private List<RuleDTO> rule;
 
-    public String getProduct_name() {
-        return product_name;
+    public DynamicRecommendationDTO() {
     }
 
-    public DynamicRecommendationDTO() {
+    public String getProduct_name() {
+        return product_name;
     }
 
     public void setProduct_name(String product_name) {
