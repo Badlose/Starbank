@@ -81,7 +81,7 @@ public class RecommendationControllerTest {
         // Настройка мока для recommendationService
         when(recommendationService.getRecommendation(any(UUID.class))).thenReturn(mockRecommendation);
 
-        // Выполнение GET-запроса и проверка статуса и содержимого ответа
+
         mockMvc.perform(get("/recommendation/userId/{userId}", testUserId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -110,30 +110,31 @@ public class RecommendationControllerTest {
                 "Не упустите возможность разнообразить свой портфель, снизить риски и" +
                 " следить за актуальными рыночными тенденциями. Откройте ИИС сегодня и станьте ближе к финансовой независимости!");
 
-        // Настройка мока для метода сервиса
+
         when(recommendationService.createNewDynamicRecommendation(any(DynamicRecommendation.class))).thenReturn(expectedDto);
 
-        // Выполнение запроса и проверка результатов
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/recommendation/rule/Invest 500") // Путь к вашему контроллеру
-                        .contentType(MediaType.APPLICATION_JSON) // Указание типа контента
-                        .content(objectMapper.writeValueAsString(recommendation))) // Передача JSON-содержимого
-                .andExpect(status().isOk()) // Проверка статуса ответа (200 Created)
-                .andExpect(jsonPath("$.id").value(expectedDto.getId())) // Проверка ID в ответе
-                .andExpect(jsonPath("$.product_name").value(expectedDto.getProduct_name())) // Проверка имени продукта
-                .andExpect(jsonPath("$.product_id").value(expectedDto.getProduct_id().toString())) // Проверка ID продукта
-                .andExpect(jsonPath("$.product_text").value(expectedDto.getProduct_text())); // Проверка текста продукта
 
-        // Проверка, что метод сервиса был вызван
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/recommendation/rule")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recommendation)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(expectedDto.getId()))
+                .andExpect(jsonPath("$.product_name").value(expectedDto.getProduct_name()))
+                .andExpect(jsonPath("$.product_id").value(expectedDto.getProduct_id().toString()))
+                .andExpect(jsonPath("$.product_text").value(expectedDto.getProduct_text()));
+
+
         verify(recommendationService).createNewDynamicRecommendation(any(DynamicRecommendation.class));
     }
+
 
     @Test
     public void testCreateNewDynamicRecommendation_InvalidRecommendation() throws Exception {
         String json = "{\"name\":null,\"productId\":3fa85f64-5717-4562-b3fc-2c963f66afa6,\"text\":null,\"ruleList\":null}";
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/recommendation/rule/Invest 500")
+                        .post("/recommendation/rule")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest()); // Ожидаем статус 400
