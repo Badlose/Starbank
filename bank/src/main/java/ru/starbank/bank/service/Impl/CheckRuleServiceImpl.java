@@ -1,9 +1,8 @@
 package ru.starbank.bank.service.Impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import ru.starbank.bank.exceptions.*;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.model.enums.QueryEnum;
 import ru.starbank.bank.model.enums.TypeOfProductEnum;
@@ -16,42 +15,48 @@ public class CheckRuleServiceImpl implements CheckRuleService {
 
     @Override
     public void checkRule(Rule rule) {
+        List<String> arguments = rule.getArguments();
+        int argumentsSize = arguments.size();
         List<String> comparisons = List.of("<", ">", "<=", ">=", "==");
+        //boolean errorType = false;
+
         if (rule.getQuery() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid field");
+            throw new QueryNullPointerException("Query is null");
         }
-        if (rule.getArguments().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Arguments are empty");
+        if (arguments.isEmpty()) {
+            throw new EmptyRuleArgumentsException("Arguments are empty");
         }
-        boolean errorType = false;
         try {
             QueryEnum.valueOf(rule.getQuery());
-            TypeOfProductEnum.valueOf(rule.getArguments().get(0));
         } catch (IllegalArgumentException r) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid type");
+            throw new IncorrectRuleQueryValueException("Incorrect rule query");
         }
-        if (rule.getArguments().size() == 2 && !comparisons.contains(rule.getArguments().get(1))) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid comparison");
+        try {
+            TypeOfProductEnum.valueOf(arguments.get(0));
+        } catch (IllegalArgumentException r) {
+            throw new IncorrectProductTypeException("Incorrect product type");
         }
-        if (rule.getArguments().size() >= 4 && rule.getArguments().size() <= 5) {
-            if ((!rule.getArguments().get(1).equals("WITHDRAW") && !rule.getArguments().get(1).equals("DEPOSIT"))) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid type transaction");
-
+        if (argumentsSize == 2 && !comparisons.contains(arguments.get(1))) {
+            throw new IncorrectComparisonSymbolException("Incorrect comparison symbol. Somebody trying to drop your database :(");
+        }
+        if (argumentsSize >= 4 && argumentsSize <= 5) {
+            if ((!arguments.get(1).equals("WITHDRAW") && !arguments.get(1).equals("DEPOSIT"))) {
+                throw new IncorrectTransactionTypeException("Incorrect transaction type");
             }
-            if (!comparisons.contains(rule.getArguments().get(2))) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid comparison");
+            if (!comparisons.contains(arguments.get(2))) {
+                throw new IncorrectComparisonSymbolException("Incorrect comparison symbol. Somebody trying to drop your database :(");
             }
-            if (!StringUtils.isNumeric(rule.getArguments().get(3))) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid number");
+            if (!StringUtils.isNumeric(arguments.get(3))) {
+                throw new IncorrectNumberForComparisonException("Incorrect number for comparison");
             }
-            if (rule.getArguments().size() == 5) {
-                if (!rule.getArguments().get(4).equals("OR")) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid OR");
+            if (argumentsSize == 5) {
+                if (!arguments.get(4).equals("OR")) {
+                    throw new IncorrectRuleORArgumentException("Incorrect OR argument");
                 }
             }
         }
-        if (rule.getArguments().size() == 3 || rule.getArguments().size() > 5) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "more Arguments");
+        if (argumentsSize == 3 || argumentsSize > 5) {
+            throw new ArgumentsSizeException("Incorrect arguments size");
         }
     }
 

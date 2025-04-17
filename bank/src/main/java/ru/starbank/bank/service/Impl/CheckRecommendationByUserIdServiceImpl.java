@@ -2,7 +2,7 @@ package ru.starbank.bank.service.Impl;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ru.starbank.bank.exceptions.IncorrectRuleQueryException;
+import ru.starbank.bank.exceptions.IncorrectRuleQueryValueException;
 import ru.starbank.bank.model.DynamicRecommendation;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.service.CheckRecommendationByUserIdService;
@@ -57,7 +57,7 @@ public class CheckRecommendationByUserIdServiceImpl implements CheckRecommendati
                     }
                 }
                 case "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW" -> check = check && ruleSets.get(3).check(userId, rule);
-                default -> throw new IncorrectRuleQueryException("Incorrect query.");
+                default -> throw new IncorrectRuleQueryValueException("Incorrect query.");
             }
 
         }

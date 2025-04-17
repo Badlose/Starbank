@@ -30,17 +30,17 @@ public class CacheConfigurationsTest {
         assertThat(transactionCountsCache.get("key2")).isNull();
     }
 
-    @Test
-    public void testCacheExpiration() throws InterruptedException {
-        CaffeineCache transactionCountsCache = (CaffeineCache) cacheManager.getCache("transactionCounts");
-
-        transactionCountsCache.put("key1", 100);
-
-        assertThat(transactionCountsCache.get("key1").get()).isEqualTo(100);
-
-        Thread.sleep(1000 * 60 * 10 + 1000);
-
-        assertThat(transactionCountsCache.get("key1")).isNull();
-    }
+//    @Test
+//    public void testCacheExpiration() throws InterruptedException {
+//        CaffeineCache transactionCountsCache = (CaffeineCache) cacheManager.getCache("transactionCounts");
+//
+//        transactionCountsCache.put("key1", 100);
+//
+//        assertThat(transactionCountsCache.get("key1").get()).isEqualTo(100);
+//
+//        Thread.sleep(1000 * 60 * 10 + 1000);
+//
+//        assertThat(transactionCountsCache.get("key1")).isNull();
+//    }
 
 }

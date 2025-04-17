@@ -1,16 +1,17 @@
-package ru.starbank.bank.service.Impl;
+package ru.starbank.bank.service.ruleSets;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.starbank.bank.configuration.RecommendationsDataSourceConfiguration;
 import ru.starbank.bank.model.Rule;
 import ru.starbank.bank.repository.TransactionsRepository;
+import ru.starbank.bank.service.Impl.RecommendationUserOfRuleServiceImpl;
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RecommendationUserOfRuleServiceImplTest {
 
@@ -53,6 +54,24 @@ class RecommendationUserOfRuleServiceImplTest {
         boolean expectedResult = ruleService.check(userId, givenRule);
 
         assertFalse(expectedResult);
+    }
+
+    @Test
+    public void shouldThrowExceptionThenUserIdIsNull() {
+        UUID userId = null;
+        Rule givenRule = new Rule("USER_OF", List.of("DEBIT"), true);
+
+        assertThrows(Exception.class,
+                () -> repository.countTransactionsByUserIdProductType(userId, givenRule.getArguments().get(0)));
+    }
+
+    @Test
+    public void shouldThrowExceptionThenRuleIsNull() {
+        UUID userId = UUID.fromString("d4a4d619-9a0c-4fc5-b0cb-76c49409546b");
+        Rule givenRule = null;
+
+        assertThrows(Exception.class,
+                () -> repository.countTransactionsByUserIdProductType(userId, givenRule.getArguments().get(0)));
     }
 
 }

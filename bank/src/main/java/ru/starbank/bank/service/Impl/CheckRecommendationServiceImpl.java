@@ -11,6 +11,7 @@ import ru.starbank.bank.service.CheckRuleService;
 
 @Service
 public class CheckRecommendationServiceImpl implements CheckRecommendationService {
+
     @Autowired
     private CheckRuleService checkRuleService;
 
