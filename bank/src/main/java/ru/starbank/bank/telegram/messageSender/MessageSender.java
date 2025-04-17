@@ -33,5 +33,4 @@ public class MessageSender {
             LOGGER.error("Something went wrong {}", response.errorCode());
         }
     }
-
 }
