@@ -10,6 +10,12 @@ public class RuleDTO {
     public RuleDTO() {
     }
 
+    public RuleDTO(String query, List<String> arguments, boolean negate) {
+        this.query = query;
+        this.arguments = arguments;
+        this.negate = negate;
+    }
+
     public String getQuery() {
         return query;
     }
@@ -34,4 +40,12 @@ public class RuleDTO {
         this.negate = negate;
     }
 
+    @Override
+    public String toString() {
+        return "RuleDTO{" +
+                "query='" + query + '\'' +
+                ", arguments=" + arguments +
+                ", negate=" + negate +
+                '}';
+    }
 }

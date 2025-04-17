@@ -18,6 +18,14 @@ public class DynamicRecommendationDTO {
     public DynamicRecommendationDTO() {
     }
 
+    public DynamicRecommendationDTO(Long id, String product_name, UUID product_id, String product_text, List<RuleDTO> rule) {
+        this.id = id;
+        this.product_name = product_name;
+        this.product_id = product_id;
+        this.product_text = product_text;
+        this.rule = rule;
+    }
+
     public String getProduct_name() {
         return product_name;
     }
@@ -58,4 +66,14 @@ public class DynamicRecommendationDTO {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "DynamicRecommendationDTO{" +
+                "id=" + id +
+                ", product_name='" + product_name + '\'' +
+                ", product_id=" + product_id +
+                ", product_text='" + product_text + '\'' +
+                ", rule=" + rule +
+                '}';
+    }
 }
